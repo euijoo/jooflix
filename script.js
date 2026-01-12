@@ -44,7 +44,7 @@ const heroSubtitle = document.getElementById("heroSubtitle");
 const heroDesc = document.getElementById("heroDesc");
 
 // 기본 히어로 소스 (원하면 바꿔도 됨)
-heroVideo.src = "https://youtu.be/acUIyAfieHE?si=ZUug3bn3w9mvVYVj";
+heroVideo.src = "https://bodaponi.b-cdn.net/%EC%B9%B4%EC%9A%B4%ED%8A%B8%20b.mp4";
 
 
 
