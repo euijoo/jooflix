@@ -37,11 +37,10 @@ const rows = {
 };
 
 // ===== CORS 프록시 함수 (새 프록시) =====
-// corsproxy.io: https://corsproxy.io/?<URL>
+// corsproxy.io 버전 (문법만)
 function getProxyUrl(originalUrl) {
-  return `https://corsproxy.io/?${encodeURIComponent(originalUrl)}`;
-  // 필요하면 다른 프록시로 쉽게 교체 가능:
-  // return `https://corsproxy.github.io/?${encodeURIComponent(originalUrl)}`;
+  // 권장 포맷: https://corsproxy.io/?url=https://example.com
+  return `https://corsproxy.io/?url=${encodeURIComponent(originalUrl)}`;
 }
 
 // ===== HERO ELEMENTS & Video.js 초기화 =====
