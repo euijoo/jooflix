@@ -61,7 +61,7 @@ function initHeroPlayer(src) {
   });
 
   // 히어로 기본 영상 (프록시 적용)
-  const defaultSrc = src || "https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4";
+  const defaultSrc = src || "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/2193c273-6625-4eeb-9761-9dbcd658e816/10s/master.m3u8?fastly_token=Njk2NWE3NWVfODFlYTAzYWJkNmZmZTc5ODI2MDk3N2M2YTQ1Y2YzMDJiZGEwM2Q4YWNmOGVlZGNhOTc0NWEwNjY1OGQyMjMzOA%3D%3D";
 
   player.src({
     src: getProxyUrl(defaultSrc),
