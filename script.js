@@ -1,4 +1,4 @@
-// ===== 데이터 예시 (기존 유지, src는 프록시 적용) =====
+// ===== 데이터 예시 (src는 '원본 URL' 유지) =====
 const rows = {
   korean: [
     {
@@ -36,9 +36,12 @@ const rows = {
   ]
 };
 
-// ===== CORS 프록시 함수 =====
+// ===== CORS 프록시 함수 (새 프록시) =====
+// corsproxy.io: https://corsproxy.io/?<URL>
 function getProxyUrl(originalUrl) {
-  return `https://api.allorigins.win/raw?url=${encodeURIComponent(originalUrl)}`;
+  return `https://corsproxy.io/?${encodeURIComponent(originalUrl)}`;
+  // 필요하면 다른 프록시로 쉽게 교체 가능:
+  // return `https://corsproxy.github.io/?${encodeURIComponent(originalUrl)}`;
 }
 
 // ===== HERO ELEMENTS & Video.js 초기화 =====
@@ -47,7 +50,7 @@ const heroTitle = document.getElementById("heroTitle");
 const heroSubtitle = document.getElementById("heroSubtitle");
 const heroDesc = document.getElementById("heroDesc");
 
-// Video.js 플레이어 초기화 (DOMContentLoaded 후 실행)
+// Video.js 플레이어 초기화
 function initHeroPlayer(src) {
   const player = videojs(heroVideoEl, {
     fluid: true,
@@ -58,26 +61,29 @@ function initHeroPlayer(src) {
     }
   });
 
+  // 히어로 기본 영상 (프록시 적용)
+  const defaultSrc = src || "https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4";
+
   player.src({
-    // 프록시 제거하고 직접 테스트
-    src: src || "https://bodaponi.b-cdn.net/%EC%B9%B4%EC%9A%B4%ED%8A%B8%20b.mp4",
+    src: getProxyUrl(defaultSrc),
     type: "video/mp4"
   });
-}
 
   // 자동 재생 + muted (모바일 호환)
   player.ready(() => {
-    player.play().catch(() => {});  // autoplay 정책 무시
     player.muted(true);
     player.loop(true);
+    player.play().catch(() => {});
   });
 
   return player;
 }
 
 // DOM 로드 후 Video.js 초기화
-document.addEventListener('DOMContentLoaded', () => {
-  window.heroPlayer = initHeroPlayer("https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4");  // 전역으로 저장
+document.addEventListener("DOMContentLoaded", () => {
+  window.heroPlayer = initHeroPlayer(
+    "https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4"
+  );
 });
 
 // ===== SLIDER 생성 (프록시 적용) =====
@@ -90,7 +96,7 @@ sliders.forEach((slider) => {
     const card = document.createElement("button");
     card.className = "item";
     card.type = "button";
-    card.setAttribute("data-video-src", item.src);  // 원본 URL 저장
+    card.setAttribute("data-video-src", item.src); // 원본 URL 저장
     card.setAttribute("data-title", item.title);
     card.setAttribute("data-subtitle", item.subtitle);
     card.setAttribute("data-desc", item.desc);
@@ -107,11 +113,11 @@ sliders.forEach((slider) => {
       const subtitle = card.getAttribute("data-subtitle");
       const desc = card.getAttribute("data-desc");
 
-      // Video.js 소스 변경 (프록시 적용)
+      // Video.js 소스 변경 (새 프록시 적용)
       if (src && window.heroPlayer) {
         window.heroPlayer.src({
           src: getProxyUrl(src),
-          type: 'video/mp4'
+          type: "video/mp4"
         });
         window.heroPlayer.currentTime(0);
         window.heroPlayer.play().catch(() => {});
@@ -125,7 +131,7 @@ sliders.forEach((slider) => {
   });
 });
 
-// ===== SLIDER 버튼 로직 (기존 유지) =====
+// ===== SLIDER 버튼 로직 =====
 const nextBtns = document.querySelectorAll(".next");
 const prevBtns = document.querySelectorAll(".prev");
 
