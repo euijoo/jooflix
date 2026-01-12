@@ -44,8 +44,8 @@ const heroSubtitle = document.getElementById("heroSubtitle");
 const heroDesc = document.getElementById("heroDesc");
 
 // 기본 히어로 소스 (원하면 바꿔도 됨)
-heroVideo.src =
-  "https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4";
+heroVideo.src = "https://www.w3schools.com/html/mov_bbb.mp4";
+
 
 
 // ===== SLIDER 생성 =====
