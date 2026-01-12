@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>JOOFLIX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <!-- Video.js CSS CDN -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
   <link rel="stylesheet" href="index.css" />
   <link
     rel="stylesheet"
@@ -13,7 +15,7 @@
   />
 </head>
 <body>
-  <!-- HEADER / NAV -->
+  <!-- HEADER / NAV (변경 없음) -->
   <nav class="nav">
     <div class="nav-left">
       <div class="logo">
@@ -52,11 +54,23 @@
     </div>
   </nav>
 
-  <!-- HERO (메인 비디오) -->
+  <!-- HERO (Video.js 적용) -->
   <main>
     <div class="video">
-      <!-- 온라인 동영상 URL을 JS로 주입 -->
-      <video id="heroVideo" autoplay muted loop playsinline></video>
+      <video 
+        id="heroVideo" 
+        class="video-js vjs-big-play-centered" 
+        controls 
+        preload="auto" 
+        width="100%" 
+        height="100%" 
+        data-setup='{"fluid": true, "responsive": true, "playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
+        poster="https://euijoo.github.io/jooflix/img/poster-placeholder.jpg"
+        playsinline
+      >
+        <!-- 소스는 JS에서 프록시 URL로 설정 -->
+        <p class="vjs-no-js">브라우저가 Video.js를 지원하지 않습니다. <a href="https://videojs.com/html5-video-support/" target="_blank">최신 브라우저 사용</a></p>
+      </video>
     </div>
 
     <div class="description">
@@ -84,14 +98,11 @@
     </div>
   </main>
 
-  <!-- ROWS / SLIDERS -->
+  <!-- ROWS / SLIDERS (변경 없음) -->
   <section>
-    <!-- 1. 한국이 만든 콘텐츠 -->
     <div class="content-list">
       <h1>한국이 만든 콘텐츠</h1>
-      <div class="slider" data-row="korean">
-        <!-- JS가 썸네일 채움 -->
-      </div>
+      <div class="slider" data-row="korean"></div>
       <button class="prev">
         <i class="fa-solid fa-angle-right prev-arrow"></i>
       </button>
@@ -100,7 +111,6 @@
       </button>
     </div>
 
-    <!-- 2. 지금 뜨는 콘텐츠 -->
     <div class="content-list">
       <h1>지금 뜨는 콘텐츠</h1>
       <div class="slider" data-row="trending"></div>
@@ -112,7 +122,6 @@
       </button>
     </div>
 
-    <!-- 3. 오늘 한국의 TOP 10 -->
     <div class="content-list">
       <h1>오늘 한국의 TOP 10 콘텐츠</h1>
       <div class="slider" data-row="top10"></div>
@@ -125,7 +134,7 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (변경 없음) -->
   <footer>
     <div class="wrap">
       <div class="social-icons">
@@ -150,6 +159,8 @@
     </div>
   </footer>
 
+  <!-- Video.js JS CDN (body 끝에) -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
