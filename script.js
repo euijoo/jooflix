@@ -4,7 +4,7 @@ const rows = {
     {
       title: "한국 영화 1",
       thumb: "https://via.placeholder.com/400x250?text=KR+1",
-      src: "https://bodaponi.b-cdn.net/%EC%B9%B4%EC%9A%B4%ED%8A%B8%20b.mp4",  // 원본 URL
+      src: "https://manifest.prod.boltdns.net/manifest/v1/hls/v4/clear/2385340575001/d9ede5af-202c-4b31-820f-233724e2574c/10s/master.m3u8?fastly_token=Njk2NWE3ZDdfNmMzMjQ1NWQ3ZTVkMTEyNmUxMTU5MThkYjgxZTRhY2UwOThlOGJjYjEzMzk5NDNjZjAwYWVkZmE5ZDg1NzMwOA%3D%3D.mp4",  // 원본 URL
       subtitle: "한국 콘텐츠 예시",
       desc: "한국 영화 1의 간단한 설명입니다."
     },
