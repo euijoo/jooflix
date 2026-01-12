@@ -58,11 +58,12 @@ function initHeroPlayer(src) {
     }
   });
 
-  // 소스 설정 (프록시 적용)
   player.src({
-    src: src ? getProxyUrl(src) : getProxyUrl("https://bodaponi.b-cdn.net/%EC%B9%B4%EC%9A%B4%ED%8A%B8%20b.mp4"),
-    type: 'video/mp4'
+    // 프록시 제거하고 직접 테스트
+    src: src || "https://bodaponi.b-cdn.net/%EC%B9%B4%EC%9A%B4%ED%8A%B8%20b.mp4",
+    type: "video/mp4"
   });
+}
 
   // 자동 재생 + muted (모바일 호환)
   player.ready(() => {
