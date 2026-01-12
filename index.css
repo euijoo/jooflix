@@ -26,7 +26,61 @@ button {
   color: inherit;
 }
 
-/* NAV */
+/* ===== Video.js 오버라이드 (히어로 영역 맞춤) ===== */
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 60vh !important;
+}
+
+.video-js .vjs-tech {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.video-js .vjs-big-play-button {
+  font-size: 3rem !important;
+  width: 5rem !important;
+  height: 5rem !important;
+  line-height: 5rem !important;
+  border-radius: 50% !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #000 !important;
+  margin-left: -2.5rem !important;
+  margin-top: -2.5rem !important;
+}
+
+.video-js .vjs-big-play-button:hover {
+  background-color: #fff !important;
+}
+
+.video-js .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  border-radius: 0 0 10px 10px !important;
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-volume-level {
+  background-color: #e50914 !important;
+}
+
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+  opacity: 0.85 !important;
+}
+
+/* 모바일 Video.js 컨트롤 숨김 (넷플릭스 스타일) */
+@media (max-width: 768px) {
+  .video-js .vjs-control-bar {
+    display: none !important;
+  }
+  .video-js:hover .vjs-control-bar {
+    display: flex !important;
+  }
+}
+
+/* NAV (기존 유지) */
 .nav {
   display: flex;
   justify-content: space-between;
@@ -37,6 +91,7 @@ button {
     rgba(0, 0, 0, 0.7) 10%,
     rgba(0, 0, 0, 0)
   );
+  z-index: 1000; /* Video.js 위로 */
 }
 
 .nav-left {
@@ -142,19 +197,24 @@ main {
   overflow: hidden;
 }
 
-main .video video {
+main .video {
+  position: relative;
   width: 100%;
-  height: 100%;
-  max-height: 60vh;
-  object-fit: cover;
+  height: 60vh; /* 고정 높이로 Video.js 맞춤 */
+  background-color: #000;
+}
+
+main .video video {
   display: block;
 }
 
+/* DESCRIPTION (기존 유지) */
 .description {
   position: absolute;
   bottom: 30%;
   left: 40px;
   max-width: 500px;
+  z-index: 100;
 }
 
 .description h1 {
@@ -220,6 +280,7 @@ main .video video {
   align-items: center;
   gap: 1em;
   padding-right: 1.5rem;
+  z-index: 100;
 }
 
 .age-info i {
@@ -249,7 +310,7 @@ main .video video {
   top: 0;
 }
 
-/* ROWS / SLIDER */
+/* ROWS / SLIDER (기존 유지) */
 section .content-list {
   margin-bottom: 3rem;
   position: relative;
@@ -344,7 +405,7 @@ section .slider::-webkit-scrollbar {
   transform: rotateY(180deg);
 }
 
-/* FOOTER */
+/* FOOTER (기존 유지) */
 footer {
   width: 100%;
   margin-bottom: 2rem;
@@ -379,25 +440,24 @@ footer .copyright {
   font-size: 0.7rem;
 }
 
-/* RESPONSIVE */
-/* pad */
+/* RESPONSIVE (Video.js 반응형 추가) */
 @media screen and (max-width: 1437px) {
   .description {
     bottom: 10%;
   }
+  main .video {
+    height: 50vh;
+  }
 }
 
-/* nav, hero for tablet */
 @media screen and (max-width: 982px) {
   .nav {
     padding: 0.3em 1rem 0;
   }
-
   .logo {
     width: 5rem;
     padding: 0;
   }
-
   .menu-list {
     position: absolute;
     top: 50px;
@@ -409,11 +469,9 @@ footer .copyright {
     padding: 1em 4em;
     z-index: 999;
   }
-
   .menu-list li {
     margin: 0.3em 0;
   }
-
   .menu-list::before {
     position: absolute;
     content: "";
@@ -423,7 +481,6 @@ footer .copyright {
     top: 0;
     left: 0;
   }
-
   .mobile-menu-btn {
     display: flex;
     align-items: center;
@@ -431,43 +488,41 @@ footer .copyright {
     background: transparent;
     padding: 0.4em 0.6em;
   }
-
   .nav-left {
     position: relative;
   }
-
   .nav-right .search {
     border: none;
     background-color: transparent;
   }
-
   .nav-right .search-bar input {
     display: none;
   }
+  main .video {
+    height: 40vh;
+  }
 }
 
-/* phone */
 @media screen and (max-width: 768px) {
   .description h1,
   .description h3,
   .description p {
     display: none;
   }
-
   .description {
     bottom: 15%;
     left: 20px;
   }
-
   button {
     font-size: 0.5rem;
   }
-
   .slider .item {
     min-width: 160px;
     height: 100px;
   }
-
+  main .video {
+    height: 35vh;
+  }
   footer .options {
     grid-template-columns: repeat(2, 1fr);
   }
