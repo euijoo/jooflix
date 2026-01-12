@@ -1,163 +1,155 @@
-<!doctype html>
-<html lang="kr">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Jooflix</title>
-    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="index.css">
+  <meta charset="UTF-8" />
+  <title>MY FLIX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="index.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 </head>
 <body>
-    <nav>
-        <div class="left">
-            <div class="logo">
-                <a href="#"><img src="./img/logo.png" alt=""></a>
-            </div>
-            <div class="mobile-menu">메뉴</div>
-            <ul class="menu-list">
-                <li>
-                    <a href="#">홈</a>
-                </li>
-                <li>
-                    <a href="#">시리즈</a>
-                </li>
-                <li>
-                    <a href="#">영화</a>
-                </li>
-                <li>
-                    <a href="#">NEW! 요즘 대세 콘텐츠</a>
-                </li>
-                <li>
-                    <a href="#">내가 찜한 콘텐츠</a>
-                </li>
-            </ul>
+  <!-- HEADER / NAV -->
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo">
+        <a href="#">
+          <img src="logo.jpg" alt="MyFlix 로고" />
+        </a>
+      </div>
+      <button class="mobile-menu-btn" aria-label="메뉴 열기">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <ul class="menu-list">
+        <li><a href="#">홈</a></li>
+        <li><a href="#">시리즈</a></li>
+        <li><a href="#">영화</a></li>
+        <li><a href="#">NEW! 요즘 대세 콘텐츠</a></li>
+        <li><a href="#">내가 찜한 콘텐츠</a></li>
+        <li><a href="#">키즈</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <div class="search">
+        <div class="search-bar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="제목, 인물, 장르 검색" />
         </div>
-        <div class="right">
-            <div class="icon search">
-                <div class="search-bar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="제목, 사람, 장르"/>
-                </div>
-            </div>
-            <div class="icon kids">
-                <a href="#">키즈</a>
-            </div>
-            <div class="icon bell">
-                <a href="#"><i class="fa-solid fa-bell"></i></a>
-            </div>
-            <div class="icon profile">
-                <a href="#">
-                    <div class="avatar-box"></div>
-                    <i class="fa-solid fa-caret-down"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
-    <main>
-        <div class="video">
-            <video src="./video/doctor.mp4" autoplay muted loop></video>
-        </div>
-        <div class="description">
-            <h1>Doctor Strange 2</h1>
-            <h3>매주 새로운 트레일러 공개</h3>
-            <p>
-                5월, 차원의 경계가 무너지고 닥터 스트레인지가 온다
-                전 세계를 뒤흔들 역대급 멀티버스 전쟁의 시작!
-                [닥터 스트레인지: 대혼돈의 멀티버스] 티저 예고편 공개!
-            </p>
-            <div class="buttons">
-                <button class="play"><i class="fa-solid fa-play"></i><span>재생</span></button>
-                <button class="detail"><i class="fa-solid fa-circle-info"></i>상세 정보</button>
-            </div>
-        </div>
-        <div class="age-info">
-            <i class="fa-solid fa-rotate-right"></i>
-            <div class="age">15+</div>
-        </div>
-    </main>
-    <section>
-        <div class="content-list">
-            <h1>한국이 만든 콘텐츠</h1>
-            <div class="slider">
-            </div>
-            <div class="prev"><i class="fa-solid fa-angle-right prev-arrow"></i></div>
-            <div class="next"><i class="fa-solid fa-angle-right"></i></div>
-        </div>
-        <div class="content-list">
-            <h1>지금 뜨는 콘텐츠</h1>
-            <div class="slider">
-            </div>
-            <div class="prev"><i class="fa-solid fa-angle-right prev-arrow"></i></div>
-            <div class="next"><i class="fa-solid fa-angle-right"></i></div>
-        </div>
-        <div class="content-list">
-            <h1>오늘 한국의 TOP 10 콘텐츠</h1>
-            <div class="slider">
-            </div>
-            <div class="prev"><i class="fa-solid fa-angle-right prev-arrow"></i></div>
-            <div class="next"><i class="fa-solid fa-angle-right"></i></div>
-        </div>
-    </section>
-    <footer>
-        <div class="wrap">
-            <div class="social-icons">
-                <i class="fa-brands fa-facebook-square"></i>
-                <i class="fa-brands fa-instagram"></i>
-                <i class="fa-brands fa-twitter"></i>
-                <i class="fa-brands fa-youtube"></i>
-            </div>
-            <div class="options">
-                <div class="option">자막 및 음성</div>
-                <div class="option">음성 지원</div>
-                <div class="option">고객 센터</div>
-                <div class="option">기프트카드</div>
-                <div class="option">미디어 센터</div>
-                <div class="option">투자 정보(IR)</div>
-                <div class="option">입사 정보</div>
-                <div class="option">이용 약관</div>
-                <div class="option">개인 정보</div>
-                <div class="option">법적 고지</div>
-                <div class="option">쿠키 설정</div>
-                <div class="option">회사 정보</div>
-                <div class="option">문의하기</div>
-            </div>
-        </div>
-    </footer>
-    <script>
-        const next = document.querySelectorAll('.next');
-        const prev = document.querySelectorAll('.prev');
-        const slider = document.querySelectorAll('.slider')
+      </div>
+      <div class="icon">
+        <i class="fa-regular fa-bell"></i>
+      </div>
+      <div class="profile icon">
+        <button class="profile-btn">
+          <div class="avatar-box"></div>
+          <i class="fa-solid fa-caret-down"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
 
-        for(let i =0;i<slider.length;i++){
-            getMovies(slider[i],i+1);
-            makeSlider(slider[i],prev[i],next[i]);
-        }
-        function makeSlider(element,prev,next){
-            next.addEventListener('click',()=>{
-                const offsetX = element.offsetWidth;
-                element.scrollBy(offsetX,0)
-            })
-            prev.addEventListener('click',()=>{
-                const offsetX = element.offsetWidth;
-                element.scrollBy(-offsetX,0)
-            })
-        }
-        function getMovies(element,page){
-            fetch(`https://yts.mx/api/v2/list_movies.json?limit=20&sort_by=rating&page=${page}`)
-                .then(data=>data.json())
-                .then(data=>{
-                    const movies = data.data.movies;
-                    movies.forEach(movie=>{
-                        const div = document.createElement('div');
-                        div.className='item';
-                        div.innerHTML = `<img src="${movie.medium_cover_image}" alt="">`;
-                        element.appendChild(div);
-                    })
-                })
-        }
-    </script>
+  <!-- HERO (메인 비디오) -->
+  <main>
+    <div class="video">
+      <!-- 온라인 동영상 URL을 JS로 주입 -->
+      <video id="heroVideo" autoplay muted loop playsinline></video>
+    </div>
+
+    <div class="description">
+      <h1 id="heroTitle">Doctor Strange 2</h1>
+      <h3 id="heroSubtitle">매주 새로운 트레일러 공개</h3>
+      <p id="heroDesc">
+        5월, 차원의 경계가 무너지고 닥터 스트레인지가 온다.
+        전 세계를 뒤흔들 역대급 멀티버스 전쟁의 시작!
+      </p>
+      <div class="buttons">
+        <button class="btn play" id="heroPlayBtn">
+          <i class="fa-solid fa-play"></i>
+          <span>재생</span>
+        </button>
+        <button class="btn detail">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>상세 정보</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="age-info">
+      <i class="fa-solid fa-rotate-right"></i>
+      <div class="age">15+</div>
+    </div>
+  </main>
+
+  <!-- ROWS / SLIDERS -->
+  <section>
+    <!-- 1. 한국이 만든 콘텐츠 -->
+    <div class="content-list">
+      <h1>한국이 만든 콘텐츠</h1>
+      <div class="slider" data-row="korean">
+        <!-- JS가 썸네일 채움 -->
+      </div>
+      <button class="prev">
+        <i class="fa-solid fa-angle-right prev-arrow"></i>
+      </button>
+      <button class="next">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
+
+    <!-- 2. 지금 뜨는 콘텐츠 -->
+    <div class="content-list">
+      <h1>지금 뜨는 콘텐츠</h1>
+      <div class="slider" data-row="trending"></div>
+      <button class="prev">
+        <i class="fa-solid fa-angle-right prev-arrow"></i>
+      </button>
+      <button class="next">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
+
+    <!-- 3. 오늘 한국의 TOP 10 -->
+    <div class="content-list">
+      <h1>오늘 한국의 TOP 10 콘텐츠</h1>
+      <div class="slider" data-row="top10"></div>
+      <button class="prev">
+        <i class="fa-solid fa-angle-right prev-arrow"></i>
+      </button>
+      <button class="next">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="social-icons">
+        <i class="fa-brands fa-facebook-f"></i>
+        <i class="fa-brands fa-instagram"></i>
+        <i class="fa-brands fa-twitter"></i>
+        <i class="fa-brands fa-youtube"></i>
+      </div>
+      <div class="options">
+        <a href="#" class="option">자막 및 음성</a>
+        <a href="#" class="option">고객 센터</a>
+        <a href="#" class="option">투자 정보</a>
+        <a href="#" class="option">입사 정보</a>
+        <a href="#" class="option">이용 약관</a>
+        <a href="#" class="option">개인정보 처리방침</a>
+        <a href="#" class="option">쿠키 설정</a>
+        <a href="#" class="option">회사 정보</a>
+      </div>
+      <p class="copyright">
+        © 2026 MyFlix. 개인 연습용 페이지입니다.
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
