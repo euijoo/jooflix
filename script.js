@@ -76,7 +76,7 @@ function initHeroPlayer(src) {
 
 // DOM 로드 후 Video.js 초기화
 document.addEventListener('DOMContentLoaded', () => {
-  window.heroPlayer = initHeroPlayer();  // 전역으로 저장
+  window.heroPlayer = initHeroPlayer("https://bodaponi.b-cdn.net/Whiplash.2014.720p.BluRay.H264.AAC-RARBG.mp4");  // 전역으로 저장
 });
 
 // ===== SLIDER 생성 (프록시 적용) =====
