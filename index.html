@@ -1,166 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>JOOFLIX</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <!-- Video.js CSS CDN -->
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-  <link rel="stylesheet" href="index.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <meta charset="utf-8" />
+  <title>Spider-Man NWH 테스트</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .player-wrap {
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background: #000;
+    }
+  </style>
 </head>
 <body>
-  <!-- HEADER / NAV (변경 없음) -->
-  <nav class="nav">
-    <div class="nav-left">
-      <div class="logo">
-        <a href="#">
-          <img src="https://euijoo.github.io/jooflix/img/logo.png" alt="JOOFlIX" />
-        </a>
-      </div>
-      <button class="mobile-menu-btn" aria-label="메뉴 열기">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-      <ul class="menu-list">
-        <li><a href="#">홈</a></li>
-        <li><a href="#">시리즈</a></li>
-        <li><a href="#">영화</a></li>
-        <li><a href="#">NEW! 요즘 대세 콘텐츠</a></li>
-        <li><a href="#">내가 찜한 콘텐츠</a></li>
-        <li><a href="#">키즈</a></li>
-      </ul>
-    </div>
-    <div class="nav-right">
-      <div class="search">
-        <div class="search-bar">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" placeholder="제목, 인물, 장르 검색" />
-        </div>
-      </div>
-      <div class="icon">
-        <i class="fa-regular fa-bell"></i>
-      </div>
-      <div class="profile icon">
-        <button class="profile-btn">
-          <div class="avatar-box"></div>
-          <i class="fa-solid fa-caret-down"></i>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO (Video.js 적용) -->
-  <main>
-    <div class="video">
-      <video 
-        id="heroVideo" 
-        class="video-js vjs-big-play-centered" 
-        controls 
-        preload="auto" 
-        width="100%" 
-        height="100%" 
-        data-setup='{"fluid": true, "responsive": true, "playbackRates": [0.5, 1, 1.25, 1.5, 2]}'
-        poster="https://euijoo.github.io/jooflix/img/poster-placeholder.jpg"
-        playsinline
-      >
-        <!-- 소스는 JS에서 프록시 URL로 설정 -->
-        <p class="vjs-no-js">브라우저가 Video.js를 지원하지 않습니다. <a href="https://videojs.com/html5-video-support/" target="_blank">최신 브라우저 사용</a></p>
-      </video>
-    </div>
-
-    <div class="description">
-      <h1 id="heroTitle">위플래쉬</h1>
-      <h3 id="heroSubtitle">매주 새로운 트레일러 공개</h3>
-      <p id="heroDesc">
-        5월, 차원의 경계가 무너지고 닥터 스트레인지가 온다.
-        전 세계를 뒤흔들 역대급 멀티버스 전쟁의 시작!
-      </p>
-      <div class="buttons">
-        <button class="btn play" id="heroPlayBtn">
-          <i class="fa-solid fa-play"></i>
-          <span>재생</span>
-        </button>
-        <button class="btn detail">
-          <i class="fa-solid fa-circle-info"></i>
-          <span>상세 정보</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="age-info">
-      <i class="fa-solid fa-rotate-right"></i>
-      <div class="age">15+</div>
-    </div>
-  </main>
-
-  <!-- ROWS / SLIDERS (변경 없음) -->
-  <section>
-    <div class="content-list">
-      <h1>한국이 만든 콘텐츠</h1>
-      <div class="slider" data-row="korean"></div>
-      <button class="prev">
-        <i class="fa-solid fa-angle-right prev-arrow"></i>
-      </button>
-      <button class="next">
-        <i class="fa-solid fa-angle-right"></i>
-      </button>
-    </div>
-
-    <div class="content-list">
-      <h1>지금 뜨는 콘텐츠</h1>
-      <div class="slider" data-row="trending"></div>
-      <button class="prev">
-        <i class="fa-solid fa-angle-right prev-arrow"></i>
-      </button>
-      <button class="next">
-        <i class="fa-solid fa-angle-right"></i>
-      </button>
-    </div>
-
-    <div class="content-list">
-      <h1>오늘 한국의 TOP 10 콘텐츠</h1>
-      <div class="slider" data-row="top10"></div>
-      <button class="prev">
-        <i class="fa-solid fa-angle-right prev-arrow"></i>
-      </button>
-      <button class="next">
-        <i class="fa-solid fa-angle-right"></i>
-      </button>
-    </div>
-  </section>
-
-  <!-- FOOTER (변경 없음) -->
-  <footer>
-    <div class="wrap">
-      <div class="social-icons">
-        <i class="fa-brands fa-facebook-f"></i>
-        <i class="fa-brands fa-instagram"></i>
-        <i class="fa-brands fa-twitter"></i>
-        <i class="fa-brands fa-youtube"></i>
-      </div>
-      <div class="options">
-        <a href="#" class="option">자막 및 음성</a>
-        <a href="#" class="option">고객 센터</a>
-        <a href="#" class="option">투자 정보</a>
-        <a href="#" class="option">입사 정보</a>
-        <a href="#" class="option">이용 약관</a>
-        <a href="#" class="option">개인정보 처리방침</a>
-        <a href="#" class="option">쿠키 설정</a>
-        <a href="#" class="option">회사 정보</a>
-      </div>
-      <p class="copyright">
-        © 2026 JOOFlix. 개인용 페이지 입니다.
-      </p>
-    </div>
-  </footer>
-
-  <!-- Video.js JS CDN (body 끝에) -->
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-  <script src="script.js"></script>
+  <div class="player-wrap">
+    <video
+      controls
+      preload="metadata"
+      src="https://bodaponi.b-cdn.net/%EC%8A%A4%ED%8C%8C%EC%9D%B4%EB%8D%94%EB%A7%A8-%20%EB%85%B8%20%EC%9B%A8%EC%9D%B4%20%ED%99%88%20m.mp4"
+    >
+      브라우저가 video 태그를 지원하지 않습니다.
+    </video>
+  </div>
 </body>
 </html>
