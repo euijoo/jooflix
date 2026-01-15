@@ -189,20 +189,12 @@ function playWithNPlayer(videoUrl) {
   // nPlayer URL 스킴
   const nplayerUrl = `nplayer-${videoUrl}`;
   
-  // iOS에서 nPlayer 실행 시도
+  // iOS에서 nPlayer 실행
   window.location.href = nplayerUrl;
   
-  // 만약 nPlayer가 설치되지 않았다면 안내 메시지
-  setTimeout(() => {
-    const install = confirm(
-      'nPlayer가 설치되어 있지 않은 것 같습니다.\n\n' +
-      'App Store에서 nPlayer를 다운로드하시겠습니까?'
-    );
-    if (install) {
-      window.open('https://apps.apple.com/app/nplayer/id1116905928', '_blank');
-    }
-  }, 2000);
+  // setTimeout 제거 - nPlayer가 없으면 자연스럽게 실패함
 }
+
 
 // 새 창에서 비디오 열기 (iOS/iPadOS 호환)
 function openVideoInNewTab(videoUrl) {
