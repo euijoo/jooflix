@@ -40,6 +40,8 @@ async function getMovieDetails(movieId) {
 
 // 포스터 URL 생성
 function getPosterUrl(posterPath) {
-  if (!posterPath) return 'https://via.placeholder.com/300x450?text=No+Poster';
+  if (!posterPath) {
+    return 'https://via.placeholder.com/300x450?text=No+Poster';
+  }
   return `${TMDB_IMAGE_BASE_URL}${posterPath}`;
 }
