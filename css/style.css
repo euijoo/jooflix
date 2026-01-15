@@ -79,6 +79,7 @@ header {
   display: flex;
   align-items: center;
   gap: 40px;
+  flex-shrink: 0; /* 줄어들지 않도록 */
 }
 
 .header-left .logo {
@@ -96,6 +97,7 @@ nav {
   text-decoration: none;
   font-size: 14px;
   transition: color 0.3s;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 .nav-link:hover,
@@ -107,6 +109,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-shrink: 0; /* 줄어들지 않도록 */
 }
 
 .btn-add {
@@ -117,7 +120,13 @@ nav {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
   display: none; /* 모바일에서 숨김 */
+  transition: all 0.3s;
+}
+
+.btn-add:hover {
+  background: var(--accent-hover);
 }
 
 .icon-btn {
@@ -126,197 +135,101 @@ nav {
   font-size: 20px;
   cursor: pointer;
   color: var(--text-primary);
+  padding: 5px;
+  transition: transform 0.2s;
+  flex-shrink: 0; /* 줄어들지 않도록 */
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
 }
 
 .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-}
-
-.btn-logout {
-  display: none;
-  background: transparent;
-  border: 1px solid var(--text-secondary);
-  color: var(--text-secondary);
-  padding: 5px 15px;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  flex-shrink: 0; /* 줄어들지 않도록 */
 }
 
-/* 컨테이너 */
-.container {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* 영화 그리드 */
-.section-title {
-  font-size: 20px;
-  margin-bottom: 20px;
-  padding-left: 5px;
-}
-
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 모바일: 2열 */
-  gap: 15px;
-}
-
-.movie-card {
-  background: var(--bg-card);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
-}
-
-.movie-card:hover {
+.avatar:hover {
+  border-color: var(--accent);
   transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }
 
-.movie-poster {
-  width: 100%;
-  aspect-ratio: 2/3;
-  object-fit: cover;
-  display: block;
+/* 로그아웃 버튼 완전히 제거 */
+.btn-logout {
+  display: none !important;
 }
 
-.movie-info {
-  padding: 12px;
+/* 작은 화면 (480px 미만) */
+@media (max-width: 479px) {
+  header {
+    padding: 10px 15px;
+  }
+  
+  .header-left {
+    gap: 20px;
+  }
+  
+  .header-left .logo {
+    font-size: 22px;
+  }
+  
+  .header-right {
+    gap: 10px;
+  }
+  
+  .icon-btn {
+    font-size: 18px;
+  }
 }
 
-.movie-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* 작은 모바일 (600px 미만) */
+@media (max-width: 599px) {
+  .btn-add {
+    display: none; /* + 영화 추가 버튼 숨김 */
+  }
 }
 
-.movie-year {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* 영화 카드 옵션 버튼 (⋮) */
-.movie-options {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.3);  /* 더 투명하게 */
-  border: none;
-  color: rgba(255, 255, 255, 0.5);  /* 텍스트도 투명하게 */
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 18px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.movie-card:hover .movie-options {
-  display: flex;
-}
-
-.movie-options:hover {
-  background: rgba(0, 0, 0, 0.8);  /* 호버 시 더 진하게 */
-  color: rgba(255, 255, 255, 1);
-}
-
-
-/* 모달 */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
-.modal-content {
-  background: var(--bg-secondary);
-  border-radius: var(--border-radius);
-  padding: 30px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-size: 30px;
-  cursor: pointer;
-  line-height: 1;
+/* 태블릿 (600px ~ 767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .btn-add {
+    display: block; /* + 영화 추가 버튼 표시 */
+    font-size: 13px;
+    padding: 6px 15px;
+  }
 }
 
 /* 태블릿 (768px 이상) */
 @media (min-width: 768px) {
   nav {
-    display: flex; /* 태블릿부터 메뉴 표시 */
+    display: flex; /* 메뉴 표시 */
   }
-
+  
   .btn-add {
-    display: block;
+    display: block; /* + 영화 추가 버튼 표시 */
   }
-
-  .btn-logout {
-    display: block;
-  }
-
-  .movie-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3열 */
+  
+  .header-right {
     gap: 20px;
-  }
-
-  .movie-title {
-    font-size: 16px;
-  }
-
-  .section-title {
-    font-size: 24px;
   }
 }
 
 /* 데스크톱 (1024px 이상) */
 @media (min-width: 1024px) {
-  .container {
-    padding: 40px;
+  header {
+    padding: 15px 40px;
   }
-
-  .movie-grid {
-    grid-template-columns: repeat(4, 1fr); /* 4열 */
-    gap: 25px;
-  }
-}
-
-/* 대형 데스크톱 (1440px 이상) */
-@media (min-width: 1440px) {
-  .movie-grid {
-    grid-template-columns: repeat(5, 1fr); /* 5열 */
+  
+  .btn-add {
+    padding: 8px 25px;
+    font-size: 15px;
   }
 }
+
 
 
 /* 검색 결과 */
