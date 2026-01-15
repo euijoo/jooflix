@@ -162,13 +162,13 @@ function displayMovies(movies) {
           </div>
           ${movie.externalVideoUrl ? `
             <div style="display: flex; gap: 6px; flex-shrink: 0;">
-              <button 
-                class="play-btn" 
-                onclick="event.stopPropagation(); window.open('${movie.externalVideoUrl}', '_blank')"
-                title="새 창에서 재생"
-                style="padding: 6px 10px; font-size: 11px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
-                🖥️ PC
-              </button>
+             <button 
+  class="play-btn" 
+  onclick="event.stopPropagation(); openVideoInNewTab('${movie.externalVideoUrl}')"
+  title="새 창에서 재생"
+  style="padding: 6px 10px; font-size: 11px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+  🖥️ PC
+</button>
               <button 
                 class="play-btn" 
                 onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl}')"
@@ -186,6 +186,15 @@ function displayMovies(movies) {
 
 // nPlayer로 재생하는 함수
 function playWithNPlayer(videoUrl) {
+
+  // 새 창에서 비디오 열기 (Referer 없이)
+function openVideoInNewTab(videoUrl) {
+  const newWindow = window.open('', '_blank');
+  newWindow.opener = null;
+  newWindow.location = videoUrl;
+}
+
+  
   // nPlayer URL 스킴
   const nplayerUrl = `nplayer-${videoUrl}`;
   
