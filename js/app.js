@@ -81,8 +81,3 @@ async function deleteMovie(movieId) {
     alert('영화 삭제에 실패했습니다.');
   }
 }
-
-
-  // TODO: 옵션 메뉴 구현
-  console.log('영화 옵션:', movieId);
-}
