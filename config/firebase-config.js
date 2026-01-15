@@ -1,9 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// Firebase 설정 (CDN 방식)
 const firebaseConfig = {
   apiKey: "AIzaSyBUKrd8fVGZlgpHH2y8EYbDanBIxx4iQdg",
   authDomain: "jooflix-6ecae.firebaseapp.com",
@@ -13,8 +8,8 @@ const firebaseConfig = {
   appId: "1:540634103488:web:46327f032162e7c445b725"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Firebase 초기화 (CDN 방식)
+firebase.initializeApp(firebaseConfig);
 
 // Firebase 서비스 초기화
 const auth = firebase.auth();
@@ -22,3 +17,5 @@ const db = firebase.firestore();
 
 // Google Auth Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+console.log('Firebase 초기화 완료!');
