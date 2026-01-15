@@ -3,7 +3,7 @@ let currentUser = null;
 
 // 허용된 사용자 이메일 리스트 (나중에 Firestore로 옮길 수 있음)
 const allowedEmails = [
-  'euijoojung@gmil.com',  // 여기에 당신의 구글 이메일 추가
+  'euijoojung@gmail.com',  // 여기에 당신의 구글 이메일 추가
   // 초대할 사람들 이메일 추가
 ];
 
