@@ -1,9 +1,9 @@
 // 현재 사용자
 let currentUser = null;
 
-// 허용된 사용자 이메일 리스트 (나중에 Firestore로 옮길 수 있음)
+// 허용된 사용자 이메일 리스트
 const allowedEmails = [
-  'euijoojung@gmail.com',  // 여기에 당신의 구글 이메일 추가
+  'euijoojung@gmail.com',
   // 초대할 사람들 이메일 추가
 ];
 
@@ -37,16 +37,7 @@ document.getElementById('google-login-btn').addEventListener('click', async () =
   }
 });
 
-// 로그아웃 (기존 코드 삭제 또는 주석 처리)
-// document.getElementById('logout-btn').addEventListener('click', async () => {
-//   try {
-//     await auth.signOut();
-//   } catch (error) {
-//     console.error('로그아웃 실패:', error);
-//   }
-// });
-
-// 로그아웃 확인 함수 (새로 추가)
+// 로그아웃 확인 함수
 async function confirmLogout() {
   const confirmed = confirm('로그아웃 하시겠습니까?');
   if (confirmed) {
