@@ -209,9 +209,9 @@ nav {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.3);  /* 더 투명하게 */
   border: none;
-  color: white;
+  color: rgba(255, 255, 255, 0.5);  /* 텍스트도 투명하게 */
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -220,11 +220,18 @@ nav {
   display: none;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
 .movie-card:hover .movie-options {
   display: flex;
 }
+
+.movie-options:hover {
+  background: rgba(0, 0, 0, 0.8);  /* 호버 시 더 진하게 */
+  color: rgba(255, 255, 255, 1);
+}
+
 
 /* 모달 */
 .modal {
