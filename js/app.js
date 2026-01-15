@@ -155,12 +155,55 @@ function displayMovies(movies) {
       <button class="movie-options" onclick="event.stopPropagation(); showMovieOptions('${movie.id}')">⋮</button>
       <img class="movie-poster" src="${getPosterUrl(movie.posterPath)}" alt="${movie.title}">
       <div class="movie-info">
-        <h3 class="movie-title">${movie.title}</h3>
-        <p class="movie-year">${movie.releaseDate ? movie.releaseDate.substring(0, 4) : ''}</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <div style="flex: 1; min-width: 0;">
+            <h3 class="movie-title" style="margin: 0;">${movie.title}</h3>
+            <p class="movie-year" style="margin: 4px 0 0 0;">${movie.releaseDate ? movie.releaseDate.substring(0, 4) : ''}</p>
+          </div>
+          ${movie.externalVideoUrl ? `
+            <div style="display: flex; gap: 6px; flex-shrink: 0;">
+              <button 
+                class="play-btn" 
+                onclick="event.stopPropagation(); window.open('${movie.externalVideoUrl}', '_blank')"
+                title="새 창에서 재생"
+                style="padding: 6px 10px; font-size: 11px; background: #e50914; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                🖥️ PC
+              </button>
+              <button 
+                class="play-btn" 
+                onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl}')"
+                title="nPlayer로 재생"
+                style="padding: 6px 10px; font-size: 11px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                📱 N
+              </button>
+            </div>
+          ` : ''}
+        </div>
       </div>
     </div>
   `).join('');
 }
+
+// nPlayer로 재생하는 함수
+function playWithNPlayer(videoUrl) {
+  // nPlayer URL 스킴
+  const nplayerUrl = `nplayer-${videoUrl}`;
+  
+  // iOS에서 nPlayer 실행 시도
+  window.location.href = nplayerUrl;
+  
+  // 만약 nPlayer가 설치되지 않았다면 안내 메시지
+  setTimeout(() => {
+    const install = confirm(
+      'nPlayer가 설치되어 있지 않은 것 같습니다.\n\n' +
+      'App Store에서 nPlayer를 다운로드하시겠습니까?'
+    );
+    if (install) {
+      window.open('https://apps.apple.com/app/nplayer/id1116905928', '_blank');
+    }
+  }, 2000);
+}
+
 
 // 영화 상세 모달 표시
 function showMovieDetail(movieId) {
