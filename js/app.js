@@ -184,16 +184,24 @@ function displayMovies(movies) {
   `).join('');
 }
 
-// nPlayer로 재생하는 함수
 function playWithNPlayer(videoUrl) {
-  // nPlayer URL 스킴
   const nplayerUrl = `nplayer-${videoUrl}`;
   
-  // iOS에서 nPlayer 실행
-  window.location.href = nplayerUrl;
+  // 임시 링크 생성
+  const link = document.createElement('a');
+  link.href = nplayerUrl;
+  link.style.display = 'none';
+  document.body.appendChild(link);
   
-  // setTimeout 제거 - nPlayer가 없으면 자연스럽게 실패함
+  // 클릭하여 nPlayer 실행
+  link.click();
+  
+  // 링크 제거
+  setTimeout(() => {
+    document.body.removeChild(link);
+  }, 100);
 }
+
 
 
 // 새 창에서 비디오 열기 (iOS/iPadOS 호환)
