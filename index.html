@@ -30,12 +30,13 @@
         </nav>
       </div>
       <div class="header-right">
-        <button id="search-btn" class="icon-btn">🔍</button>
-        <button id="add-movie-btn" class="btn-add">+ 영화 추가</button>
-        <div class="user-menu">
-          <img id="user-avatar" class="avatar" src="" alt="프로필">
-          <button id="logout-btn" class="btn-logout">로그아웃</button>
-        </div>
+  <button class="icon-btn" id="search-btn">🔍</button>
+  <button class="btn-add" id="add-movie-btn">+ 영화 추가</button>
+  <img class="avatar" id="user-avatar" src="" alt="프로필" 
+       onclick="confirmLogout()" 
+       style="cursor: pointer;" 
+       title="클릭하여 로그아웃">
+</div>
       </div>
     </header>
 
