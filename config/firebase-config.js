@@ -18,4 +18,4 @@ const db = firebase.firestore();
 // Google Auth Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-console.log('Firebase 초기화 완료!');
+console.log('✅ Firebase 초기화 완료!');
