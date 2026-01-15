@@ -1,4 +1,4 @@
-// Firebase 설정 (CDN 방식)
+// Firebase CDN 방식
 const firebaseConfig = {
   apiKey: "AIzaSyBUKrd8fVGZlgpHH2y8EYbDanBIxx4iQdg",
   authDomain: "jooflix-6ecae.firebaseapp.com",
@@ -11,11 +11,11 @@ const firebaseConfig = {
 // Firebase 초기화 (CDN 방식)
 firebase.initializeApp(firebaseConfig);
 
-// Firebase 서비스 초기화
+// Firebase 서비스
 const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Google Auth Provider
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-console.log('✅ Firebase 초기화 완료!');
+console.log('Firebase 초기화 완료!');
