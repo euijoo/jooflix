@@ -37,14 +37,27 @@ document.getElementById('google-login-btn').addEventListener('click', async () =
   }
 });
 
-// 로그아웃
-document.getElementById('logout-btn').addEventListener('click', async () => {
-  try {
-    await auth.signOut();
-  } catch (error) {
-    console.error('로그아웃 실패:', error);
+// 로그아웃 (기존 코드 삭제 또는 주석 처리)
+// document.getElementById('logout-btn').addEventListener('click', async () => {
+//   try {
+//     await auth.signOut();
+//   } catch (error) {
+//     console.error('로그아웃 실패:', error);
+//   }
+// });
+
+// 로그아웃 확인 함수 (새로 추가)
+async function confirmLogout() {
+  const confirmed = confirm('로그아웃 하시겠습니까?');
+  if (confirmed) {
+    try {
+      await auth.signOut();
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      alert('로그아웃에 실패했습니다.');
+    }
   }
-});
+}
 
 // 화면 전환
 function showAuthScreen() {
