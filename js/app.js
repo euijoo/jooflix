@@ -186,15 +186,6 @@ function displayMovies(movies) {
 
 // nPlayer로 재생하는 함수
 function playWithNPlayer(videoUrl) {
-
-  // 새 창에서 비디오 열기 (iOS/iPadOS 호환)
-function openVideoInNewTab(videoUrl) {
-  // iOS에서도 작동하도록 직접 URL을 window.open에 전달
-  window.open(videoUrl, '_blank', 'noopener,noreferrer');
-}
-
-
-  
   // nPlayer URL 스킴
   const nplayerUrl = `nplayer-${videoUrl}`;
   
@@ -213,6 +204,11 @@ function openVideoInNewTab(videoUrl) {
   }, 2000);
 }
 
+// 새 창에서 비디오 열기 (iOS/iPadOS 호환)
+function openVideoInNewTab(videoUrl) {
+  // iOS에서도 작동하도록 직접 URL을 window.open에 전달
+  window.open(videoUrl, '_blank', 'noopener,noreferrer');
+}
 
 // 영화 상세 모달 표시
 function showMovieDetail(movieId) {
