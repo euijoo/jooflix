@@ -22,21 +22,22 @@
 </head>
 <body>
 
-    <!-- ========== AUTH SCREEN ========== -->
+    <!-- ========== 인증 화면 ========== -->
     <div id="auth-screen" class="auth-screen">
         <div class="auth-container">
             <h1 class="auth-logo">jooflix</h1>
             <p class="auth-subtitle">나만의 영화 컬렉션을 만들어보세요</p>
             <button id="google-login-btn" class="btn btn-hover">
+                <i class='bx bxl-google'></i>
                 <span>Google로 시작하기</span>
             </button>
         </div>
     </div>
 
-    <!-- ========== MAIN SCREEN ========== -->
+    <!-- ========== 메인 화면 ========== -->
     <div id="main-screen" class="main-screen" style="display: none;">
         
-        <!-- Navigation -->
+        <!-- 네비게이션 -->
         <div class="nav-wrapper">
             <div class="container">
                 <div class="nav">
@@ -61,17 +62,17 @@
             </div>
         </div>
 
-        <!-- Hero Slide -->
+        <!-- 히어로 슬라이드 -->
         <div class="hero-slide">
             <div class="hero-carousel owl-carousel carousel-nav-center" id="hero-carousel">
-                <!-- Hero items will be dynamically loaded -->
+                <!-- 동적으로 로드됨 -->
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- 메인 컨텐츠 -->
         <div class="container">
             
-            <!-- My Collection Section -->
+            <!-- 내 컬렉션 섹션 -->
             <div class="section" id="my-collection">
                 <div class="section-header">
                     <span>내 영화 컬렉션</span>
@@ -81,7 +82,7 @@
                     </button>
                 </div>
                 <div class="movies-slide owl-carousel" id="movies-carousel">
-                    <!-- Movie items will be dynamically loaded -->
+                    <!-- 동적으로 로드됨 -->
                 </div>
             </div>
 
@@ -89,21 +90,13 @@
 
     </div>
 
-    <!-- ========== SEARCH MODAL ========== -->
+    <!-- ========== 검색 모달 ========== -->
     <div id="search-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <button class="modal-close">&times;</button>
             <h2>영화 검색</h2>
             <input type="text" id="movie-search-input" placeholder="영화 제목을 입력하세요..." class="search-input">
             <div id="search-results" class="search-results"></div>
-        </div>
-    </div>
-
-    <!-- ========== MOVIE DETAIL MODAL ========== -->
-    <div id="movie-detail-modal" class="modal" style="display: none;">
-        <div class="modal-content modal-large">
-            <button class="modal-close">&times;</button>
-            <div id="movie-detail-content"></div>
         </div>
     </div>
 
