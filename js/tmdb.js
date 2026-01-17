@@ -45,39 +45,29 @@ function getPosterUrl(posterPath) {
   }
   return `${TMDB_IMAGE_BASE_URL}${posterPath}`;
 }
-// ========== 예고편 가져오기 ==========
+// 영화 예고편 가져오기
 async function getMovieTrailer(movieId) {
     try {
-        // 한국어 예고편 시도
-        const response = await fetch(
-            `${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=ko-KR`
-        );
+        const response = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${2d4d8e48233af18b21fb939e508073b5}&language=ko-KR`);
         const data = await response.json();
         
-        const trailer = data.results.find(
-            video => video.type === 'Trailer' && video.site === 'YouTube'
+        // 한국어 예고편 찾기
+        let trailer = data.results.find(video => 
+            video.type === 'Trailer' && video.site === 'YouTube'
         );
         
-        if (trailer) {
-            return `https://www.youtube.com/watch?v=${trailer.key}`;
+        // 한국어 예고편이 없으면 영어로 다시 시도
+        if (!trailer) {
+            const enResponse = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${2d4d8e48233af18b21fb939e508073b5}&language=en-US`);
+            const enData = await enResponse.json();
+            trailer = enData.results.find(video => 
+                video.type === 'Trailer' && video.site === 'YouTube'
+            );
         }
         
-        // 한국어 없으면 영어 시도
-        const enResponse = await fetch(
-            `${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
-        );
-        const enData = await enResponse.json();
-        const enTrailer = enData.results.find(
-            video => video.type === 'Trailer' && video.site === 'YouTube'
-        );
-        
-        if (enTrailer) {
-            return `https://www.youtube.com/watch?v=${enTrailer.key}`;
-        }
-        
-        return null;
+        return trailer;
     } catch (error) {
-        console.error('예고편 오류:', error);
+        console.error('예고편 로드 오류:', error);
         return null;
     }
 }
