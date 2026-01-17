@@ -40,7 +40,13 @@ addMovieBtn.addEventListener('click', () => {
 
 document.querySelectorAll('.modal-close').forEach(btn => {
     btn.addEventListener('click', (e) => {
-        e.target.closest('.modal').style.display = 'none';
+        const modal = e.target.closest('.modal');
+        modal.style.display = 'none';
+        
+        // 비디오 모달이면 iframe 정리
+        if (modal.id === 'video-modal') {
+            document.getElementById('video-player').src = '';
+        }
     });
 });
 
@@ -48,6 +54,11 @@ document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
+            
+            // 비디오 모달이면 iframe 정리
+            if (modal.id === 'video-modal') {
+                document.getElementById('video-player').src = '';
+            }
         }
     });
 });
@@ -192,7 +203,7 @@ function displayHeroSlide(movie) {
                 </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
-                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+                        <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play-circle'></i><span>예고편</span>
                         </button>
                     ` : ''}
@@ -209,6 +220,7 @@ function displayHeroSlide(movie) {
         </div>
     `);
 }
+
 
 function getBackdropUrl(backdropPath) {
     if (!backdropPath) return 'https://via.placeholder.com/1920x1080?text=No+Image';
@@ -279,7 +291,29 @@ function goToHeroSlide(index) {
     }, 500);
 }
 
-// ========== 재생 ==========
+// ========== 비디오 재생 ==========
+function openVideoInModal(videoUrl) {
+    const videoModal = document.getElementById('video-modal');
+    const videoPlayer = document.getElementById('video-player');
+    
+    // YouTube URL을 embed 형식으로 변환
+    let embedUrl = videoUrl;
+    if (videoUrl.includes('youtube.com/watch')) {
+        const videoId = videoUrl.split('v=')[1].split('&')[0];
+        embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    } else if (videoUrl.includes('youtu.be/')) {
+        const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+        embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+    
+    videoPlayer.src = embedUrl;
+    videoModal.style.display = 'flex';
+}
+
+function openVideoInNewTab(videoUrl) {
+    window.open(videoUrl, '_blank', 'noopener,noreferrer');
+}
+
 function playWithNPlayer(videoUrl) {
     const link = document.createElement('a');
     link.href = `nplayer-${videoUrl}`;
@@ -287,10 +321,6 @@ function playWithNPlayer(videoUrl) {
     document.body.appendChild(link);
     link.click();
     setTimeout(() => document.body.removeChild(link), 100);
-}
-
-function openVideoInNewTab(videoUrl) {
-    window.open(videoUrl, '_blank', 'noopener,noreferrer');
 }
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
