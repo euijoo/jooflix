@@ -3,129 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <title>jooflix - 나만의 영화 컬렉션</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    
-    <!-- Owl Carousel CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    
-    <!-- Custom CSS -->
+    <title>JOOFLIX - Premium Movie Streaming</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- ========== 인증 화면 ========== -->
-    <div id="auth-screen" class="auth-screen">
-        <div class="auth-container">
-            <h1 class="auth-logo">jooflix</h1>
-            <p class="auth-subtitle">나만의 영화 컬렉션을 만들어보세요</p>
-            <button id="google-login-btn" class="btn btn-hover">
-                <i class='bx bxl-google'></i>
-                <span>Google로 시작하기</span>
+    <!-- Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <a href="#" class="logo">
+                        <span class="logo-text">JOOFLIX</span>
+                    </a>
+                    <ul class="nav-menu">
+                        <li><a href="#" class="nav-link active">홈</a></li>
+                        <li><a href="#" class="nav-link">영화</a></li>
+                        <li><a href="#" class="nav-link">TV 프로그램</a></li>
+                        <li><a href="#" class="nav-link">내가 찜한 콘텐츠</a></li>
+                    </ul>
+                    <div class="nav-right">
+                        <button class="search-btn" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div class="user-menu">
+                            <button class="user-btn" id="userBtn">
+                                <img src="https://via.placeholder.com/40" alt="User" class="user-avatar">
+                            </button>
+                            <div class="dropdown-menu" id="userDropdown">
+                                <a href="#" id="profileLink"><i class="fas fa-user"></i> 프로필</a>
+                                <a href="#" id="settingsLink"><i class="fas fa-cog"></i> 설정</a>
+                                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 로그아웃</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="제목, 배우, 장르로 검색...">
+                <button class="search-close" id="searchClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </header>
+    <!-- Hero Slider -->
+    <section class="hero-section">
+        <div class="hero-slider" id="heroSlider">
+            <!-- Slides will be dynamically generated -->
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn prev-btn" id="prevSlide">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="slider-btn next-btn" id="nextSlide">
+                <i class="fas fa-chevron-right"></i>
             </button>
         </div>
-    </div>
+        <div class="slider-indicators" id="sliderIndicators"></div>
+    </section>
 
-    <!-- ========== 메인 화면 ========== -->
-    <div id="main-screen" class="main-screen" style="display: none;">
-        
-        <!-- 네비게이션 -->
-        <div class="nav-wrapper">
-            <div class="container">
-                <div class="nav">
-                    <a href="#" class="logo">jooflix</a>
-                    <ul class="nav-menu" id="nav-menu">
-                        <li><a href="#" class="active">홈</a></li>
-                        <li><a href="#my-collection">내 컬렉션</a></li>
-                        <li>
-                            <button id="search-btn-nav" class="btn btn-hover">
-                                <i class='bx bx-search-alt'></i>
-                                <span>검색</span>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Trending Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">지금 뜨는 콘텐츠</h2>
+                    <a href="#" class="see-more">더보기 <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="movie-row" id="trendingRow">
+                    <!-- Movies will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Popular Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">인기 영화</h2>
+                    <a href="#" class="see-more">더보기 <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="movie-row" id="popularRow">
+                    <!-- Movies will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Top Rated Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">최고 평점</h2>
+                    <a href="#" class="see-more">더보기 <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="movie-row" id="topRatedRow">
+                    <!-- Movies will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Upcoming Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">개봉 예정</h2>
+                    <a href="#" class="see-more">더보기 <i class="fas fa-chevron-right"></i></a>
+                </div>
+                <div class="movie-row" id="upcomingRow">
+                    <!-- Movies will be dynamically loaded -->
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Movie Detail Modal -->
+    <div class="modal" id="movieModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-hero">
+                    <img src="" alt="" class="modal-backdrop" id="modalBackdrop">
+                    <div class="modal-hero-content">
+                        <h2 class="modal-title" id="modalTitle"></h2>
+                        <div class="modal-meta" id="modalMeta"></div>
+                        <div class="modal-actions">
+                            <button class="btn btn-primary" id="playBtn">
+                                <i class="fas fa-play"></i> 재생
                             </button>
-                        </li>
-                        <li>
-                            <img class="avatar" id="user-avatar" src="" alt="" onclick="confirmLogout()" title="로그아웃">
-                        </li>
-                    </ul>
-                    <div class="hamburger-menu" id="hamburger-menu">
-                        <div class="hamburger"></div>
+                            <button class="btn btn-secondary" id="trailerBtn">
+                                <i class="fas fa-film"></i> 예고편
+                            </button>
+                            <button class="btn btn-icon" id="addToListBtn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="btn btn-icon" id="likeBtn">
+                                <i class="far fa-thumbs-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-details">
+                    <div class="modal-overview">
+                        <h3>줄거리</h3>
+                        <p id="modalOverview"></p>
+                    </div>
+                    <div class="modal-info">
+                        <div class="info-item">
+                            <span class="info-label">출연:</span>
+                            <span class="info-value" id="modalCast"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">장르:</span>
+                            <span class="info-value" id="modalGenres"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">개봉:</span>
+                            <span class="info-value" id="modalRelease"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">평점:</span>
+                            <span class="info-value" id="modalRating"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-         <!-- 히어로 슬라이드 -->
-        <div class="hero-slide">
-            <div id="hero-carousel">
-                <!-- 동적으로 로드됨 -->
+    <!-- Video Player Modal -->
+    <div class="player-modal" id="playerModal">
+        <div class="player-overlay" id="playerOverlay"></div>
+        <div class="player-container">
+            <button class="player-close" id="playerClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="videoPlayer"></div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-overlay"></div>
+        <div class="auth-container">
+            <button class="auth-close" id="authClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="auth-content">
+                <h2 class="auth-title">JOOFLIX에 오신 것을 환영합니다</h2>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">로그인</button>
+                    <button class="auth-tab" data-tab="signup">회원가입</button>
+                </div>
+                <div class="auth-forms">
+                    <form class="auth-form active" id="loginForm">
+                        <input type="email" placeholder="이메일" required>
+                        <input type="password" placeholder="비밀번호" required>
+                        <button type="submit" class="auth-submit">로그인</button>
+                    </form>
+                    <form class="auth-form" id="signupForm">
+                        <input type="text" placeholder="이름" required>
+                        <input type="email" placeholder="이메일" required>
+                        <input type="password" placeholder="비밀번호" required>
+                        <button type="submit" class="auth-submit">회원가입</button>
+                    </form>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- 메인 컨텐츠 -->
+    <!-- Footer -->
+    <footer class="footer">
         <div class="container">
-            
-            <!-- 내 컬렉션 섹션 -->
-            <div class="section" id="my-collection">
-                <div class="section-header">
-                    <span>내 영화 컬렉션</span>
-                    <button id="add-movie-btn" class="btn btn-hover" style="margin-left: auto;">
-                        <i class='bx bx-plus'></i>
-                        <span>영화 추가</span>
-                    </button>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>JOOFLIX</h3>
+                    <p>최고의 영화 스트리밍 서비스</p>
                 </div>
-                <div class="movies-slide owl-carousel" id="movies-carousel">
-                    <!-- 동적으로 로드됨 -->
+                <div class="footer-section">
+                    <h4>링크</h4>
+                    <ul>
+                        <li><a href="#">고객센터</a></li>
+                        <li><a href="#">이용약관</a></li>
+                        <li><a href="#">개인정보처리방침</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>소셜</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
             </div>
-
-        </div>
-
-    </div>
-
-    <!-- ========== 검색 모달 ========== -->
-    <div id="search-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
-            <h2>영화 검색</h2>
-            <input type="text" id="movie-search-input" placeholder="영화 제목을 입력하세요..." class="search-input">
-            <div id="search-results" class="search-results"></div>
-        </div>
-    </div>
-
- <!-- ========== 비디오 모달 (예고편/영상) ========== -->
-    <div id="video-modal" class="modal" style="display: none;">
-        <div class="modal-content modal-video">
-            <button class="modal-close">&times;</button>
-            <div class="video-container">
-                <iframe id="video-player" src="" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JOOFLIX. All rights reserved.</p>
             </div>
         </div>
-    </div>
-    
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Owl Carousel JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    </footer>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <!-- Custom Scripts -->
-    <script src="config/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/tmdb.js"></script>
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/config.js"></script>
     <script src="js/app.js"></script>
-
 </body>
 </html>
