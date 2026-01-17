@@ -1,84 +1,128 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="no-referrer"> 
-  <title>jooflix - 나만의 영화 컬렉션</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>jooflix - 나만의 영화 컬렉션</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- 로그인 전 화면 -->
-  <div id="auth-screen" class="screen auth-container">
-    <div class="auth-container">
-      <h1 class="logo">jooflix</h1>
-      <p class="subtitle">나만의 영화 컬렉션</p>
-      <button id="google-login-btn" class="btn-primary">
-        <span>Google로 로그인</span>
-      </button>
-    </div>
-  </div>
 
-  <!-- 로그인 후 메인 화면 -->
-  <div id="main-screen" class="screen" style="display: none;">
-    <!-- 헤더 -->
-    <header>
-      <div class="header-left">
-        <h1 class="logo">jooflix</h1>
-        <nav>
-          <a href="#" class="nav-link active">홈</a>
-          <a href="#" class="nav-link">내 리스트</a>
-        </nav>
-      </div>
-      <div class="header-right">
-  <button class="icon-btn" id="search-btn">🔍</button>
-  <button class="btn-add" id="add-movie-btn">+ 영화 추가</button>
-  <img class="avatar" id="user-avatar" src="" alt="프로필" 
-       onclick="confirmLogout()" 
-       style="cursor: pointer;" 
-       title="클릭하여 로그아웃">
-</div>
-      </div>
-    </header>
-
-    <!-- 영화 검색 모달 -->
-    <div id="search-modal" class="modal" style="display: none;">
-      <div class="modal-content">
-        <button class="modal-close">&times;</button>
-        <h2>영화 검색</h2>
-        <input type="text" id="movie-search-input" placeholder="영화 제목을 입력하세요..." class="search-input">
-        <div id="search-results" class="search-results"></div>
-      </div>
-    </div>
-
-    <!-- 영화 상세 모달 -->
-    <div id="movie-detail-modal" class="modal" style="display: none;">
-      <div class="modal-content modal-large">
-        <button class="modal-close">&times;</button>
-        <div id="movie-detail-content"></div>
-      </div>
-    </div>
-
-    <!-- 영화 그리드 -->
-    <main class="container">
-      <section class="movie-section">
-        <h2 class="section-title">내가 추가한 영화</h2>
-        <div id="movies-grid" class="movie-grid">
-          <!-- 동적으로 영화 카드 추가 -->
+    <!-- ========== AUTH SCREEN ========== -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-container">
+            <h1 class="auth-logo">jooflix</h1>
+            <p class="auth-subtitle">나만의 영화 컬렉션을 만들어보세요</p>
+            <button id="google-login-btn" class="btn btn-hover">
+                <span>Google로 시작하기</span>
+            </button>
         </div>
-      </section>
-    </main>
-  </div>
+    </div>
 
-  <!-- Firebase SDK (CDN 방식) - 반드시 이 순서대로! -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- ========== MAIN SCREEN ========== -->
+    <div id="main-screen" class="main-screen" style="display: none;">
+        
+        <!-- Navigation -->
+        <div class="nav-wrapper">
+            <div class="container">
+                <div class="nav">
+                    <a href="#" class="logo">jooflix</a>
+                    <ul class="nav-menu" id="nav-menu">
+                        <li><a href="#" class="active">홈</a></li>
+                        <li><a href="#my-collection">내 컬렉션</a></li>
+                        <li>
+                            <button id="search-btn-nav" class="btn btn-hover">
+                                <i class='bx bx-search-alt'></i>
+                                <span>검색</span>
+                            </button>
+                        </li>
+                        <li>
+                            <img class="avatar" id="user-avatar" src="" alt="" onclick="confirmLogout()" title="로그아웃">
+                        </li>
+                    </ul>
+                    <div class="hamburger-menu" id="hamburger-menu">
+                        <div class="hamburger"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<!-- 앱 스크립트 - Firebase SDK 다음에 로드 -->
-<script src="config/firebase-config.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/tmdb.js"></script>
-<script src="js/app.js"></script>
+        <!-- Hero Slide -->
+        <div class="hero-slide">
+            <div class="hero-carousel owl-carousel carousel-nav-center" id="hero-carousel">
+                <!-- Hero items will be dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            
+            <!-- My Collection Section -->
+            <div class="section" id="my-collection">
+                <div class="section-header">
+                    <span>내 영화 컬렉션</span>
+                    <button id="add-movie-btn" class="btn btn-hover" style="margin-left: auto;">
+                        <i class='bx bx-plus'></i>
+                        <span>영화 추가</span>
+                    </button>
+                </div>
+                <div class="movies-slide owl-carousel" id="movies-carousel">
+                    <!-- Movie items will be dynamically loaded -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========== SEARCH MODAL ========== -->
+    <div id="search-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h2>영화 검색</h2>
+            <input type="text" id="movie-search-input" placeholder="영화 제목을 입력하세요..." class="search-input">
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- ========== MOVIE DETAIL MODAL ========== -->
+    <div id="movie-detail-modal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <button class="modal-close">&times;</button>
+            <div id="movie-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Owl Carousel JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Custom Scripts -->
+    <script src="config/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/tmdb.js"></script>
+    <script src="js/app.js"></script>
+
 </body>
 </html>
