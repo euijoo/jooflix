@@ -422,3 +422,58 @@ function playWithNPlayer(videoUrl) {
     link.click();
     setTimeout(() => document.body.removeChild(link), 100);
 }
+
+// ========== 예고편 재생 기능 ==========
+
+// 예고편 모달 열기
+async function playTrailer(movieId) {
+    const trailer = await getMovieTrailer(movieId);
+    
+    if (!trailer) {
+        alert('예고편을 찾을 수 없습니다.');
+        return;
+    }
+    
+    const videoModal = document.getElementById('video-modal');
+    const videoPlayer = document.getElementById('video-player');
+    
+    // YouTube 임베드 URL 생성 (autoplay 활성화)
+    videoPlayer.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0&modestbranding=1`;
+    videoModal.style.display = 'flex';
+}
+
+// 비디오 모달 닫기
+function closeVideoModal() {
+    const videoModal = document.getElementById('video-modal');
+    const videoPlayer = document.getElementById('video-player');
+    
+    videoPlayer.src = ''; // 비디오 정지
+    videoModal.style.display = 'none';
+}
+
+// 모달 닫기 이벤트 리스너
+document.addEventListener('DOMContentLoaded', () => {
+    const videoModal = document.getElementById('video-modal');
+    const modalCloses = document.querySelectorAll('.modal-close');
+    
+    // X 버튼으로 닫기
+    modalCloses.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const modal = e.target.closest('.modal');
+            if (modal && modal.id === 'video-modal') {
+                closeVideoModal();
+            }
+        });
+    });
+    
+    // 모달 외부 클릭시 닫기
+    if (videoModal) {
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+    }
+});
+
+
