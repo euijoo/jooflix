@@ -105,7 +105,7 @@ function displaySearchResults(movies) {
         </div>
     `).join('');
 }
-// ========== Firestore 추가 ==========
+// ========== Firestore 추가 (예고편 포함) ==========
 async function addMovieToCollection(movieId) {
     if (!currentUser) return;
     
@@ -115,6 +115,9 @@ async function addMovieToCollection(movieId) {
             alert('영화 정보를 가져올 수 없습니다.');
             return;
         }
+        
+        // 예고편 가져오기
+        const trailerUrl = await getMovieTrailer(movieId);
         
         await db.collection('movies').add({
             userId: currentUser.uid,
@@ -133,6 +136,7 @@ async function addMovieToCollection(movieId) {
                 profilePath: actor.profile_path
             })),
             externalVideoUrl: '',
+            trailerUrl: trailerUrl || '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
@@ -146,6 +150,7 @@ async function addMovieToCollection(movieId) {
         alert('추가 실패');
     }
 }
+
 
 // ========== Firestore 로드 ==========
 async function loadMovies() {
@@ -168,7 +173,7 @@ async function loadMovies() {
         console.error('로드 오류:', error);
     }
 }
-// ========== 히어로 슬라이드 ==========
+// ========== 히어로 슬라이드 (예고편 버튼 추가) ==========
 function displayHeroSlide(movies) {
     const heroCarousel = $('#hero-carousel');
     
@@ -205,6 +210,11 @@ function displayHeroSlide(movies) {
                     ${movie.overview ? movie.overview.substring(0, 200) + '...' : '줄거리 정보 없음'}
                 </div>
                 <div class="item-action top-down delay-8">
+                    ${movie.trailerUrl ? `
+                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.trailerUrl}')" style="background-color: #ff0000; border-color: #ff0000;">
+                            <i class='bx bx-play-circle'></i><span>예고편</span>
+                        </button>
+                    ` : ''}
                     ${movie.externalVideoUrl ? `
                         <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl}')">
                             <i class='bx bx-play'></i><span>재생</span>
@@ -234,7 +244,8 @@ function getBackdropUrl(backdropPath) {
     if (!backdropPath) return 'https://via.placeholder.com/1920x1080?text=No+Image';
     return `https://image.tmdb.org/t/p/original${backdropPath}`;
 }
-// ========== 영화 캐러셀 ==========
+
+// ========== 영화 캐러셀 (클릭 시 히어로 이동) ==========
 function displayMovies(movies) {
     const moviesCarousel = $('#movies-carousel');
     
@@ -252,8 +263,8 @@ function displayMovies(movies) {
     }
     
     moviesCarousel.trigger('destroy.owl.carousel');
-    moviesCarousel.html(movies.map(movie => `
-        <div class="movie-item">
+    moviesCarousel.html(movies.map((movie, index) => `
+        <div class="movie-item" onclick="goToHeroSlide(${index})">
             <button class="movie-options" onclick="event.stopPropagation(); showMovieOptions('${movie.id}')">⋮</button>
             <img class="movie-poster" src="${getPosterUrl(movie.posterPath)}" alt="${movie.title}">
             <div class="movie-item-content">
@@ -287,6 +298,19 @@ function displayMovies(movies) {
         }
     });
 }
+
+// ========== 히어로 슬라이드 이동 ==========
+function goToHeroSlide(index) {
+    // 최대 5개만 히어로에 표시되므로 범위 제한
+    const heroIndex = Math.min(index, 4);
+    $('#hero-carousel').trigger('to.owl.carousel', [heroIndex, 300]);
+    
+    // 히어로 영역으로 스크롤
+    $('html, body').animate({
+        scrollTop: $('.hero-slide').offset().top - 60
+    }, 500);
+}
+
 // ========== 재생 ==========
 function playWithNPlayer(videoUrl) {
     const link = document.createElement('a');
