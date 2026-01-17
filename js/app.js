@@ -1,4 +1,5 @@
-// ========== DOM 요소 ==========
+// ========== 전역 변수 ==========
+let allMovies = [];
 const searchModal = document.getElementById('search-modal');
 const searchBtnNav = document.getElementById('search-btn-nav');
 const addMovieBtn = document.getElementById('add-movie-btn');
@@ -7,36 +8,16 @@ const searchResults = document.getElementById('search-results');
 
 // ========== jQuery 초기화 ==========
 $(document).ready(function() {
-    // 햄버거 메뉴
     $('#hamburger-menu').click(function() {
         $(this).toggleClass('active');
         $('#nav-menu').toggleClass('active');
     });
     
-    // Owl Carousel 네비게이션
-    let navText = [
-        "<i class='bx bx-chevron-left'></i>", 
-        "<i class='bx bx-chevron-right'></i>"
-    ];
-    
-    // 히어로 캐러셀
-    $('#hero-carousel').owlCarousel({
-        items: 1,
-        dots: false,
-        loop: true,
-        nav: true,
-        navText: navText,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: true
-    });
-    
-    // 영화 캐러셀
     $('#movies-carousel').owlCarousel({
         items: 2,
         dots: false,
         nav: true,
-        navText: navText,
+        navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
         margin: 15,
         loop: false,
         responsive: {
@@ -70,7 +51,6 @@ document.querySelectorAll('.modal').forEach(modal => {
         }
     });
 });
-
 // ========== 검색 ==========
 let searchTimeout;
 searchInput.addEventListener('input', (e) => {
@@ -105,7 +85,7 @@ function displaySearchResults(movies) {
         </div>
     `).join('');
 }
-// ========== Firestore 추가 (예고편 포함) ==========
+// ========== Firestore 추가 ==========
 async function addMovieToCollection(movieId) {
     if (!currentUser) return;
     
@@ -116,7 +96,6 @@ async function addMovieToCollection(movieId) {
             return;
         }
         
-        // 예고편 가져오기
         const trailerUrl = await getMovieTrailer(movieId);
         
         await db.collection('movies').add({
@@ -140,7 +119,7 @@ async function addMovieToCollection(movieId) {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
-        alert(`${movieDetails.title} 추가 완료!`);
+        alert(`${movieDetails.title} 추가!`);
         searchModal.style.display = 'none';
         searchInput.value = '';
         searchResults.innerHTML = '';
@@ -150,7 +129,6 @@ async function addMovieToCollection(movieId) {
         alert('추가 실패');
     }
 }
-
 
 // ========== Firestore 로드 ==========
 async function loadMovies() {
@@ -162,23 +140,28 @@ async function loadMovies() {
             .orderBy('createdAt', 'desc')
             .get();
         
-        const movies = [];
+        allMovies = [];
         snapshot.forEach(doc => {
-            movies.push({ id: doc.id, ...doc.data() });
+            allMovies.push({ id: doc.id, ...doc.data() });
         });
         
-        displayMovies(movies);
-        displayHeroSlide(movies);
+        displayMovies(allMovies);
+        
+        if (allMovies.length > 0) {
+            const randomIndex = Math.floor(Math.random() * allMovies.length);
+            displayHeroSlide(allMovies[randomIndex]);
+        } else {
+            displayHeroSlide(null);
+        }
     } catch (error) {
         console.error('로드 오류:', error);
     }
 }
-// ========== 히어로 슬라이드 (예고편 버튼 추가) ==========
-function displayHeroSlide(movies) {
+// ========== 히어로 슬라이드 ==========
+function displayHeroSlide(movie) {
     const heroCarousel = $('#hero-carousel');
     
-    if (movies.length === 0) {
-        heroCarousel.trigger('destroy.owl.carousel');
+    if (!movie) {
         heroCarousel.html(`
             <div class="hero-slide-item">
                 <div class="hero-slide-item-content">
@@ -194,58 +177,44 @@ function displayHeroSlide(movies) {
         return;
     }
     
-    const heroMovies = movies.slice(0, 5);
-    heroCarousel.trigger('destroy.owl.carousel');
-    heroCarousel.html(heroMovies.map(movie => `
+    heroCarousel.html(`
         <div class="hero-slide-item">
             <img src="${getBackdropUrl(movie.backdropPath)}" alt="${movie.title}">
             <div class="hero-slide-item-content">
-                <h2 class="item-content-title top-down delay-2">${movie.title}</h2>
-                <div class="movie-infos top-down delay-4">
+                <h2 class="item-content-title">${movie.title}</h2>
+                <div class="movie-infos" style="margin-top: 20px;">
                     ${movie.releaseDate ? `<div class="movie-info"><i class='bx bx-calendar'></i><span>${movie.releaseDate.substring(0, 4)}</span></div>` : ''}
                     ${movie.runtime ? `<div class="movie-info"><i class='bx bx-time'></i><span>${movie.runtime}분</span></div>` : ''}
                     ${movie.genres && movie.genres.length > 0 ? `<div class="movie-info"><i class='bx bx-category'></i><span>${movie.genres[0].name}</span></div>` : ''}
                 </div>
-                <div class="item-content-description top-down delay-6">
-                    ${movie.overview ? movie.overview.substring(0, 200) + '...' : '줄거리 정보 없음'}
+                <div class="item-content-description" style="margin-top: 20px;">
+                    ${movie.overview ? (movie.overview.length > 200 ? movie.overview.substring(0, 200) + '...' : movie.overview) : '줄거리 정보 없음'}
                 </div>
-                <div class="item-action top-down delay-8">
+                <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
-                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.trailerUrl}')" style="background-color: #ff0000; border-color: #ff0000;">
+                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.trailerUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play-circle'></i><span>예고편</span>
                         </button>
                     ` : ''}
                     ${movie.externalVideoUrl ? `
-                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl}')">
+                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play'></i><span>재생</span>
                         </button>
-                        <button class="btn btn-hover" onclick="playWithNPlayer('${movie.externalVideoUrl}')" style="background-color: #0078d4; border-color: #0078d4;">
+                        <button class="btn btn-hover" onclick="playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-movie'></i><span>nPlayer</span>
                         </button>
                     ` : ''}
                 </div>
             </div>
         </div>
-    `).join(''));
-    
-    heroCarousel.owlCarousel({
-        items: 1,
-        dots: false,
-        loop: true,
-        nav: true,
-        navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: true
-    });
+    `);
 }
 
 function getBackdropUrl(backdropPath) {
     if (!backdropPath) return 'https://via.placeholder.com/1920x1080?text=No+Image';
     return `https://image.tmdb.org/t/p/original${backdropPath}`;
 }
-
-// ========== 영화 캐러셀 (클릭 시 히어로 이동) ==========
+// ========== 영화 캐러셀 ==========
 function displayMovies(movies) {
     const moviesCarousel = $('#movies-carousel');
     
@@ -272,10 +241,10 @@ function displayMovies(movies) {
                 <p class="movie-item-year">${movie.releaseDate ? movie.releaseDate.substring(0, 4) : ''}</p>
                 ${movie.externalVideoUrl ? `
                     <div class="movie-item-actions">
-                        <button class="btn btn-hover" onclick="event.stopPropagation(); openVideoInNewTab('${movie.externalVideoUrl}')">
+                        <button class="btn btn-hover" onclick="event.stopPropagation(); openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play'></i><span>PC</span>
                         </button>
-                        <button class="btn btn-hover" onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl}')" style="background-color: #0078d4; border-color: #0078d4;">
+                        <button class="btn btn-hover" onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-movie'></i><span>N</span>
                         </button>
                     </div>
@@ -298,14 +267,13 @@ function displayMovies(movies) {
         }
     });
 }
-
-// ========== 히어로 슬라이드 이동 ==========
+// ========== 히어로 이동 ==========
 function goToHeroSlide(index) {
-    // 최대 5개만 히어로에 표시되므로 범위 제한
-    const heroIndex = Math.min(index, 4);
-    $('#hero-carousel').trigger('to.owl.carousel', [heroIndex, 300]);
+    if (!allMovies || index >= allMovies.length) return;
     
-    // 히어로 영역으로 스크롤
+    const selectedMovie = allMovies[index];
+    displayHeroSlide(selectedMovie);
+    
     $('html, body').animate({
         scrollTop: $('.hero-slide').offset().top - 60
     }, 500);
@@ -324,7 +292,6 @@ function playWithNPlayer(videoUrl) {
 function openVideoInNewTab(videoUrl) {
     window.open(videoUrl, '_blank', 'noopener,noreferrer');
 }
-
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
     const movie = await getMovieData(movieId);
@@ -345,14 +312,13 @@ async function showMovieOptions(movieId) {
     }
 }
 
-// ========== Firestore 함수들 ==========
 async function getMovieData(movieId) {
     try {
         const doc = await db.collection('movies').doc(movieId).get();
         if (doc.exists) return { id: doc.id, ...doc.data() };
         return null;
     } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        console.error('데이터 오류:', error);
         return null;
     }
 }
@@ -373,7 +339,7 @@ async function updateMovieVideoUrl(movieId, videoUrl) {
 async function deleteMovie(movieId) {
     try {
         await db.collection('movies').doc(movieId).delete();
-        alert('영화 삭제 완료');
+        alert('삭제 완료');
         loadMovies();
     } catch (error) {
         console.error('삭제 오류:', error);
