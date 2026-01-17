@@ -296,18 +296,46 @@ function openVideoInModal(videoUrl) {
     const videoModal = document.getElementById('video-modal');
     const videoPlayer = document.getElementById('video-player');
     
-    // YouTube URL을 embed 형식으로 변환
-    let embedUrl = videoUrl;
-    if (videoUrl.includes('youtube.com/watch')) {
-        const videoId = videoUrl.split('v=')[1].split('&')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    } else if (videoUrl.includes('youtu.be/')) {
-        const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-        embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    if (!videoUrl) {
+        alert('영상 URL이 없습니다.');
+        return;
     }
     
-    videoPlayer.src = embedUrl;
-    videoModal.style.display = 'flex';
+    let embedUrl = '';
+    
+    try {
+        // YouTube URL 파싱
+        if (videoUrl.includes('youtube.com/watch?v=')) {
+            const url = new URL(videoUrl);
+            const videoId = url.searchParams.get('v');
+            if (videoId) {
+                embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            }
+        } else if (videoUrl.includes('youtu.be/')) {
+            const videoId = videoUrl.split('youtu.be/')[1].split('?')[0].split('/')[0];
+            if (videoId) {
+                embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            }
+        } else if (videoUrl.includes('youtube.com/embed/')) {
+            // 이미 embed URL인 경우
+            embedUrl = videoUrl;
+        } else {
+            // 다른 비디오 URL
+            embedUrl = videoUrl;
+        }
+        
+        if (!embedUrl) {
+            alert('올바른 YouTube URL이 아닙니다.');
+            return;
+        }
+        
+        videoPlayer.src = embedUrl;
+        videoModal.style.display = 'flex';
+        
+    } catch (error) {
+        console.error('URL 파싱 오류:', error);
+        alert('영상을 불러올 수 없습니다.');
+    }
 }
 
 function openVideoInNewTab(videoUrl) {
@@ -322,6 +350,7 @@ function playWithNPlayer(videoUrl) {
     link.click();
     setTimeout(() => document.body.removeChild(link), 100);
 }
+
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
     const movie = await getMovieData(movieId);
