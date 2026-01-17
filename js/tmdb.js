@@ -48,7 +48,8 @@ function getPosterUrl(posterPath) {
 // 영화 예고편 가져오기
 async function getMovieTrailer(movieId) {
     try {
-        const response = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${2d4d8e48233af18b21fb939e508073b5}&language=ko-KR`);
+        // 한국어 예고편 먼저 시도
+        const response = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=ko-KR`);
         const data = await response.json();
         
         // 한국어 예고편 찾기
@@ -58,14 +59,14 @@ async function getMovieTrailer(movieId) {
         
         // 한국어 예고편이 없으면 영어로 다시 시도
         if (!trailer) {
-            const enResponse = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${2d4d8e48233af18b21fb939e508073b5}&language=en-US`);
+            const enResponse = await fetch(`${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`);
             const enData = await enResponse.json();
             trailer = enData.results.find(video => 
                 video.type === 'Trailer' && video.site === 'YouTube'
             );
         }
         
-        return trailer;
+        return trailer ? trailer.key : null;
     } catch (error) {
         console.error('예고편 로드 오류:', error);
         return null;
