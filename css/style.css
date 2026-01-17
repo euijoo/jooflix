@@ -746,15 +746,15 @@ button {
 }
 
 .btn-small {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
 }
 
-.movie-item-buttons {
+.movie-item-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 
