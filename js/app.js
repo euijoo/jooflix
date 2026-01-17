@@ -107,7 +107,9 @@ async function addMovieToCollection(movieId) {
             return;
         }
         
-        const trailerUrl = await getMovieTrailer(movieId);
+        // ✅ trailerKey를 받아서 전체 URL로 변환
+        const trailerKey = await getMovieTrailer(movieId);
+        const trailerUrl = trailerKey ? `https://www.youtube.com/watch?v=${trailerKey}` : '';
         
         await db.collection('movies').add({
             userId: currentUser.uid,
@@ -126,7 +128,7 @@ async function addMovieToCollection(movieId) {
                 profilePath: actor.profile_path
             })),
             externalVideoUrl: '',
-            trailerUrl: trailerUrl || '',
+            trailerUrl: trailerUrl,  // ✅ 전체 URL 저장
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
@@ -140,6 +142,7 @@ async function addMovieToCollection(movieId) {
         alert('추가 실패');
     }
 }
+
 
 // ========== Firestore 로드 ==========
 async function loadMovies() {
@@ -249,19 +252,27 @@ function displayMovies(movies) {
             <button class="movie-options" onclick="event.stopPropagation(); showMovieOptions('${movie.id}')">⋮</button>
             <img class="movie-poster" src="${getPosterUrl(movie.posterPath)}" alt="${movie.title}">
             <div class="movie-item-content">
-                <h3 class="movie-item-title">${movie.title}</h3>
-                <p class="movie-item-year">${movie.releaseDate ? movie.releaseDate.substring(0, 4) : ''}</p>
-                ${movie.externalVideoUrl ? `
-                    <div class="movie-item-actions">
-                        <button class="btn btn-hover" onclick="event.stopPropagation(); openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
-                            <i class='bx bx-play'></i><span>PC</span>
-                        </button>
-                        <button class="btn btn-hover" onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
-                            <i class='bx bx-movie'></i><span>N</span>
-                        </button>
-                    </div>
-                ` : ''}
-            </div>
+    <h3 class="movie-item-title">${movie.title}</h3>
+    <p class="movie-item-year">${movie.releaseDate ? movie.releaseDate.substring(0, 4) : ''}</p>
+    <div class="movie-item-actions">
+        ${movie.trailerUrl ? `
+            <button class="btn btn-hover btn-small" onclick="event.stopPropagation(); openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+                <i class='bx bx-play-circle'></i><span>예고편</span>
+            </button>
+        ` : movie.tmdbId ? `
+            <button class="btn btn-hover btn-small" onclick="event.stopPropagation(); playTrailer(${movie.tmdbId})">
+                <i class='bx bx-play-circle'></i><span>예고편</span>
+            </button>
+        ` : ''}
+        ${movie.externalVideoUrl ? `
+            <button class="btn btn-hover btn-small" onclick="event.stopPropagation(); openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                <i class='bx bx-play'></i><span>PC</span>
+            </button>
+            <button class="btn btn-hover btn-small" onclick="event.stopPropagation(); playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                <i class='bx bx-movie'></i><span>N</span>
+            </button>
+        ` : ''}
+    </div>
         </div>
     `).join(''));
     
@@ -398,17 +409,6 @@ async function deleteMovie(movieId) {
 }
 
 
-async function deleteMovie(movieId) {
-    try {
-        await db.collection('movies').doc(movieId).delete();
-        alert('삭제 완료');
-        loadMovies();
-    } catch (error) {
-        console.error('삭제 오류:', error);
-        alert('삭제 실패');
-    }
-}
-
 // ========== 영상 재생 함수들 ==========
 function openVideoInNewTab(videoUrl) {
     window.open(videoUrl, '_blank', 'noopener,noreferrer');
@@ -427,9 +427,9 @@ function playWithNPlayer(videoUrl) {
 
 // 예고편 모달 열기
 async function playTrailer(movieId) {
-    const trailer = await getMovieTrailer(movieId);
+    const trailerKey = await getMovieTrailer(movieId);
     
-    if (!trailer) {
+    if (!trailerKey) {  // ✅ trailerKey로 수정
         alert('예고편을 찾을 수 없습니다.');
         return;
     }
@@ -437,8 +437,7 @@ async function playTrailer(movieId) {
     const videoModal = document.getElementById('video-modal');
     const videoPlayer = document.getElementById('video-player');
     
-    // YouTube 임베드 URL 생성 (autoplay 활성화)
-    videoPlayer.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0&modestbranding=1`;
+    videoPlayer.src = `https://www.youtube-nocookie.com/embed/${trailerKey}?autoplay=1&rel=0&modestbranding=1`;
     videoModal.style.display = 'flex';
 }
 
