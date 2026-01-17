@@ -45,3 +45,39 @@ function getPosterUrl(posterPath) {
   }
   return `${TMDB_IMAGE_BASE_URL}${posterPath}`;
 }
+// ========== 예고편 정보 가져오기 ==========
+async function getMovieTrailer(movieId) {
+    try {
+        const response = await fetch(
+            `${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=ko-KR`
+        );
+        const data = await response.json();
+        
+        // YouTube 예고편 찾기
+        const trailer = data.results.find(
+            video => video.type === 'Trailer' && video.site === 'YouTube'
+        );
+        
+        if (trailer) {
+            return `https://www.youtube.com/watch?v=${trailer.key}`;
+        }
+        
+        // 한국어 없으면 영어 시도
+        const enResponse = await fetch(
+            `${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        const enData = await enResponse.json();
+        const enTrailer = enData.results.find(
+            video => video.type === 'Trailer' && video.site === 'YouTube'
+        );
+        
+        if (enTrailer) {
+            return `https://www.youtube.com/watch?v=${enTrailer.key}`;
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('예고편 가져오기 오류:', error);
+        return null;
+    }
+}
