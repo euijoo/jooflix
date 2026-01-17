@@ -45,15 +45,15 @@ function getPosterUrl(posterPath) {
   }
   return `${TMDB_IMAGE_BASE_URL}${posterPath}`;
 }
-// ========== 예고편 정보 가져오기 ==========
+// ========== 예고편 가져오기 ==========
 async function getMovieTrailer(movieId) {
     try {
+        // 한국어 예고편 시도
         const response = await fetch(
             `${TMDB_BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=ko-KR`
         );
         const data = await response.json();
         
-        // YouTube 예고편 찾기
         const trailer = data.results.find(
             video => video.type === 'Trailer' && video.site === 'YouTube'
         );
@@ -77,7 +77,7 @@ async function getMovieTrailer(movieId) {
         
         return null;
     } catch (error) {
-        console.error('예고편 가져오기 오류:', error);
+        console.error('예고편 오류:', error);
         return null;
     }
 }
