@@ -702,11 +702,11 @@ button {
     }
 }
 
-/* ========== 비디오 모달 ========== */
+/* 비디오 모달 스타일 */
 .modal-video {
-    max-width: 900px;
+    max-width: 1000px;
     padding: 0;
-    background-color: #000;
+    background: transparent;
 }
 
 .video-container {
@@ -714,6 +714,8 @@ button {
     padding-bottom: 56.25%; /* 16:9 비율 */
     height: 0;
     overflow: hidden;
+    background: #000;
+    border-radius: 8px;
 }
 
 .video-container iframe {
@@ -730,14 +732,29 @@ button {
     right: 0;
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    border-radius: 50%;
+    border: none;
     width: 35px;
     height: 35px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
     z-index: 10;
 }
 
 .modal-video .modal-close:hover {
-    background: var(--main-color);
+    background: var(--accent);
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.movie-item-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
 }
 
 
