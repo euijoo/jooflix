@@ -396,3 +396,29 @@ async function deleteMovie(movieId) {
         alert('삭제 실패');
     }
 }
+
+
+async function deleteMovie(movieId) {
+    try {
+        await db.collection('movies').doc(movieId).delete();
+        alert('삭제 완료');
+        loadMovies();
+    } catch (error) {
+        console.error('삭제 오류:', error);
+        alert('삭제 실패');
+    }
+}
+
+// ========== 영상 재생 함수들 ==========
+function openVideoInNewTab(videoUrl) {
+    window.open(videoUrl, '_blank', 'noopener,noreferrer');
+}
+
+function playWithNPlayer(videoUrl) {
+    const link = document.createElement('a');
+    link.href = `nplayer-${videoUrl}`;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => document.body.removeChild(link), 100);
+}
