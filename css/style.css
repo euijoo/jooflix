@@ -26,6 +26,10 @@ body {
     background-color: var(--body-bg);
     color: var(--text-color);
     line-height: 1.6;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -92,6 +96,7 @@ button {
     background-color: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
 }
 
 .nav {
@@ -237,10 +242,15 @@ button {
     transform: rotate(-45deg);
     bottom: 0;
 }
+
 /* ========== HERO SLIDE ========== */
 .hero-slide {
-    margin-top: 0;
-    padding-top: var(--nav-height);
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
 .hero-slide-item {
@@ -380,9 +390,18 @@ button {
     visibility: visible;
     opacity: 1;
 }
+
 /* ========== SECTION ========== */
 .section {
     padding: 80px 0;
+}
+
+#my-collection {
+    margin-top: calc(var(--nav-height) + 40vw);
+    height: calc(100vh - var(--nav-height) - 40vw);
+    overflow-y: auto;
+    padding-top: 20px;
+    flex: 1;
 }
 
 .section-header {
@@ -604,6 +623,7 @@ button {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 /* ========== RESPONSIVE ========== */
 @media only screen and (max-width: 1280px) {
     html {
@@ -616,6 +636,11 @@ button {
     
     .item-content-title {
         font-size: 3rem;
+    }
+    
+    #my-collection {
+        margin-top: calc(var(--nav-height) + 50vw);
+        height: calc(100vh - var(--nav-height) - 50vw);
     }
 }
 
@@ -676,6 +701,11 @@ button {
     
     .section-header button {
         margin-left: 0 !important;
+    }
+    
+    #my-collection {
+        margin-top: calc(var(--nav-height) + 60vw);
+        height: calc(100vh - var(--nav-height) - 60vw);
     }
 }
 
