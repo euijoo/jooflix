@@ -66,7 +66,7 @@ async function getMovieTrailer(movieId) {
             );
         }
         
-        return trailer ? trailer.key : null;
+        return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
     } catch (error) {
         console.error('예고편 로드 오류:', error);
         return null;
