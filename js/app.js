@@ -202,8 +202,9 @@ function displayHeroSlide(movie) {
                     ${movie.overview ? (movie.overview.length > 200 ? movie.overview.substring(0, 200) + '...' : movie.overview) : '줄거리 정보 없음'}
                 </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
-                    ${movie.trailerUrl ? `
-    <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+                    $movie.trailerUrl
+  ? `<button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')"> ... `
+  : ''
         <i class='bx bx-play-circle'></i><span>예고편</span>
     </button>
 ` : ''}
@@ -291,56 +292,59 @@ function goToHeroSlide(index) {
     }, 500);
 }
 
-// ========== 비디오 재생 ==========
 function openVideoInModal(videoUrl) {
-    const videoModal = document.getElementById('video-modal');
-    const videoPlayer = document.getElementById('video-player');
-    
-    console.log('원본 URL:', videoUrl);
-    
-    if (!videoUrl) {
-        alert('영상 URL이 없습니다.');
-        return;
+  const videoModal = document.getElementById('video-modal');
+  const videoPlayer = document.getElementById('video-player');
+
+  console.log('원본 URL:', videoUrl);
+
+  if (!videoUrl) {
+    alert('영상 URL이 없습니다.');
+    return;
+  }
+
+  let embedUrl = '';
+
+  try {
+    if (videoUrl.includes('youtube.com/watch?v=')) {
+      const url = new URL(videoUrl);
+      const videoId = url.searchParams.get('v');
+      if (videoId) {
+        embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+      }
+    } else if (videoUrl.includes('youtu.be/')) {
+      const videoId = videoUrl.split('youtu.be/')[1].split('?')[0].split('/')[0];
+      if (videoId) {
+        embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+      }
+    } else if (videoUrl.includes('youtube.com/embed/')) {
+      embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
+    } else {
+      // ✅ 여기가 핵심: 그냥 videoId만 온 경우
+      // 알파벳/숫자 11자 정도면 YouTube ID라고 보고 처리
+      if (/^[a-zA-Z0-9_-]{6,15}$/.test(videoUrl)) {
+        embedUrl = `https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1&rel=0&modestbranding=1`;
+      } else {
+        embedUrl = videoUrl;
+      }
     }
-    
-    let embedUrl = '';
-    
-    try {
-        // YouTube URL 파싱
-        if (videoUrl.includes('youtube.com/watch?v=')) {
-            const url = new URL(videoUrl);
-            const videoId = url.searchParams.get('v');
-            console.log('추출된 비디오 ID:', videoId);
-            if (videoId) {
-                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            }
-        } else if (videoUrl.includes('youtu.be/')) {
-            const videoId = videoUrl.split('youtu.be/')[1].split('?')[0].split('/')[0];
-            console.log('추출된 비디오 ID:', videoId);
-            if (videoId) {
-                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            }
-        } else if (videoUrl.includes('youtube.com/embed/')) {
-            embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
-        } else {
-            embedUrl = videoUrl;
-        }
-        
-        console.log('최종 embed URL:', embedUrl);
-        
-        if (!embedUrl) {
-            alert('올바른 YouTube URL이 아닙니다.');
-            return;
-        }
-        
-        videoPlayer.src = embedUrl;
-        videoModal.style.display = 'flex';
-        
-    } catch (error) {
-        console.error('URL 파싱 오류:', error);
-        alert('영상을 불러올 수 없습니다: ' + error.message);
+
+    console.log('최종 embed URL:', embedUrl);
+
+    if (!embedUrl) {
+      alert('올바른 YouTube URL이 아닙니다.');
+      return;
     }
+
+    videoPlayer.src = embedUrl;
+    videoModal.style.display = 'flex';
+
+  } catch (error) {
+    console.error('URL 파싱 오류:', error);
+    alert('영상을 불러올 수 없습니다: ' + error.message);
+  }
 }
+
 
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
