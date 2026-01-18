@@ -210,10 +210,10 @@ function displayHeroSlide(movie) {
         <i class='bx bx-play-circle'></i><span>Trailer</span>
     </button>
 ` : ''}
-                    ${movie.externalVideoUrl ? `
-                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                    ${movie.externalVideoUrl ? class="btn btn-hover btn-trailer"
+                        <button class="btn class="btn btn-hover btn-play"-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                         <i class='bx bx-play'></i><span>Play</span>                        </button>
-                        <button class="btn btn-hover" onclick="playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                        <button class="btn class="btn btn-hover btn-nplayer"-hover" onclick="playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-movie'></i><span>NPlayer</span>
                         </button>
                     ` : ''}
