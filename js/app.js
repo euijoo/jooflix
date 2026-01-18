@@ -75,8 +75,7 @@ $(document).ready(function() {
             displaySearchResults(results);
         } catch (error) {
             console.error('검색 오류:', error);
-            searchResults.innerHTML = '<p class="error">검색 중 오류가 발생했습니다.</p>';
-        }
+const results = await searchMovies(query);        }
     });
 
     // 초기 로드
@@ -193,7 +192,8 @@ function displayMovies(movies) {
 }
 
 // ========== 트레일러 재생 ==========
-async function playTrailer(movieId) {
+async 209
+    (movieId) {
     try {
         const videos = await tmdbAPI.getMovieVideos(movieId);
         const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
@@ -207,7 +207,7 @@ async function playTrailer(movieId) {
                 return;
             }
 
-            document.getElementById('video-player').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
+            document.getElementById('video-player').src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0&enablejsapi=1&modestbranding=1&origin=${window.location.origin}`;
             document.getElementById('video-modal').style.display = 'flex';
         } else {
             alert('트레일러를 찾을 수 없습니다.');
