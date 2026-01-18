@@ -349,6 +349,19 @@ button {
     transform: scale(1.05);
 }
 
+
+/* 각 버튼 색상 */
+.btn-trailer {
+    background-color: #e50914;
+}
+
+.btn-play {
+    background-color: #0080ff;
+}
+
+.btn-nplayer {
+    background-color: #00b894;
+}
 /* ========== OWL CAROUSEL ========== */
 .carousel-nav-center {
     position: relative;
