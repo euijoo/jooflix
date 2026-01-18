@@ -324,6 +324,7 @@ button {
     display: flex;
     gap: 15px;
         justify-content: flex-start;
+        margin-top: 10px;
 }
 
 /* ========== OWL CAROUSEL ========== */
