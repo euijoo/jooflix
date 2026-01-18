@@ -1,6 +1,64 @@
 // ========== 전역 변수 ==========
 let allMovies = [];
 
+// ========== loadMoviesFromDB 함수를 먼저 정의 ==========
+async function loadMoviesFromDB() {
+    try {
+        allMovies = await db.getMovies();
+        displayMovies(allMovies);
+    } catch (error) {
+        console.error('영화 불러오기 오류:', error);
+    }
+}
+
+// ========== displayMovies 함수 정의 ==========
+function displayMovies(movies) {
+    const moviesContainer = document.getElementById('movies-carousel');
+    moviesContainer.innerHTML = '';
+
+    if (movies.length === 0) {
+        moviesContainer.innerHTML = '<p class="no-movies">커석션에 영화가 없습니다. 영화를 추가해보세요!</p>';
+        return;
+    }
+
+    movies.forEach(movie => {
+        const movieCard = document.createElement('div');
+        movieCard.className = 'movie-card';
+        movieCard.innerHTML = `
+            <img src="${movie.poster}" alt="${movie.title}">
+            <div class="movie-overlay">
+                <h3>${movie.title}</h3>
+                <p>${movie.year} · ⭐${movie.rating}</p>
+                <div class="movie-actions">
+                    <button class="btn-play" onclick="playTrailer(${movie.id})">
+                        <i class='bx bx-play'></i>
+                    </button>
+                    <button class="btn-delete" onclick="deleteMovie('${movie.id}')">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        moviesContainer.appendChild(movieCard);
+    });
+
+    // 캐러셀 재초기화
+    $('#movies-carousel').trigger('destroy.owl.carousel');
+    $('#movies-carousel').owlCarousel({
+        items: 2,
+        dots: false,
+        nav: true,
+        navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
+        margin: 15,
+        loop: false,
+        responsive: {
+            500: { items: 3 },
+            1280: { items: 4 },
+            1600: { items: 6 }
+        }
+    });
+}
+
 // ========== jQuery 초기화 ==========
 $(document).ready(function() {
     // DOM 요소 선택
@@ -9,6 +67,23 @@ $(document).ready(function() {
     const addMovieBtn = document.getElementById('add-movie-btn');
     const searchInput = document.getElementById('movie-search-input');
     const searchResults = document.getElementById('search-results');
+
+    console.log('DOM Elements:', {
+        searchModal,
+        searchBtnNav,
+        addMovieBtn,
+        searchInput,
+        searchResults
+    });
+
+    if (!searchBtnNav) {
+        console.error('search-btn-nav element not found!');
+        return;
+    }
+    if (!addMovieBtn) {
+        console.error('add-movie-btn element not found!');
+        return;
+    }
 
     // ========== 햄버거 메뉴 ==========
     $('#hamburger-menu').click(function() {
@@ -33,11 +108,13 @@ $(document).ready(function() {
 
     // ========== 모달 제어 ==========
     searchBtnNav.addEventListener('click', () => {
+        console.log('Search button clicked!');
         searchModal.style.display = 'flex';
         searchInput.focus();
     });
 
     addMovieBtn.addEventListener('click', () => {
+        console.log('Add movie button clicked!');
         searchModal.style.display = 'flex';
         searchInput.focus();
     });
@@ -80,6 +157,7 @@ $(document).ready(function() {
     });
 
     // 초기 로드
+    console.log('Loading movies from DB...');
     loadMoviesFromDB();
 });
 
@@ -132,64 +210,6 @@ async function addMovieToCollection(movie) {
         console.error('영화 추가 오류:', error);
         alert('영화 추가에 실패했습니다.');
     }
-}
-
-// ========== DB에서 영화 목록 불러오기 ==========
-async function loadMoviesFromDB() {
-    try {
-        allMovies = await db.getMovies();
-        displayMovies(allMovies);
-    } catch (error) {
-        console.error('영화 불러오기 오류:', error);
-    }
-}
-
-// ========== 영화 표시 ==========
-function displayMovies(movies) {
-    const moviesContainer = document.getElementById('movies-carousel');
-    moviesContainer.innerHTML = '';
-
-    if (movies.length === 0) {
-        moviesContainer.innerHTML = '<p class="no-movies">커석션에 영화가 없습니다. 영화를 추가해보세요!</p>';
-        return;
-    }
-
-    movies.forEach(movie => {
-        const movieCard = document.createElement('div');
-        movieCard.className = 'movie-card';
-        movieCard.innerHTML = `
-            <img src="${movie.poster}" alt="${movie.title}">
-            <div class="movie-overlay">
-                <h3>${movie.title}</h3>
-                <p>${movie.year} · ⭐${movie.rating}</p>
-                <div class="movie-actions">
-                    <button class="btn-play" onclick="playTrailer(${movie.id})">
-                        <i class='bx bx-play'></i>
-                    </button>
-                    <button class="btn-delete" onclick="deleteMovie('${movie.id}')">
-                        <i class='bx bx-trash'></i>
-                    </button>
-                </div>
-            </div>
-        `;
-        moviesContainer.appendChild(movieCard);
-    });
-
-    // 캐러셀 재초기화
-    $('#movies-carousel').trigger('destroy.owl.carousel');
-    $('#movies-carousel').owlCarousel({
-        items: 2,
-        dots: false,
-        nav: true,
-        navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
-        margin: 15,
-        loop: false,
-        responsive: {
-            500: { items: 3 },
-            1280: { items: 4 },
-            1600: { items: 6 }
-        }
-    });
 }
 
 // ========== 트레일러 재생 ==========
