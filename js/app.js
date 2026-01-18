@@ -312,14 +312,12 @@ function openVideoInModal(videoUrl) {
             const videoId = url.searchParams.get('v');
             console.log('추출된 비디오 ID:', videoId);
             if (videoId) {
-                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            }
+                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;            }
         } else if (videoUrl.includes('youtu.be/')) {
             const videoId = videoUrl.split('youtu.be/')[1].split('?')[0].split('/')[0];
             console.log('추출된 비디오 ID:', videoId);
             if (videoId) {
-                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-            }
+                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;            }
         } else if (videoUrl.includes('youtube.com/embed/')) {
             embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
         } else {
