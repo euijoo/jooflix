@@ -27,6 +27,7 @@ $(document).ready(function() {
         }
     });
 });
+
 // ========== 모달 제어 ==========
 searchBtnNav.addEventListener('click', () => {
     searchModal.style.display = 'flex';
@@ -62,6 +63,7 @@ document.querySelectorAll('.modal').forEach(modal => {
         }
     });
 });
+
 // ========== 검색 ==========
 let searchTimeout;
 searchInput.addEventListener('input', (e) => {
@@ -96,6 +98,7 @@ function displaySearchResults(movies) {
         </div>
     `).join('');
 }
+
 // ========== Firestore 추가 ==========
 async function addMovieToCollection(movieId) {
     if (!currentUser) return;
@@ -202,12 +205,11 @@ function displayHeroSlide(movie) {
                     ${movie.overview ? (movie.overview.length > 200 ? movie.overview.substring(0, 200) + '...' : movie.overview) : '줄거리 정보 없음'}
                 </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
-                    $movie.trailerUrl
-  ? `<button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')"> ... `
-  : ''
-        <i class='bx bx-play-circle'></i><span>예고편</span>
-    </button>
-` : ''}
+                    ${movie.trailerUrl ? `
+                        <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+                            <i class='bx bx-play-circle'></i><span>예고편</span>
+                        </button>
+                    ` : ''}
                     ${movie.externalVideoUrl ? `
                         <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play'></i><span>재생</span>
@@ -221,7 +223,6 @@ function displayHeroSlide(movie) {
         </div>
     `);
 }
-
 
 function getBackdropUrl(backdropPath) {
     if (!backdropPath) return 'https://via.placeholder.com/1920x1080?text=No+Image';
@@ -280,6 +281,7 @@ function displayMovies(movies) {
         }
     });
 }
+
 // ========== 히어로 이동 ==========
 function goToHeroSlide(index) {
     if (!allMovies || index >= allMovies.length) return;
@@ -292,6 +294,7 @@ function goToHeroSlide(index) {
     }, 500);
 }
 
+// ========== 비디오 모달 재생 ==========
 function openVideoInModal(videoUrl) {
   const videoModal = document.getElementById('video-modal');
   const videoPlayer = document.getElementById('video-player');
@@ -320,8 +323,7 @@ function openVideoInModal(videoUrl) {
     } else if (videoUrl.includes('youtube.com/embed/')) {
       embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
     } else {
-      // ✅ 여기가 핵심: 그냥 videoId만 온 경우
-      // 알파벳/숫자 11자 정도면 YouTube ID라고 보고 처리
+      // videoId만 온 경우 처리
       if (/^[a-zA-Z0-9_-]{6,15}$/.test(videoUrl)) {
         embedUrl = `https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1&rel=0&modestbranding=1`;
       } else {
@@ -344,7 +346,6 @@ function openVideoInModal(videoUrl) {
     alert('영상을 불러올 수 없습니다: ' + error.message);
   }
 }
-
 
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
@@ -389,18 +390,6 @@ async function updateMovieVideoUrl(movieId, videoUrl) {
         alert('업데이트 실패');
     }
 }
-
-async function deleteMovie(movieId) {
-    try {
-        await db.collection('movies').doc(movieId).delete();
-        alert('삭제 완료');
-        loadMovies();
-    } catch (error) {
-        console.error('삭제 오류:', error);
-        alert('삭제 실패');
-    }
-}
-
 
 async function deleteMovie(movieId) {
     try {
