@@ -193,7 +193,8 @@ function displayHeroSlide(movie) {
             <img src="${getBackdropUrl(movie.backdropPath)}" alt="${movie.title}">
             <div class="hero-slide-item-content">
                 <h2 class="item-content-title">${movie.title}</h2>
-                <div class="movie-infos">                    ${movie.releaseDate ? `
+                <div class="movie-infos" style="margin-top: 20px;">
+                    ${movie.releaseDate ? `
   <div class="movie-info">
     <i class='bx bx-calendar' onclick="event.stopPropagation(); showMovieOptions('${movie.id}')" style="cursor: pointer;" title="영화 설정"></i>
     <span>${movie.releaseDate.substring(0, 4)}</span>
@@ -206,15 +207,17 @@ function displayHeroSlide(movie) {
                </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
-                    <button class="btn btn-hover btn-trailer" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">        <i class='bx bx-play-circle'></i><span>Trailer</span>
+    <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+        <i class='bx bx-play-circle'></i><span>Trailer</span>
     </button>
 ` : ''}
-                ${movie.externalVideoUrl ? `
-                    <button class="btn btn-hover btn-play" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')"> <i class='bx bx-play'></i><span>Play</span>
-                    </button>
-                    <button class="btn btn-hover btn-nplayer" onclick="playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')"> <i class='bx bx-movie'></i><span>NPlayer</span>
-                    </button>
-                ` : ''}                    ` : ''}
+                    ${movie.externalVideoUrl ? `
+                        <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                        <i class='bx bx-play'></i><span>Play</span>                        </button>
+                        <button class="btn btn-hover" onclick="playWithNPlayer('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
+                            <i class='bx bx-movie'></i><span>NPlayer</span>
+                        </button>
+                    ` : ''}
                 </div>
             </div>
         </div>
