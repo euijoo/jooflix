@@ -123,7 +123,11 @@ button {
 }
 
 .nav-menu a:not(.btn):not(.logo) {
-    font-size: 14px;}
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 14px;
+    transition: color 0.3s;
+}
 
 .nav-menu a:not(.btn):hover,
 .nav-menu a.active {
@@ -147,13 +151,17 @@ button {
 /* ========== BUTTON ========== */
 .btn {
     color: #ffffff;
-    font-size: 11px;    font-weight: 700;
+    padding: 0.5rem 1.5rem;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 700;
     display: inline-flex;
     position: relative;
     align-items: center;
     gap: 8px;
     background-color: transparent;
-    border: none;    border-radius: 4px;
+    border: 2px solid var(--main-color);
+    border-radius: 4px;
     transition: all 0.3s;
     overflow: hidden;
 }
@@ -322,46 +330,9 @@ button {
 
 .item-action {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-    padding-left: 0;
+    gap: 15px;
 }
 
-/* ========== 버튼 스타일 ========== */
-.btn {
-    padding: 8px 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-shadow: none;
-}
-
-.btn-hover {
-    opacity: 0.9;
-}
-
-.btn-hover:hover {
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-
-/* 각 버튼 색상 */
-.btn-trailer {
-    background-color: #e50914;
-}
-
-.btn-play {
-    background-color: #0080ff;
-}
-
-.btn-nplayer {
-    background-color: #00b894;
-}
 /* ========== OWL CAROUSEL ========== */
 .carousel-nav-center {
     position: relative;
