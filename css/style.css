@@ -322,9 +322,31 @@ button {
 
 .item-action {
     display: flex;
-    gap: 15px;
-        justify-content: flex-start;
-        margin-top: 5px;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding-left: 0;
+}
+
+/* ========== 버튼 스타일 ========== */
+.btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-shadow: none;
+}
+
+.btn-hover {
+    opacity: 0.9;
+}
+
+.btn-hover:hover {
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 /* ========== OWL CAROUSEL ========== */
