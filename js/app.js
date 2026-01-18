@@ -203,8 +203,8 @@ function displayHeroSlide(movie) {
                 </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
-                <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
-                    <i class='bx bx-play-circle'></i><span>예고편</span>        <i class='bx bx-play-circle'></i><span>예고편</span>
+    <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+        <i class='bx bx-play-circle'></i><span>예고편</span>
     </button>
 ` : ''}
                     ${movie.externalVideoUrl ? `
@@ -306,24 +306,20 @@ function openVideoInModal(videoUrl) {
     let embedUrl = '';
     
     try {
-                // YouTube 비디오 ID만 들어온 경우 (11자리)
-                const youtubeIdPattern = /^[a-zA-Z0-9_-]{11}$/;
-                if (youtubeIdPattern.test(videoUrl)) {
-                                embedUrl = `https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1&rel=0&modestbranding=1`;
-                                videoPlayer.src = embedUrl;
-                                videoModal.style.display = 'flex';
         // YouTube URL 파싱
         if (videoUrl.includes('youtube.com/watch?v=')) {
             const url = new URL(videoUrl);
             const videoId = url.searchParams.get('v');
             console.log('추출된 비디오 ID:', videoId);
             if (videoId) {
-                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;            }
+                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            }
         } else if (videoUrl.includes('youtu.be/')) {
             const videoId = videoUrl.split('youtu.be/')[1].split('?')[0].split('/')[0];
             console.log('추출된 비디오 ID:', videoId);
             if (videoId) {
-                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;            }
+                embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+            }
         } else if (videoUrl.includes('youtube.com/embed/')) {
             embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
         } else {
