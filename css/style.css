@@ -400,7 +400,7 @@ button {
     margin-top: calc(var(--nav-height) + 40vw);
     height: calc(100vh - var(--nav-height) - 40vw);
     overflow-y: auto;
-    padding-top: 20px;
+    padding-top: 240px
     flex: 1;
 }
 
