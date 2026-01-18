@@ -206,10 +206,11 @@ function displayHeroSlide(movie) {
                 </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
-                        <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
-                            <i class='bx bx-play-circle'></i><span>예고편</span>
-                        </button>
-                    ` : ''}
+  <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
+    <i class='bx bx-play-circle'></i><span>예고편</span>
+  </button>
+` : ''}
+
                     ${movie.externalVideoUrl ? `
                         <button class="btn btn-hover" onclick="openVideoInNewTab('${movie.externalVideoUrl.replace(/'/g, "\\'")}')">
                             <i class='bx bx-play'></i><span>재생</span>
