@@ -193,7 +193,7 @@ function displayHeroSlide(movie) {
             <img src="${getBackdropUrl(movie.backdropPath)}" alt="${movie.title}">
             <div class="hero-slide-item-content">
                 <h2 class="item-content-title">${movie.title}</h2>
-                <div class="movie-infos" style="margin-top: 20px;">
+                <div class="movie-infos" style="margin-top: 1000px;">
                     ${movie.releaseDate ? `
   <div class="movie-info">
     <i class='bx bx-calendar' onclick="event.stopPropagation(); showMovieOptions('${movie.id}')" style="cursor: pointer;" title="영화 설정"></i>
