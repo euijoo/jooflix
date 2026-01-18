@@ -224,6 +224,7 @@ function displayHeroSlide(movie) {
     `);
 }
 
+
 function getBackdropUrl(backdropPath) {
     if (!backdropPath) return 'https://via.placeholder.com/1920x1080?text=No+Image';
     return `https://image.tmdb.org/t/p/original${backdropPath}`;
