@@ -310,7 +310,13 @@ function openVideoInModal(videoUrl) {
   let embedUrl = '';
 
   try {
-    if (videoUrl.includes('youtube.com/watch?v=')) {
+    // 상대 경로 /embed/로 시작하는 경우 처리 (핵심 수정!)
+    if (videoUrl.startsWith('/embed/')) {
+      const videoId = videoUrl.split('/embed/')[1].split('?')[0];
+      embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+    } 
+    // 전체 YouTube URL 처리
+    else if (videoUrl.includes('youtube.com/watch?v=')) {
       const url = new URL(videoUrl);
       const videoId = url.searchParams.get('v');
       if (videoId) {
@@ -322,14 +328,18 @@ function openVideoInModal(videoUrl) {
         embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
       }
     } else if (videoUrl.includes('youtube.com/embed/')) {
+      // 이미 embed URL이지만 도메인이 잘못되었을 수 있음
       embedUrl = videoUrl.replace('youtube.com', 'youtube-nocookie.com');
-    } else {
-      // videoId만 온 경우 처리
-      if (/^[a-zA-Z0-9_-]{6,15}$/.test(videoUrl)) {
-        embedUrl = `https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1&rel=0&modestbranding=1`;
-      } else {
-        embedUrl = videoUrl;
+      // http://나 https:// 없으면 추가
+      if (!embedUrl.startsWith('http')) {
+        embedUrl = 'https://www.youtube-nocookie.com' + (embedUrl.startsWith('/') ? embedUrl : '/' + embedUrl);
       }
+    } 
+    // videoId만 온 경우 처리
+    else if (/^[a-zA-Z0-9_-]{6,15}$/.test(videoUrl)) {
+      embedUrl = `https://www.youtube-nocookie.com/embed/${videoUrl}?autoplay=1&rel=0&modestbranding=1`;
+    } else {
+      embedUrl = videoUrl;
     }
 
     console.log('최종 embed URL:', embedUrl);
@@ -347,6 +357,7 @@ function openVideoInModal(videoUrl) {
     alert('영상을 불러올 수 없습니다: ' + error.message);
   }
 }
+
 
 // ========== 옵션 ==========
 async function showMovieOptions(movieId) {
