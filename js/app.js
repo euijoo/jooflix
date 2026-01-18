@@ -204,9 +204,7 @@ function displayHeroSlide(movie) {
                     ${movie.runtime ? `<div class="movie-info"><i class='bx bx-time'></i><span>${movie.runtime}분</span></div>` : ''}
                     ${movie.genres && movie.genres.length > 0 ? `<div class="movie-info"><i class='bx bx-category'></i><span>${movie.genres[0].name}</span></div>` : ''}
                 </div>
-                <div class="item-content-description" style="margin-top: 20px;">
-                    ${movie.overview ? (movie.overview.length > 200 ? movie.overview.substring(0, 200) + '...' : movie.overview) : '줄거리 정보 없음'}
-                </div>
+               </div>
                 <div class="item-action" style="margin-top: 30px; display: flex; gap: 15px;">
                     ${movie.trailerUrl ? `
     <button class="btn btn-hover" onclick="openVideoInModal('${movie.trailerUrl.replace(/'/g, "\\'")}')">
