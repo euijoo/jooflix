@@ -342,7 +342,37 @@ function setupHeroButtons(movie) {
             alert('재생 URL이 설정되지 않았습니다.');
         }
     };
+  // ===========================
+    // 연도 클릭 이벤트 (새로 추가!)
+    // ===========================
+    const heroYear = document.getElementById('hero-year');
+    heroYear.onclick = async () => {
+        const currentUrl = movie.externalVideoUrl || '';
+        const newUrl = prompt(
+            `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
+            currentUrl
+        );
+        
+        if (newUrl === null) return;
+        
+        try {
+            await db.collection('movies').doc(movie.id).update({
+                externalVideoUrl: newUrl.trim()
+            });
+            
+            movie.externalVideoUrl = newUrl.trim();
+            loadMovies();
+            alert('URL이 저장되었습니다!');
+            
+        } catch (error) {
+            console.error('URL 저장 오류:', error);
+            alert('URL 저장 중 오류가 발생했습니다.');
+        }
+    };
 }
+
+
+
 // ===========================
 // 영화 그리드 표시 (영화 카드 클릭 → 히어로 변경 추가)
 // ===========================
