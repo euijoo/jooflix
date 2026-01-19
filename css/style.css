@@ -895,3 +895,17 @@ img {
     height: 50px;
     border-width: 5px;
 }
+
+
+/* 히어로 연도 클릭 가능 스타일 */
+#hero-year {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+#hero-year:hover {
+    background: var(--bg-card);
+    color: var(--accent-green);
+}
