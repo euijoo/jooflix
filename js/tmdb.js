@@ -28,15 +28,20 @@ async function getMovieDetails(movieId) {
     const movie = await movieResponse.json();
     const credits = await creditsResponse.json();
     
+    // 👇 감독 정보 추가!
+    const director = credits.crew.find(person => person.job === 'Director');
+    
     return {
       ...movie,
-      cast: credits.cast.slice(0, 10) // 상위 10명만
+      cast: credits.cast.slice(0, 10), // 상위 10명만
+      director: director || null // 👈 감독 추가!
     };
   } catch (error) {
     console.error('영화 상세 정보 가져오기 실패:', error);
     return null;
   }
 }
+
 
 // 포스터 URL 생성
 function getPosterUrl(posterPath) {
