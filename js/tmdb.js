@@ -45,6 +45,7 @@ function getPosterUrl(posterPath) {
   }
   return `${TMDB_IMAGE_BASE_URL}${posterPath}`;
 }
+
 // 영화 예고편 가져오기
 async function getMovieTrailer(movieId) {
     try {
@@ -72,3 +73,11 @@ async function getMovieTrailer(movieId) {
         return null;
     }
 }
+
+// ===========================
+// 전역 함수로 노출 (이 부분만 추가!)
+// ===========================
+window.searchMovies = searchMovies;
+window.getMovieDetails = getMovieDetails;
+window.getPosterUrl = getPosterUrl;
+window.getMovieTrailer = getMovieTrailer;
