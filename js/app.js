@@ -433,15 +433,19 @@ function setupHeroButtons(movie) {
         }
     };
     
-    // Play 버튼
-    const playBtn = document.getElementById('hero-play-btn');
-    playBtn.onclick = () => {
-        if (movie.externalVideoUrl) {
-            window.open(movie.externalVideoUrl, '_blank');
-        } else {
-            alert('재생 URL이 설정되지 않았습니다.');
-        }
-    };
+    // Play 버튼 (Referrer 제거)
+const playBtn = document.getElementById('hero-play-btn');
+playBtn.onclick = () => {
+    if (movie.externalVideoUrl) {
+        const link = document.createElement('a');
+        link.href = movie.externalVideoUrl;
+        link.target = '_blank';
+        link.rel = 'noreferrer noopener'; // 👈 핵심!
+        link.click();
+    } else {
+        alert('재생 URL이 설정되지 않았습니다.');
+    }
+};
     
     // NPlayer 버튼
     const nplayerBtn = document.getElementById('hero-nplayer-btn');
@@ -548,18 +552,22 @@ function attachMovieCardEvents() {
         });
     });
     
-    // Play 버튼 (수정!)
-    document.querySelectorAll('.btn-play').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const url = this.dataset.url;
-            if (url && url.trim() !== '') {
-                window.open(url, '_blank');
-            } else {
-                alert('재생 URL이 설정되지 않았습니다.\n영화를 삭제 후 다시 추가하여 URL을 입력하세요.');
-            }
-        });
+    // Play 버튼 (Referrer 제거)
+document.querySelectorAll('.btn-play').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const url = this.dataset.url;
+        if (url && url.trim() !== '') {
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noreferrer noopener'; // 👈 핵심!
+            link.click();
+        } else {
+            alert('재생 URL이 설정되지 않았습니다.');
+        }
     });
+});
     
     // NPlayer 버튼
     document.querySelectorAll('.btn-nplayer').forEach(btn => {
