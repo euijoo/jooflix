@@ -74,10 +74,11 @@ async function getMovieTrailer(movieId) {
     }
 }
 
-// ===========================
-// 전역 함수로 노출 (이 부분만 추가!)
-// ===========================
+// 전역 함수로 노출
 window.searchMovies = searchMovies;
 window.getMovieDetails = getMovieDetails;
 window.getPosterUrl = getPosterUrl;
 window.getMovieTrailer = getMovieTrailer;
+
+console.log('TMDB 함수 전역 노출 완료');
+
