@@ -1,15 +1,15 @@
-/* ========== VARIABLES ========== */
+/* ========== VARIABLES (테마 공통 색상/크기 변수) ========== */
 :root {
-    --main-color: #1f83ed;
-    --accent-red: #e50914;
-    --body-bg: #181616;
-    --box-bg: #221f1f;
-    --text-color: #ffffff;
-    --text-secondary: #b3b3b3;
-    --nav-height: 60px;
+    --main-color: #1f83ed;      /* 메인 포인트 색 (로고, 버튼, 아이콘 등) */
+    --accent-red: #e50914;      /* 보조 빨강 포인트 (필요 시 사용) */
+    --body-bg: #181616;         /* 전체 배경색 */
+    --box-bg: #221f1f;          /* 카드/모달 박스 배경색 */
+    --text-color: #ffffff;      /* 기본 텍스트 색 */
+    --text-secondary: #b3b3b3;  /* 보조 텍스트 색 */
+    --nav-height: 60px;         /* 상단 네비게이션 높이 (히어로/섹션 계산에 사용) */
 }
 
-/* ========== RESET ========== */
+/* ========== RESET (기본 스타일 초기화) ========== */
 * {
     padding: 0;
     margin: 0;
@@ -26,6 +26,8 @@ body {
     background-color: var(--body-bg);
     color: var(--text-color);
     line-height: 1.6;
+    /* 전체 화면 높이에 맞추고, body 자체 스크롤은 막고,
+       아래 #my-collection 영역만 스크롤 되도록 처리 */
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -53,7 +55,7 @@ button {
     margin: auto;
 }
 
-/* ========== AUTH SCREEN ========== */
+/* ========== AUTH SCREEN (로그인/로딩 가리개 화면) ========== */
 .auth-screen {
     position: fixed;
     top: 0;
@@ -64,7 +66,7 @@ button {
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #0a0a0a 0%, #181616 50%, #0a0a0a 100%);
-    z-index: 9999;
+    z-index: 9999; /* 화면 맨 위로 */
 }
 
 .auth-container {
@@ -86,24 +88,24 @@ button {
     margin-bottom: 40px;
 }
 
-/* ========== NAVIGATION ========== */
+/* ========== NAVIGATION (상단 고정 메뉴바) ========== */
 .nav-wrapper {
-    position: fixed;
+    position: fixed;                       /* 항상 상단에 고정 */
     top: 0;
     left: 0;
     width: 100%;
     z-index: 99;
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.95); /* 반투명 블랙 + 블러 */
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
+    flex-shrink: 0;                        /* body flex에서 눌리지 않게 */
 }
 
 .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--nav-height);
+    height: var(--nav-height);             /* 위에서 정의한 nav 높이 사용 */
 }
 
 .logo {
@@ -122,6 +124,7 @@ button {
     margin: 0;
 }
 
+/* 상단 메뉴 텍스트 링크 (버튼/로고 제외) */
 .nav-menu a:not(.btn):not(.logo) {
     text-transform: uppercase;
     font-weight: 700;
@@ -129,6 +132,7 @@ button {
     transition: color 0.3s;
 }
 
+/* 현재 선택된 메뉴 or hover 시 색상 강조 */
 .nav-menu a:not(.btn):hover,
 .nav-menu a.active {
     color: var(--main-color);
@@ -148,7 +152,7 @@ button {
     transform: scale(1.1);
 }
 
-/* ========== BUTTON ========== */
+/* ========== BUTTON (공통 버튼 스타일) ========== */
 .btn {
     color: #ffffff;
     padding: 0.5rem 1.5rem;
@@ -163,9 +167,10 @@ button {
     border: 2px solid var(--main-color);
     border-radius: 4px;
     transition: all 0.3s;
-    overflow: hidden;
+    overflow: hidden; /* hover 배경 애니메이션이 버튼 안에서만 보이도록 */
 }
 
+/* .btn-hover: 테두리 → 내부로 색이 차오르는 효과 */
 .btn-hover::before {
     content: '';
     position: absolute;
@@ -191,12 +196,12 @@ button {
     box-shadow: 0 0 20px rgba(31, 131, 237, 0.5);
 }
 
-/* ========== HAMBURGER MENU ========== */
+/* ========== HAMBURGER MENU (모바일 메뉴 버튼) ========== */
 .hamburger-menu {
     width: 30px;
     height: 30px;
     cursor: pointer;
-    display: none;
+    display: none; /* 데스크탑에서는 숨김, 모바일에서만 보이도록 */
     position: relative;
 }
 
@@ -229,6 +234,7 @@ button {
     bottom: -10px;
 }
 
+/* 메뉴 활성화 시 X 아이콘으로 변형 */
 .hamburger-menu.active .hamburger {
     background-color: transparent;
 }
@@ -243,16 +249,17 @@ button {
     bottom: 0;
 }
 
-/* ========== HERO SLIDE ========== */
+/* ========== HERO SLIDE (상단 큰 영화 배경 영역) ========== */
 .hero-slide {
-    position: fixed;
-    top: var(--nav-height);
+    position: fixed;           /* 상단 네비 아래에 고정 (스크롤과 분리) */
+    top: var(--nav-height);    /* 네비 높이만큼 아래에서 시작 */
     left: 0;
     width: 100%;
     z-index: 10;
     flex-shrink: 0;
 }
 
+/* 히어로 영역의 높이를 비율로 맞추기 (화면 폭의 40%) */
 .hero-slide-item {
     padding-top: 40%;
     position: relative;
@@ -268,6 +275,7 @@ button {
     object-fit: cover;
 }
 
+/* 아래에서 위쪽으로 어두워지는 그라데이션 오버레이 */
 .hero-slide-item::before {
     content: '';
     position: absolute;
@@ -279,14 +287,15 @@ button {
     z-index: 1;
 }
 
+/* 히어로 안 텍스트/버튼 콘텐트 박스 */
 .hero-slide-item-content {
     position: absolute;
     bottom: 10%;
     left: 0;
     width: 100%;
     color: var(--text-color);
-    z-index: 2;
-    padding: 0 5rem;
+    z-index: 2;          /* 배경 위에 오도록 */
+    padding: 0 5rem;     /* 좌우 여백 */
 }
 
 .item-content-title {
@@ -297,6 +306,7 @@ button {
     margin-bottom: 20px;
 }
 
+/* 히어로 안 연도/시간/장르 정보 라인 */
 .movie-infos {
     display: flex;
     align-items: center;
@@ -328,12 +338,13 @@ button {
     margin-bottom: 20px;
 }
 
+/* 히어로 버튼 줄 (Trailer / Play / NPlayer) */
 .item-action {
     display: flex;
-    gap: 15px;
+    gap: 50px;
 }
 
-/* ========== OWL CAROUSEL ========== */
+/* ========== OWL CAROUSEL (슬라이더 공통 네비 스타일) ========== */
 .carousel-nav-center {
     position: relative;
 }
@@ -372,7 +383,7 @@ button {
     box-shadow: 0 0 20px rgba(31, 131, 237, 0.5);
 }
 
-/* ========== ANIMATIONS ========== */
+/* ========== ANIMATIONS (히어로 텍스트 등장 애니메이션) ========== */
 .top-down {
     transform: translateY(-50px);
     visibility: hidden;
@@ -391,16 +402,19 @@ button {
     opacity: 1;
 }
 
-/* ========== SECTION ========== */
+/* ========== SECTION (아래 섹션 공통) ========== */
 .section {
     padding: 80px 0;
 }
 
+/* 내 영화 컬렉션 영역
+   - 상단 네비 + 히어로 높이만큼 아래에서 시작
+   - body는 스크롤 막고, 이 영역만 세로 스크롤 허용 */
 #my-collection {
-    margin-top: calc(var(--nav-height) + 40vw);
-    height: calc(100vh - var(--nav-height) - 40vw);
+    margin-top: calc(var(--nav-height) + 40vw);          /* 히어로 높이(40vw) + 네비 높이 만큼 아래로 */
+    height: calc(100vh - var(--nav-height) - 40vw);      /* 나머지 높이를 리스트 영역으로 사용 */
     overflow-y: auto;
-    padding-top: 240px
+    padding-top: 240px;                                  /* 히어로와의 간격(필요하면 조정) */
     flex: 1;
 }
 
@@ -415,12 +429,12 @@ button {
     align-items: center;
 }
 
-/* ========== MOVIE ITEM ========== */
+/* ========== MOVIE ITEM (영화 카드 스타일) ========== */
 .movie-item {
     display: block;
     position: relative;
     overflow: hidden;
-    padding-top: 140%;
+    padding-top: 140%;          /* 포스터 비율 유지 (세로형) */
     cursor: pointer;
     border-radius: 8px;
     transition: transform 0.3s;
@@ -444,6 +458,7 @@ button {
     transform: scale(1.1);
 }
 
+/* 호버 시 위로 슬라이드되는 정보 패널 */
 .movie-item-content {
     position: absolute;
     bottom: 0;
@@ -472,6 +487,7 @@ button {
     margin-bottom: 10px;
 }
 
+/* 카드 안 작은 버튼 (PC / N) */
 .movie-item-actions {
     display: flex;
     gap: 8px;
@@ -482,6 +498,7 @@ button {
     padding: 6px 12px;
 }
 
+/* 카드 우측 상단 ⋮ 옵션 버튼 */
 .movie-options {
     position: absolute;
     top: 10px;
@@ -509,7 +526,7 @@ button {
     transform: scale(1.1);
 }
 
-/* ========== MODAL ========== */
+/* ========== MODAL (검색/비디오 모달 공통) ========== */
 .modal {
     position: fixed;
     top: 0;
@@ -624,20 +641,21 @@ button {
     overflow: hidden;
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE (반응형) ========== */
 @media only screen and (max-width: 1280px) {
     html {
         font-size: 14px;
     }
     
     .hero-slide-item {
-        padding-top: 50%;
+        padding-top: 50%; /* 화면이 좁을수록 히어로 높이를 조금 더 키움 */
     }
     
     .item-content-title {
         font-size: 3rem;
     }
     
+    /* 히어로 높이를 50vw로 보정 → 리스트 영역 높이도 같이 조정 */
     #my-collection {
         margin-top: calc(var(--nav-height) + 50vw);
         height: calc(100vh - var(--nav-height) - 50vw);
@@ -666,6 +684,7 @@ button {
         font-size: 2.5rem;
     }
     
+    /* 850px 이하에서는 햄버거 메뉴 표시, nav-menu는 슬라이드 패널로 변경 */
     .hamburger-menu {
         display: block;
     }
@@ -703,6 +722,8 @@ button {
         margin-left: 0 !important;
     }
     
+    /* 모바일에서 히어로 비율이 더 커지므로 (60vw),
+       컬렉션 위치/높이도 그에 맞춰 재조정 */
     #my-collection {
         margin-top: calc(var(--nav-height) + 60vw);
         height: calc(100vh - var(--nav-height) - 60vw);
@@ -732,7 +753,7 @@ button {
     }
 }
 
-/* ========== 비디오 모달 ========== */
+/* ========== 비디오 모달 (예고편 재생용) ========== */
 .modal-video {
     max-width: 900px;
     padding: 0;
@@ -741,7 +762,7 @@ button {
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 비율 */
+    padding-bottom: 56.25%; /* 16:9 비율 유지 */
     height: 0;
     overflow: hidden;
 }
