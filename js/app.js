@@ -186,9 +186,17 @@ async function addMovieToCollection(movieId) {
         // 로딩 표시
         searchResults.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading"></div></div>';
         
-        // TMDB에서 영화 상세 정보 가져오기
+        // TMDB에서 영화 상세 정보 + 스틸컷 가져오기
         const movieDetails = await window.getMovieDetails(movieId);
         const trailerUrl = await window.getMovieTrailer(movieId);
+        const backdrops = await window.getMovieBackdrops(movieId); // 👈 추가!
+        
+        // 랜덤 백드롭 선택 (있으면)
+        let randomBackdrop = '';
+        if (backdrops && backdrops.length > 0) {
+            const randomIndex = Math.floor(Math.random() * backdrops.length);
+            randomBackdrop = backdrops[randomIndex].file_path;
+        }
         
         // 스트리밍 링크 입력 받기
         const streamingUrl = prompt(
@@ -202,7 +210,7 @@ async function addMovieToCollection(movieId) {
             title: movieDetails.title,
             year: movieDetails.release_date ? movieDetails.release_date.split('-')[0] : 'N/A',
             posterPath: movieDetails.poster_path,
-            backdropPath: movieDetails.backdrop_path,
+            backdropPath: randomBackdrop || movieDetails.backdrop_path, // 👈 랜덤 백드롭 우선!
             overview: movieDetails.overview,
             runtime: movieDetails.runtime,
             genres: movieDetails.genres ? movieDetails.genres.map(g => g.name).join(', ') : '',
@@ -231,6 +239,7 @@ async function addMovieToCollection(movieId) {
         alert('영화를 추가하는 중 오류가 발생했습니다.');
     }
 }
+
 
 // ===========================
 // Firestore에서 영화 목록 불러오기
