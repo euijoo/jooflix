@@ -259,9 +259,9 @@ button {
     flex-shrink: 0;
 }
 
-/* 히어로 영역의 높이를 비율로 맞추기 (화면 폭의 40%) */
+/* 히어로 영역의 높이를 비율로 맞추기 (화면 폭의 20%) */
 .hero-slide-item {
-    padding-top: 40%;
+    padding-top: 20%;
     position: relative;
     overflow: hidden;
 }
