@@ -118,24 +118,26 @@ searchInput.addEventListener('input', function(e) {
         return;
     }
     
-    searchTimeout = setTimeout(() => {
-        searchMovies(query);
+    // 로딩 표시
+    searchResults.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loading"></div></div>';
+    
+    searchTimeout = setTimeout(async () => {
+        try {
+            console.log('검색 시작:', query);
+            const movies = await window.searchMovies(query);
+            console.log('검색 결과:', movies);
+            displaySearchResults(movies);
+        } catch (error) {
+            console.error('검색 오류:', error);
+            searchResults.innerHTML = '<p style="color: #ff5555; padding: 20px; text-align: center;">검색 중 오류가 발생했습니다.</p>';
+        }
     }, 500);
 });
 
-// TMDB 영화 검색
-async function searchMovies(query) {
-    try {
-        const movies = await window.searchMovies(query);
-        displaySearchResults(movies);
-    } catch (error) {
-        console.error('검색 오류:', error);
-        searchResults.innerHTML = '<p style="color: var(--text-secondary); padding: 20px;">검색 중 오류가 발생했습니다.</p>';
-    }
-}
-
 // 검색 결과 표시
 function displaySearchResults(movies) {
+    console.log('displaySearchResults 호출:', movies);
+    
     if (!movies || movies.length === 0) {
         searchResults.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">검색 결과가 없습니다.</p>';
         return;
@@ -172,6 +174,7 @@ function displaySearchResults(movies) {
         });
     });
 }
+
 
 
 // ===========================
