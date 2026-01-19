@@ -3,6 +3,38 @@
 // ===========================
 let allMovies = [];
 
+
+// ===========================
+// 유틸리티 함수
+// ===========================
+
+// 줄거리를 문장 단위로 3줄 이내로 자르기
+function truncateOverview(text, maxLines = 3) {
+    if (!text) return '줄거리 정보가 없습니다.';
+    
+    // 문장 단위로 분리 (마침표, 느낌표, 물음표 기준)
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    
+    let result = '';
+    let lineCount = 0;
+    
+    for (let sentence of sentences) {
+        const testText = result + sentence;
+        // 임시로 줄 수 계산 (대략적으로 45자당 1줄로 가정)
+        const estimatedLines = Math.ceil(testText.length / 45);
+        
+        if (estimatedLines <= maxLines) {
+            result = testText;
+        } else {
+            break;
+        }
+    }
+    
+    // 결과가 없으면 첫 문장만
+    return result.trim() || sentences[0];
+}
+
+
 // DOM 요소
 const searchModal = document.getElementById('search-modal');
 const videoModal = document.getElementById('video-modal');
@@ -306,6 +338,15 @@ async function displayHeroSlide() {
     
     // 제목
     document.getElementById('hero-title').textContent = featuredMovie.title;
+
+
+    // 등급 아이콘 설정 (URL 여부에 따라) 👈 추가!
+const ratingIcon = document.getElementById('hero-rating');
+if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== '') {
+    ratingIcon.textContent = '🔓';
+} else {
+    ratingIcon.textContent = '🔒';
+}
     
     // 메타 정보
     document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
@@ -314,8 +355,9 @@ async function displayHeroSlide() {
         : 'N/A';
     document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
-    // 줄거리
-    document.getElementById('hero-overview').textContent = featuredMovie.overview || '줄거리 정보가 없습니다.';
+    // 줄거리 (문장 단위로 3줄)
+document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
+
     
     // 버튼 이벤트
     setupHeroButtons(featuredMovie);
@@ -610,7 +652,7 @@ document.getElementById('hero-runtime').textContent = featuredMovie.runtime
 document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
     // 줄거리
-    document.getElementById('hero-overview').textContent = featuredMovie.overview || '줄거리 정보가 없습니다.';
+    document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
     
     // 버튼 이벤트
     setupHeroButtons(featuredMovie);
