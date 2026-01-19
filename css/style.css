@@ -342,8 +342,20 @@ button {
 .item-action {
     display: flex;
     gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
 }
 
+.item-action .btn {
+        font-size: 0.9rem;
+        font-weight: 600;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 5px 12px;
+        border-radius: 4px;
+        color: var(--text-color);
+        border: none;
+        cursor: pointer;
+    }
 /* ========== OWL CAROUSEL (슬라이더 공통 네비 스타일) ========== */
 .carousel-nav-center {
     position: relative;
