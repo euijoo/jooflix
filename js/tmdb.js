@@ -104,6 +104,6 @@ window.searchMovies = searchMovies;
 window.getMovieDetails = getMovieDetails;
 window.getPosterUrl = getPosterUrl;
 window.getMovieTrailer = getMovieTrailer;
+window.getMovieBackdrops = getMovieBackdrops; // 👈 이 줄만 추가!
 
 console.log('TMDB 함수 전역 노출 완료');
-
