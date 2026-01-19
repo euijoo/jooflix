@@ -355,12 +355,67 @@ if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== 
         : 'N/A';
     document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
-    // 줄거리 (문장 단위로 3줄)
+    // 줄거리
 document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
 
-    
-    // 버튼 이벤트
-    setupHeroButtons(featuredMovie);
+// 감독/출연진 표시 👈 추가!
+displayHeroCredits(featuredMovie);
+
+// 버튼 이벤트
+setupHeroButtons(featuredMovie);
+}
+
+
+
+// ===========================
+// 히어로 감독/출연진 표시
+// ===========================
+
+async function displayHeroCredits(movie) {
+    try {
+        // TMDB에서 최신 크레딧 정보 가져오기
+        const movieDetails = await window.getMovieDetails(movie.tmdbId);
+        
+        // 감독 표시
+        const directorContainer = document.getElementById('hero-director');
+        if (movieDetails.director) {
+            const directorPhoto = movieDetails.director.profile_path
+                ? `https://image.tmdb.org/t/p/w185${movieDetails.director.profile_path}`
+                : 'https://via.placeholder.com/60x60/2C3440/99AABB?text=?';
+            
+            directorContainer.innerHTML = `
+                <div class="credit-item">
+                    <img src="${directorPhoto}" alt="${movieDetails.director.name}" class="credit-photo">
+                    <div class="credit-name">${movieDetails.director.name}</div>
+                </div>
+            `;
+        } else {
+            directorContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">정보 없음</div>';
+        }
+        
+        // 출연진 표시 (상위 5명)
+        const castContainer = document.getElementById('hero-cast');
+        if (movieDetails.cast && movieDetails.cast.length > 0) {
+            castContainer.innerHTML = movieDetails.cast.slice(0, 5).map(actor => {
+                const actorPhoto = actor.profile_path
+                    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                    : 'https://via.placeholder.com/60x60/2C3440/99AABB?text=?';
+                
+                return `
+                    <div class="credit-item">
+                        <img src="${actorPhoto}" alt="${actor.name}" class="credit-photo">
+                        <div class="credit-name">${actor.name}</div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            castContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">정보 없음</div>';
+        }
+    } catch (error) {
+        console.error('크레딧 표시 오류:', error);
+        document.getElementById('hero-director').innerHTML = '';
+        document.getElementById('hero-cast').innerHTML = '';
+    }
 }
 
 // ===========================
@@ -651,9 +706,12 @@ document.getElementById('hero-runtime').textContent = featuredMovie.runtime
     : 'N/A';
 document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
-    // 줄거리
-    document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
-    
-    // 버튼 이벤트
-    setupHeroButtons(featuredMovie);
+    // 줄거리 (문장 단위로 3줄)
+document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
+
+// 감독/출연진 표시 👈 추가!
+displayHeroCredits(featuredMovie);
+
+// 버튼 이벤트
+setupHeroButtons(featuredMovie);
 }
