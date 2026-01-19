@@ -178,7 +178,7 @@ img {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 2px solid var(--border-color);
+    border: 0px solid var(--border-color);
     object-fit: cover;
 }
 
