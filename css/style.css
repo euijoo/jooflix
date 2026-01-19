@@ -333,15 +333,14 @@ img {
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--border-color);
+    border: none; /* 👈 테두리 제거! */
     margin-bottom: 6px;
     background: var(--bg-card);
     transition: transform 0.2s;
 }
 
 .credit-photo:hover {
-    transform: scale(1.1);
-    border-color: var(--accent-green);
+    transform: scale(1.1); /* 👈 hover 효과만 유지 */
 }
 
 .credit-name {
