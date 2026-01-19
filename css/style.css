@@ -291,6 +291,72 @@ img {
     flex-wrap: wrap;
 }
 
+/* ===========================
+   히어로 감독/출연진
+   =========================== */
+.hero-credits {
+    margin-bottom: 24px;
+}
+
+.credits-section {
+    margin-bottom: 20px;
+}
+
+.credits-section:last-child {
+    margin-bottom: 0;
+}
+
+.credits-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.credits-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.credit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+}
+
+.credit-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+    margin-bottom: 6px;
+    background: var(--bg-card);
+    transition: transform 0.2s;
+}
+
+.credit-photo:hover {
+    transform: scale(1.1);
+    border-color: var(--accent-green);
+}
+
+.credit-name {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 100%;
+}
+
 .btn-primary,
 .btn-secondary {
     padding: 12px 24px;
@@ -756,6 +822,10 @@ img {
     
     .section-header h2 {
         font-size: 1.2rem;
+    }
+
+    .hero-credits {
+        display: none;
     }
 }
 
