@@ -74,6 +74,31 @@ async function getMovieTrailer(movieId) {
     }
 }
 
+
+// ===========================
+// 영화 스틸컷(백드롭) 가져오기
+// ===========================
+async function getMovieBackdrops(movieId) {
+    try {
+        const response = await fetch(
+            `${TMDB_BASE_URL}/movie/${movieId}/images?api_key=${TMDB_API_KEY}`
+        );
+        
+        if (!response.ok) {
+            throw new Error('스틸컷 요청 실패');
+        }
+        
+        const data = await response.json();
+        
+        // backdrops 배열 반환 (없으면 빈 배열)
+        return data.backdrops || [];
+        
+    } catch (error) {
+        console.error('TMDB 스틸컷 오류:', error);
+        return [];
+    }
+}
+
 // 전역 함수로 노출
 window.searchMovies = searchMovies;
 window.getMovieDetails = getMovieDetails;
