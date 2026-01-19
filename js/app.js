@@ -328,8 +328,8 @@ function displayMovies(movies) {
         margin: 15,
         loop: false,
         responsive: {
-            500:  { items: 3 },
-            1280: { items: 4 },
+            500:  { items: 4 },
+            1280: { items: 6 },
             1600: { items: 6 }
         }
     });
