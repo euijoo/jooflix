@@ -121,7 +121,7 @@ img {
     right: 0;
     height: var(--nav-height);
     background: var(--bg-dark);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 0px solid var(--border-color);
     z-index: 1000;
 }
 
