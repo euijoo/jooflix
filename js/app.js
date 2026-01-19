@@ -358,48 +358,47 @@ function setupHeroButtons(movie) {
             alert('재생 URL이 설정되지 않았습니다.');
         }
     };
-  // 등급 아이콘 클릭 → URL 입력
-const ratingIcon = document.getElementById('hero-rating');
-ratingIcon.onclick = async () => {
-    const currentUrl = movie.externalVideoUrl || '';
-    const newUrl = prompt(
-        `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
-        currentUrl
-    );
     
-    if (newUrl === null) return;
-    
-    try {
-        await db.collection('movies').doc(movie.id).update({
-            externalVideoUrl: newUrl.trim()
-        });
+    // 등급 아이콘 클릭 → URL 입력
+    const ratingIcon = document.getElementById('hero-rating');
+    ratingIcon.onclick = async () => {
+        const currentUrl = movie.externalVideoUrl || '';
+        const newUrl = prompt(
+            `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
+            currentUrl
+        );
         
-        movie.externalVideoUrl = newUrl.trim();
+        if (newUrl === null) return;
         
-        // URL 있으면 잠금 해제 아이콘으로 변경
-        if (newUrl.trim()) {
-            ratingIcon.textContent = '🔓';
-        } else {
-            ratingIcon.textContent = '🔒';
+        try {
+            await db.collection('movies').doc(movie.id).update({
+                externalVideoUrl: newUrl.trim()
+            });
+            
+            movie.externalVideoUrl = newUrl.trim();
+            
+            // URL 있으면 잠금 해제 아이콘으로 변경
+            if (newUrl.trim()) {
+                ratingIcon.textContent = '🔓';
+            } else {
+                ratingIcon.textContent = '🔒';
+            }
+            
+            alert('URL이 저장되었습니다!');
+            
+        } catch (error) {
+            console.error('URL 저장 오류:', error);
+            alert('URL 저장 중 오류가 발생했습니다.');
         }
-        
-        alert('URL이 저장되었습니다!');
-        
-    } catch (error) {
-        console.error('URL 저장 오류:', error);
-        alert('URL 저장 중 오류가 발생했습니다.');
+    };
+    
+    // URL 상태에 따라 아이콘 설정
+    if (movie.externalVideoUrl && movie.externalVideoUrl.trim() !== '') {
+        ratingIcon.textContent = '🔓';
+    } else {
+        ratingIcon.textContent = '🔒';
     }
-};
-
-// URL 상태에 따라 아이콘 설정
-if (movie.externalVideoUrl && movie.externalVideoUrl.trim() !== '') {
-    ratingIcon.textContent = '🔓';
-} else {
-    ratingIcon.textContent = '🔒';
 }
-
-
-
 
 // ===========================
 // 영화 그리드 표시 (영화 카드 클릭 → 히어로 변경 추가)
