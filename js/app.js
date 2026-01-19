@@ -26,6 +26,7 @@ $(document).ready(function() {
         margin: 15,
         loop: false,
         responsive: {
+            400:  { items: 4 }, // 500px 이상: 3개
             500:  { items: 4 }, // 500px 이상: 3개
             1280: { items: 6 }, // 1280px 이상: 4개
             1600: { items: 6 }  // 1600px 이상: 6개
