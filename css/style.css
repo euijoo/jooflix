@@ -341,16 +341,7 @@ button {
 /* 히어로 버튼 줄 (Trailer / Play / NPlayer) */
 .item-action {
     display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    font-weight: 600;
-    background-color: rgba(0, 0, 0, 0.5);
     gap: 15px;
-    color: var(--main-color);
-    margin-right: 5px;
-    margin-bottom: 20px;
-    padding: 5px 12px;
-    border-radius: 4px;
 }
 
 /* ========== OWL CAROUSEL (슬라이더 공통 네비 스타일) ========== */
