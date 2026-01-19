@@ -37,6 +37,14 @@ document.getElementById('google-login-btn').addEventListener('click', async () =
   }
 });
 
+// 로그아웃 버튼 이벤트 (추가!)
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', confirmLogout);
+  }
+});
+
 // 로그아웃 확인 함수
 async function confirmLogout() {
   const confirmed = confirm('로그아웃 하시겠습니까?');
@@ -62,5 +70,5 @@ function showMainScreen() {
   
   // 사용자 정보 표시
   const avatar = document.getElementById('user-avatar');
-  avatar.src = currentUser.photoURL || 'https://via.placeholder.com/32';
+  avatar.src = currentUser.photoURL || 'https://via.placeholder.com/36';
 }
