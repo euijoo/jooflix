@@ -358,34 +358,46 @@ function setupHeroButtons(movie) {
             alert('재생 URL이 설정되지 않았습니다.');
         }
     };
-  // ===========================
-    // 연도 클릭 이벤트 (새로 추가!)
-    // ===========================
-    const heroYear = document.getElementById('hero-year');
-    heroYear.onclick = async () => {
-        const currentUrl = movie.externalVideoUrl || '';
-        const newUrl = prompt(
-            `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
-            currentUrl
-        );
+  // 등급 아이콘 클릭 → URL 입력
+const ratingIcon = document.getElementById('hero-rating');
+ratingIcon.onclick = async () => {
+    const currentUrl = movie.externalVideoUrl || '';
+    const newUrl = prompt(
+        `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
+        currentUrl
+    );
+    
+    if (newUrl === null) return;
+    
+    try {
+        await db.collection('movies').doc(movie.id).update({
+            externalVideoUrl: newUrl.trim()
+        });
         
-        if (newUrl === null) return;
+        movie.externalVideoUrl = newUrl.trim();
         
-        try {
-            await db.collection('movies').doc(movie.id).update({
-                externalVideoUrl: newUrl.trim()
-            });
-            
-            movie.externalVideoUrl = newUrl.trim();
-            loadMovies();
-            alert('URL이 저장되었습니다!');
-            
-        } catch (error) {
-            console.error('URL 저장 오류:', error);
-            alert('URL 저장 중 오류가 발생했습니다.');
+        // URL 있으면 잠금 해제 아이콘으로 변경
+        if (newUrl.trim()) {
+            ratingIcon.textContent = '🔓';
+        } else {
+            ratingIcon.textContent = '🔒';
         }
-    };
+        
+        alert('URL이 저장되었습니다!');
+        
+    } catch (error) {
+        console.error('URL 저장 오류:', error);
+        alert('URL 저장 중 오류가 발생했습니다.');
+    }
+};
+
+// URL 상태에 따라 아이콘 설정
+if (movie.externalVideoUrl && movie.externalVideoUrl.trim() !== '') {
+    ratingIcon.textContent = '🔓';
+} else {
+    ratingIcon.textContent = '🔒';
 }
+
 
 
 
@@ -581,14 +593,22 @@ async function changeHeroMovie(index) {
     document.getElementById('hero-poster').src = window.getPosterUrl(featuredMovie.posterPath);
     
     // 제목
-    document.getElementById('hero-title').textContent = featuredMovie.title;
-    
-    // 메타 정보
-    document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
-    document.getElementById('hero-runtime').textContent = featuredMovie.runtime 
-        ? `${featuredMovie.runtime}분` 
-        : 'N/A';
-    document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
+document.getElementById('hero-title').textContent = featuredMovie.title;
+
+// 등급 아이콘 설정 (URL 여부에 따라) 👈 추가!
+const ratingIcon = document.getElementById('hero-rating');
+if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== '') {
+    ratingIcon.textContent = '🔓';
+} else {
+    ratingIcon.textContent = '🔒';
+}
+
+// 메타 정보
+document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
+document.getElementById('hero-runtime').textContent = featuredMovie.runtime 
+    ? `${featuredMovie.runtime}분` 
+    : 'N/A';
+document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
     // 줄거리
     document.getElementById('hero-overview').textContent = featuredMovie.overview || '줄거리 정보가 없습니다.';
