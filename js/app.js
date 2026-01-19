@@ -274,7 +274,7 @@ async function loadMovies() {
 // 히어로 섹션 표시
 // ===========================
 
-function displayHeroSlide() {
+async function displayHeroSlide() {
     const heroSection = document.getElementById('hero-section');
     
     if (!allMovies || allMovies.length === 0) {
@@ -283,19 +283,26 @@ function displayHeroSlide() {
     }
     
     heroSection.style.display = 'flex';
-    
-    // 첫 번째 영화를 히어로로 표시
     const featuredMovie = allMovies[0];
     
-    // 배경 이미지
+    // 실시간 랜덤 백드롭
+    const backdrops = await window.getMovieBackdrops(featuredMovie.tmdbId);
+    let backdropUrl;
+    
+    if (backdrops && backdrops.length > 0) {
+        const randomIndex = Math.floor(Math.random() * backdrops.length);
+        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[randomIndex].file_path}`;
+    } else {
+        backdropUrl = featuredMovie.backdropPath 
+            ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
+            : window.getPosterUrl(featuredMovie.posterPath);
+    }
+    
     const heroBackdrop = document.getElementById('hero-backdrop');
-    const backdropUrl = featuredMovie.backdropPath 
-        ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
-        : window.getPosterUrl(featuredMovie.posterPath);
     heroBackdrop.style.backgroundImage = `url(${backdropUrl})`;
     
-    // 포스터
     document.getElementById('hero-poster').src = window.getPosterUrl(featuredMovie.posterPath);
+
     
     // 제목
     document.getElementById('hero-title').textContent = featuredMovie.title;
@@ -548,17 +555,27 @@ async function deleteMovie(movieId) {
 // 히어로 영화 변경 (영화 카드 클릭 시)
 // ===========================
 
-function changeHeroMovie(index) {
+async function changeHeroMovie(index) {
     if (!allMovies || !allMovies[index]) return;
     
     const featuredMovie = allMovies[index];
     
-    // 배경 이미지
+    // 실시간 랜덤 백드롭
+    const backdrops = await window.getMovieBackdrops(featuredMovie.tmdbId);
+    let backdropUrl;
+    
+    if (backdrops && backdrops.length > 0) {
+        const randomIndex = Math.floor(Math.random() * backdrops.length);
+        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[randomIndex].file_path}`;
+    } else {
+        backdropUrl = featuredMovie.backdropPath 
+            ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
+            : window.getPosterUrl(featuredMovie.posterPath);
+    }
+    
     const heroBackdrop = document.getElementById('hero-backdrop');
-    const backdropUrl = featuredMovie.backdropPath 
-        ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
-        : window.getPosterUrl(featuredMovie.posterPath);
     heroBackdrop.style.backgroundImage = `url(${backdropUrl})`;
+
     
     // 포스터
     document.getElementById('hero-poster').src = window.getPosterUrl(featuredMovie.posterPath);
