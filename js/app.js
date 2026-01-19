@@ -19,19 +19,16 @@ $(document).ready(function() {
     // - #movies-carousel 요소에 OwlCarousel 플러그인을 적용
     // - 반응형으로 화면 크기에 따라 보여주는 포스터 개수 조절
     $('#movies-carousel').owlCarousel({
-        items: 2,
-        dots: false,
-        nav: true,
-        navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
-        margin: 15,
-        loop: false,
-        responsive: {
-            400:  { items: 4 }, // 500px 이상: 3개
-            500:  { items: 4 }, // 500px 이상: 3개
-            1280: { items: 6 }, // 1280px 이상: 4개
-            1600: { items: 6 }  // 1600px 이상: 6개
-        }
-    });
+  items: 4,           // 0px 이상 기본 4개
+  dots: false,
+  nav: true,
+  navText: ["<i class='bx bx-chevron-left'></i>", "<i class='bx bx-chevron-right'></i>"],
+  margin: 15,
+  loop: false,
+  responsive: {
+      1280: { items: 6 }, // 1280px 이상: 6개
+      1600: { items: 6 }
+  }
 });
 
 
