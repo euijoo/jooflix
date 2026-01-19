@@ -214,7 +214,7 @@ img {
     inset: 0;
     background-size: cover;
     background-position: center;
-    filter: blur(20px) brightness(0.4);
+    filter: blur(0px) brightness(0.4);
     transform: scale(1.1);
     z-index: 0;
 }
