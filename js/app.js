@@ -512,22 +512,26 @@ function displayMovies() {
     }
     
     moviesGrid.innerHTML = allMovies.map((movie, index) => `
-        <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${index}">
-            <img src="${window.getPosterUrl(movie.posterPath)}" 
-                 alt="${movie.title}"
-                 onerror="this.src='https://via.placeholder.com/300x450/2C3440/99AABB?text=No+Image'">
-            <div class="movie-card-overlay">
-                <div class="movie-card-title">${movie.title}</div>
-                <div class="movie-card-year">${movie.year || 'N/A'}</div>
-                <div class="movie-card-actions">
-                    <button class="btn-small btn-trailer" data-trailer="${movie.trailerUrl || ''}">예고편</button>
-                    <button class="btn-small btn-play" data-url="${movie.externalVideoUrl || ''}">Play</button>
-                    <button class="btn-small btn-nplayer" data-url="${movie.externalVideoUrl || ''}">NPlayer</button>
-                    <button class="btn-small btn-delete" data-movie-id="${movie.id}">삭제</button>
-                </div>
+    <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${index}">
+        <img src="${window.getPosterUrl(movie.posterPath)}" 
+             alt="${movie.title}"
+             onerror="this.src='https://via.placeholder.com/300x450/2C3440/99AABB?text=No+Image'">
+        <div class="movie-card-overlay">
+            <div class="movie-card-title">${movie.title}</div>
+            <div class="movie-card-year">${movie.year || 'N/A'}</div>
+            <div class="movie-card-actions">
+                <button class="btn-small btn-trailer" data-trailer="${movie.trailerUrl || ''}">예고편</button>
+                <button class="btn-small btn-play" data-url="${movie.externalVideoUrl || ''}">Play</button>
+                <button class="btn-small btn-nplayer" data-url="${movie.externalVideoUrl || ''}">NPlayer</button>
+                <button class="btn-small btn-delete" data-movie-id="${movie.id}">삭제</button>
             </div>
         </div>
-    `).join('');
+        <div class="movie-card-info">
+            <div class="movie-card-info-title">${movie.title}</div>
+            <div class="movie-card-info-year">${movie.year || 'N/A'}</div>
+        </div>
+    </div>
+`).join('');
     
     // 이벤트 리스너 추가
     attachMovieCardEvents();
@@ -594,21 +598,51 @@ document.querySelectorAll('.btn-play').forEach(btn => {
         });
     });
     
-    // 영화 카드 클릭 시 히어로 변경 (새로 추가!)
-    document.querySelectorAll('.movie-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // 버튼 클릭은 제외
-            if (e.target.classList.contains('btn-small')) return;
+    // 영화 카드 클릭 (모바일: 2단계, PC: 바로 히어로)
+document.querySelectorAll('.movie-card').forEach(card => {
+    let clickCount = 0;
+    let clickTimer = null;
+    
+    card.addEventListener('click', function(e) {
+        // 버튼 클릭은 제외
+        if (e.target.classList.contains('btn-small')) return;
+        
+        const movieIndex = parseInt(this.dataset.movieIndex);
+        const isMobile = window.innerWidth <= 480;
+        
+        if (isMobile) {
+            // 모바일: 2단계 클릭
+            clickCount++;
             
-            const movieIndex = parseInt(this.dataset.movieIndex);
+            if (clickCount === 1) {
+                // 첫 번째 클릭: 정보 슬라이드 업
+                this.classList.add('active');
+                
+                // 3초 후 리셋
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                    this.classList.remove('active');
+                }, 3000);
+            } else {
+                // 두 번째 클릭: 히어로 이동
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                this.classList.remove('active');
+                
+                changeHeroMovie(movieIndex);
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // 👈 최상단 스크롤
+            }
+        } else {
+            // PC/태블릿: 바로 히어로 이동
             changeHeroMovie(movieIndex);
-            
-            // 히어로 섹션으로 스크롤
             document.getElementById('hero-section').scrollIntoView({ 
                 behavior: 'smooth' 
             });
-        });
+        }
     });
+});
+
 }
 
 
