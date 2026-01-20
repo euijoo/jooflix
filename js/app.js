@@ -315,7 +315,9 @@ async function displayHeroSlide() {
     }
     
     heroSection.style.display = 'flex';
-    const featuredMovie = allMovies[0];
+     // 👇 랜덤 영화 선택!
+    const randomIndex = Math.floor(Math.random() * allMovies.length);
+    const featuredMovie = allMovies[randomIndex];
     
     // 실시간 랜덤 백드롭
     const backdrops = await window.getMovieBackdrops(featuredMovie.tmdbId);
