@@ -921,8 +921,49 @@ img {
     .search-results {
         padding: 12px 16px;
     }
+ /* 👇 여기에 추가! */
+    
+    /* 영화 카드 버튼 제거 */
+    .movie-card-actions {
+        display: none; /* 👈 버튼 숨김 */
+    }
+    
+    /* 카드 오버레이 항상 숨김 */
+    .movie-card-overlay {
+        opacity: 0;
+        pointer-events: none;
+    }
+    
+    /* 카드 제목/연도 슬라이드 스타일 */
+    .movie-card-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 100%);
+        padding: 12px;
+        transform: translateY(100%); /* 👈 숨겨진 상태 */
+        transition: transform 0.3s ease;
+        z-index: 5;
+    }
+    
+    /* active 클래스 시 슬라이드 업 */
+    .movie-card.active .movie-card-info {
+        transform: translateY(0); /* 👈 보이는 상태 */
+    }
+    
+    .movie-card-info-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 2px;
+    }
+    
+    .movie-card-info-year {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
 }
-
 /* ===========================
    스크롤바 스타일
    =========================== */
