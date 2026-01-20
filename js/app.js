@@ -552,6 +552,8 @@ playBtn.onclick = () => {
 // ===========================
 
 function setupMobileHeroButtons(movie) {
+    console.log('모바일 버튼 설정:', movie); // 👈 디버깅
+    
     // Trailer 버튼
     const trailerBtn = document.getElementById('hero-trailer-btn-mobile');
     if (trailerBtn) {
@@ -568,9 +570,12 @@ function setupMobileHeroButtons(movie) {
     const playBtn = document.getElementById('hero-play-btn-mobile');
     if (playBtn) {
         playBtn.onclick = () => {
-            if (movie.externalVideoUrl) {
+            const videoUrl = movie.externalVideoUrl;
+            console.log('Watch Now URL:', videoUrl); // 👈 디버깅
+            
+            if (videoUrl && videoUrl.trim() !== '') {
                 const link = document.createElement('a');
-                link.href = movie.externalVideoUrl;
+                link.href = videoUrl;
                 link.target = '_blank';
                 link.rel = 'noreferrer noopener';
                 link.click();
@@ -584,8 +589,11 @@ function setupMobileHeroButtons(movie) {
     const nplayerBtn = document.getElementById('hero-nplayer-btn-mobile');
     if (nplayerBtn) {
         nplayerBtn.onclick = () => {
-            if (movie.externalVideoUrl) {
-                const nplayerUrl = `nplayer-${movie.externalVideoUrl}`;
+            const videoUrl = movie.externalVideoUrl;
+            console.log('NPlayer URL:', videoUrl); // 👈 디버깅
+            
+            if (videoUrl && videoUrl.trim() !== '') {
+                const nplayerUrl = `nplayer-${videoUrl}`;
                 const link = document.createElement('a');
                 link.href = nplayerUrl;
                 link.click();
@@ -612,8 +620,18 @@ function setupMobileHeroButtons(movie) {
                     externalVideoUrl: newUrl.trim()
                 });
                 
+                // 로컬 객체도 업데이트
                 movie.externalVideoUrl = newUrl.trim();
+                
+                // 아이콘 업데이트
                 ratingIcon.textContent = newUrl.trim() ? '🔓' : '🔒';
+                
+                // allMovies 배열도 업데이트
+                const movieInList = allMovies.find(m => m.id === movie.id);
+                if (movieInList) {
+                    movieInList.externalVideoUrl = newUrl.trim();
+                }
+                
                 alert('URL이 저장되었습니다!');
                 
             } catch (error) {
