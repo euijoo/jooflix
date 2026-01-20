@@ -828,10 +828,10 @@ img {
     }
 }
 
-/* 480px 이하 - 2열 */
+/* 480px 이하 - 3열 (모바일 세로) */
 @media (max-width: 480px) {
     .movies-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr); /* 👈 3열로 변경 */
         gap: 12px;
     }
     
@@ -849,11 +849,15 @@ img {
     }
     
     .hero-section {
-        min-height: 350px;
+        min-height: 300px; /* 👈 300px로 변경 */
     }
-        
+    
+    .hero-poster {
+        display: none; /* 👈 포스터 숨김 */
+    }
+    
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.5rem; /* 👈 2.5rem으로 변경 */
     }
     
     .hero-overview {
@@ -888,6 +892,7 @@ img {
         padding: 12px 16px;
     }
 }
+
 
 /* ===========================
    스크롤바 스타일
