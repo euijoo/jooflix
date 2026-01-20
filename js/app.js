@@ -889,8 +889,8 @@ if (isMobile) {
         <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">${directorName}</div>
     `;
     
-    const heroActions = document.querySelector('.hero-actions'); /* 👈 추가! */
-    heroActions.innerHTML = 
+        const heroActions = document.querySelector('.hero-actions');
+    heroActions.innerHTML = `  /* 👈 백틱 추가! */
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <button id="hero-trailer-btn-mobile" class="btn-secondary" style="padding: 7px 12px; font-size: 0.7rem;">Trailer</button>
             <span style="font-size: 0.7rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
@@ -900,6 +900,7 @@ if (isMobile) {
             <button id="hero-nplayer-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">NPlayer</button>
         </div>
     `;
+
 
     
     // 모바일 버튼 이벤트
