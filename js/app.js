@@ -364,6 +364,7 @@ if (isMobile) {
         <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">${directorName}</div>
     `;
     
+     const heroActions = document.querySelector('.hero-actions'); /* 👈 추가! */
     heroActions.innerHTML = `
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <button id="hero-trailer-btn-mobile" class="btn-secondary" style="padding: 7px 12px; font-size: 0.7rem;">Trailer</button>
@@ -888,7 +889,8 @@ if (isMobile) {
         <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">${directorName}</div>
     `;
     
-    heroActions.innerHTML = `
+    const heroActions = document.querySelector('.hero-actions'); /* 👈 추가! */
+    heroActions.innerHTML = 
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <button id="hero-trailer-btn-mobile" class="btn-secondary" style="padding: 7px 12px; font-size: 0.7rem;">Trailer</button>
             <span style="font-size: 0.7rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
