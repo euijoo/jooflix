@@ -848,20 +848,24 @@ img {
         font-size: 12px;
     }
     
-    /* 히어로 섹션 수정 */
+    /* 히어로 섹션 - 아이폰 전용 디자인 */
     .hero-section {
-        min-height: 300px;
+        min-height: auto;
+        height: auto;
+        padding: 32px 20px 24px 20px;
     }
     
-    /* 히어로 배경 블러 제거 */
+    /* 배경 완전히 숨김 */
     .hero-backdrop {
-        filter: blur(0px) brightness(0.4); /* 👈 블러 0 */
+        display: none;
     }
     
-    /* 히어로 콘텐츠 왼쪽 정렬 */
+    /* 콘텐츠 세로 레이아웃 */
     .hero-content {
-        align-items: flex-start; /* 👈 왼쪽 정렬 */
-        text-align: left; /* 👈 왼쪽 정렬 */
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 0;
     }
     
     .hero-poster {
@@ -870,34 +874,38 @@ img {
     
     .hero-info {
         padding-top: 0;
-        max-width: 100%; /* 👈 전체 너비 */
+        max-width: 100%;
     }
     
-    /* 제목 크기 축소 */
+    /* 제목 */
     .hero-title {
-        font-size: 1.8rem; /* 👈 1.8rem로 축소 */
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-shadow: none;
     }
     
-    /* 메타 정보 왼쪽 정렬 */
+    /* 메타 라인 숨기고 모바일 전용으로 교체 */
     .hero-meta {
-        justify-content: flex-start; /* 👈 왼쪽 정렬 */
+        display: block;
     }
     
+    /* 줄거리 숨김 */
     .hero-overview {
-        font-size: 0.85rem; /* 👈 조금 더 작게 */
+        display: none;
     }
     
-    /* 버튼 크기 축소 */
-    .btn-primary,
-    .btn-secondary {
-        padding: 8px 12px; /* 👈 더 작게 */
-        font-size: 0.75rem; /* 👈 더 작게 */
+    /* 감독/출연진 숨김 */
+    .hero-credits {
+        display: none;
     }
     
-    /* 히어로 버튼 왼쪽 정렬 */
+    /* 버튼 영역 */
     .hero-actions {
-        justify-content: flex-start; /* 👈 왼쪽 정렬 */
+        display: block;
+        width: 100%;
     }
+
     
     /* 모달 */
     .search-modal-content {
