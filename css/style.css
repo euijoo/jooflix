@@ -831,7 +831,7 @@ img {
 /* 480px 이하 - 3열 (모바일 세로) */
 @media (max-width: 480px) {
     .movies-grid {
-        grid-template-columns: repeat(3, 1fr); /* 👈 3열로 변경 */
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
     }
     
@@ -848,28 +848,58 @@ img {
         font-size: 12px;
     }
     
+    /* 히어로 섹션 수정 */
     .hero-section {
-        min-height: 300px; /* 👈 300px로 변경 */
+        min-height: 300px;
+    }
+    
+    /* 히어로 배경 블러 제거 */
+    .hero-backdrop {
+        filter: blur(0px) brightness(0.4); /* 👈 블러 0 */
+    }
+    
+    /* 히어로 콘텐츠 왼쪽 정렬 */
+    .hero-content {
+        align-items: flex-start; /* 👈 왼쪽 정렬 */
+        text-align: left; /* 👈 왼쪽 정렬 */
     }
     
     .hero-poster {
-        display: none; /* 👈 포스터 숨김 */
+        display: none;
     }
     
+    .hero-info {
+        padding-top: 0;
+        max-width: 100%; /* 👈 전체 너비 */
+    }
+    
+    /* 제목 크기 축소 */
     .hero-title {
-        font-size: 2.5rem; /* 👈 2.5rem으로 변경 */
+        font-size: 1.8rem; /* 👈 1.8rem로 축소 */
+    }
+    
+    /* 메타 정보 왼쪽 정렬 */
+    .hero-meta {
+        justify-content: flex-start; /* 👈 왼쪽 정렬 */
     }
     
     .hero-overview {
-        font-size: 0.9rem;
+        font-size: 0.85rem; /* 👈 조금 더 작게 */
     }
     
+    /* 버튼 크기 축소 */
     .btn-primary,
     .btn-secondary {
-        padding: 10px 16px;
-        font-size: 0.85rem;
+        padding: 8px 12px; /* 👈 더 작게 */
+        font-size: 0.75rem; /* 👈 더 작게 */
     }
     
+    /* 히어로 버튼 왼쪽 정렬 */
+    .hero-actions {
+        justify-content: flex-start; /* 👈 왼쪽 정렬 */
+    }
+    
+    /* 모달 */
     .search-modal-content {
         width: 95%;
         max-height: 90vh;
@@ -892,7 +922,6 @@ img {
         padding: 12px 16px;
     }
 }
-
 
 /* ===========================
    스크롤바 스타일
