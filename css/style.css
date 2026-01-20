@@ -928,11 +928,10 @@ img {
         display: none; /* 👈 버튼 숨김 */
     }
     
-    /* 카드 오버레이 항상 숨김 */
-    .movie-card-overlay {
-        opacity: 0;
-        pointer-events: none;
-    }
+    /* 카드 오버레이 완전히 제거 */
+.movie-card-overlay {
+    display: none !important; /* 👈 완전히 숨김 */
+}
     
     /* 카드 제목/연도 슬라이드 스타일 */
     .movie-card-info {
