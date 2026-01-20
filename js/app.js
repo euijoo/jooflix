@@ -342,13 +342,54 @@ async function displayHeroSlide() {
     document.getElementById('hero-title').textContent = featuredMovie.title;
 
 
-    // 등급 아이콘 설정 (URL 여부에 따라) 👈 추가!
-const ratingIcon = document.getElementById('hero-rating');
-if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== '') {
-    ratingIcon.textContent = '🔓';
+    // 모바일 전용 레이아웃 체크
+const isMobile = window.innerWidth <= 480;
+
+if (isMobile) {
+    // ===== 아이폰 전용 레이아웃 =====
+    
+    // 감독 정보 가져오기
+    const movieDetails = await window.getMovieDetails(featuredMovie.tmdbId);
+    const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
+    
+    // 메타 라인 재구성
+    const heroMeta = document.querySelector('.hero-meta');
+    heroMeta.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span class="rating-icon" id="hero-rating-mobile" style="font-size: 1em;">${featuredMovie.externalVideoUrl ? '🔓' : '🔒'}</span>
+            <span style="color: var(--text-secondary);">${featuredMovie.year || 'N/A'}</span>
+            <span style="color: var(--text-muted);">·</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">DIRECTED BY</span>
+        </div>
+        <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 20px;">${directorName}</div>
+    `;
+    
+    // 버튼 영역 재구성
+    const heroActions = document.querySelector('.hero-actions');
+    heroActions.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+            <button id="hero-trailer-btn-mobile" class="btn-secondary" style="padding: 10px 20px; font-size: 0.85rem;">Trailer</button>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 10px; font-size: 0.85rem;">Watch Now</button>
+            <button id="hero-nplayer-btn-mobile" class="btn-secondary" style="flex: 1; padding: 10px; font-size: 0.85rem;">NPlayer</button>
+        </div>
+    `;
+    
+    // 모바일 버튼 이벤트
+    setupMobileHeroButtons(featuredMovie);
+    
 } else {
-    ratingIcon.textContent = '🔒';
-}
+    // ===== PC/태블릿 기존 레이아웃 =====
+    
+    // 등급 아이콘 설정
+    const ratingIcon = document.getElementById('hero-rating');
+    if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== '') {
+        ratingIcon.textContent = '🔓';
+    } else {
+        ratingIcon.textContent = '🔒';
+    }
     
     // 메타 정보
     document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
@@ -358,14 +399,16 @@ if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== 
     document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
     
     // 줄거리
-document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
-
-// 감독/출연진 표시 👈 추가!
-displayHeroCredits(featuredMovie);
-
-// 버튼 이벤트
-setupHeroButtons(featuredMovie);
+    document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
+    
+    // 감독/출연진 표시
+    displayHeroCredits(featuredMovie);
+    
+    // 버튼 이벤트
+    setupHeroButtons(featuredMovie);
 }
+}
+
 
 
 
@@ -502,6 +545,87 @@ playBtn.onclick = () => {
         ratingIcon.textContent = '🔒';
     }
 }
+
+
+// ===========================
+// 히어로 버튼 이벤트 설정 (모바일 전용)
+// ===========================
+
+function setupMobileHeroButtons(movie) {
+    // Trailer 버튼
+    const trailerBtn = document.getElementById('hero-trailer-btn-mobile');
+    if (trailerBtn) {
+        trailerBtn.onclick = () => {
+            if (movie.trailerUrl) {
+                playTrailer(movie.trailerUrl);
+            } else {
+                alert('예고편이 없습니다.');
+            }
+        };
+    }
+    
+    // Watch Now 버튼
+    const playBtn = document.getElementById('hero-play-btn-mobile');
+    if (playBtn) {
+        playBtn.onclick = () => {
+            if (movie.externalVideoUrl) {
+                const link = document.createElement('a');
+                link.href = movie.externalVideoUrl;
+                link.target = '_blank';
+                link.rel = 'noreferrer noopener';
+                link.click();
+            } else {
+                alert('재생 URL이 설정되지 않았습니다.');
+            }
+        };
+    }
+    
+    // NPlayer 버튼
+    const nplayerBtn = document.getElementById('hero-nplayer-btn-mobile');
+    if (nplayerBtn) {
+        nplayerBtn.onclick = () => {
+            if (movie.externalVideoUrl) {
+                const nplayerUrl = `nplayer-${movie.externalVideoUrl}`;
+                const link = document.createElement('a');
+                link.href = nplayerUrl;
+                link.click();
+            } else {
+                alert('재생 URL이 설정되지 않았습니다.');
+            }
+        };
+    }
+    
+    // 등급 아이콘 클릭
+    const ratingIcon = document.getElementById('hero-rating-mobile');
+    if (ratingIcon) {
+        ratingIcon.onclick = async () => {
+            const currentUrl = movie.externalVideoUrl || '';
+            const newUrl = prompt(
+                `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
+                currentUrl
+            );
+            
+            if (newUrl === null) return;
+            
+            try {
+                await db.collection('movies').doc(movie.id).update({
+                    externalVideoUrl: newUrl.trim()
+                });
+                
+                movie.externalVideoUrl = newUrl.trim();
+                ratingIcon.textContent = newUrl.trim() ? '🔓' : '🔒';
+                alert('URL이 저장되었습니다!');
+                
+            } catch (error) {
+                console.error('URL 저장 오류:', error);
+                alert('URL 저장 중 오류가 발생했습니다.');
+            }
+        };
+    }
+}
+
+
+
 
 // ===========================
 // 영화 그리드 표시 (영화 카드 클릭 → 히어로 변경 추가)
@@ -743,19 +867,62 @@ if (featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() !== 
     ratingIcon.textContent = '🔒';
 }
 
-// 메타 정보
-document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
-document.getElementById('hero-runtime').textContent = featuredMovie.runtime 
-    ? `${featuredMovie.runtime}분` 
-    : 'N/A';
-document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
+// 모바일 전용 레이아웃 체크
+const isMobile = window.innerWidth <= 480;
+
+if (isMobile) {
+    // ===== 아이폰 전용 레이아웃 =====
     
-    // 줄거리 (문장 단위로 3줄)
-document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
+    // 감독 정보 가져오기
+    const movieDetails = await window.getMovieDetails(featuredMovie.tmdbId);
+    const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
+    
+    // 메타 라인 재구성: 등급 · 연도 · DIRECTED BY (한 줄) + 감독 이름 (다음 줄)
+    const heroMeta = document.querySelector('.hero-meta');
+    heroMeta.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span class="rating-icon" id="hero-rating-mobile" style="font-size: 1em;">${featuredMovie.externalVideoUrl ? '🔓' : '🔒'}</span>
+            <span style="color: var(--text-secondary);">${featuredMovie.year || 'N/A'}</span>
+            <span style="color: var(--text-muted);">·</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">DIRECTED BY</span>
+        </div>
+        <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 20px;">${directorName}</div>
+    `;
+    
+    // 버튼 영역 재구성
+    const heroActions = document.querySelector('.hero-actions');
+    heroActions.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+            <button id="hero-trailer-btn-mobile" class="btn-secondary" style="padding: 10px 20px; font-size: 0.85rem;">Trailer</button>
+            <span style="font-size: 0.85rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 10px; font-size: 0.85rem;">Watch Now</button>
+            <button id="hero-nplayer-btn-mobile" class="btn-secondary" style="flex: 1; padding: 10px; font-size: 0.85rem;">NPlayer</button>
+        </div>
+    `;
+    
+    // 모바일 버튼 이벤트
+    setupMobileHeroButtons(featuredMovie);
+    
+} else {
+    // ===== PC/태블릿 기존 레이아웃 =====
+    
+    // 메타 정보
+    document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
+    document.getElementById('hero-runtime').textContent = featuredMovie.runtime 
+        ? `${featuredMovie.runtime}분` 
+        : 'N/A';
+    document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
+    
+    // 줄거리
+    document.getElementById('hero-overview').textContent = truncateOverview(featuredMovie.overview);
+    
+    // 감독/출연진 표시
+    displayHeroCredits(featuredMovie);
+    
+    // 버튼 이벤트
+    setupHeroButtons(featuredMovie);
+}
 
-// 감독/출연진 표시 👈 추가!
-displayHeroCredits(featuredMovie);
-
-// 버튼 이벤트
-setupHeroButtons(featuredMovie);
 }
