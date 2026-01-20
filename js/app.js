@@ -287,7 +287,7 @@ async function displayHeroSlide() {
                 <span style="color: var(--text-muted); font-size: 0.8rem;">·</span>
                 <span style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">DIRECTED BY</span>
             </div>
-            <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">${directorName}</div>
+            <div style="font-size: 0.8rem; font-weight: 400; color: var(--text-primary); margin-bottom: 5px;">${directorName}</div>
         `;
         
         document.querySelector('.hero-actions').innerHTML = `
@@ -296,7 +296,7 @@ async function displayHeroSlide() {
                 <span style="font-size: 0.7rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
             </div>
             <div style="display: flex; gap: 8px;">
-                <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">Watch Now</button>
+                <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">Play</button>
                 <button id="hero-nplayer-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">NPlayer</button>
             </div>
         `;
