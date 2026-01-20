@@ -880,7 +880,7 @@ img {
     
      /* 제목 */
     .hero-title {
-        font-size: 1.5rem; /* 👈 더 작게 */
+        font-size: 1.3rem; /* 👈 더 작게 */
         font-weight: 700;
         margin-bottom: 10px;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
@@ -895,8 +895,8 @@ img {
    /* 버튼 크기 축소 */
     .btn-primary,
     .btn-secondary {
-        padding: 8px 14px; /* 👈 더 작게 */
-        font-size: 0.75rem; /* 👈 더 작게 */
+        padding: 6px 10px; /* 👈 더 작게 */
+        font-size: 0.65rem; /* 👈 더 작게 */
     }
     
     /* 줄거리 숨김 */
