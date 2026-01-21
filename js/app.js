@@ -332,7 +332,7 @@ async function displayHeroSlide() {
         
                 // 버튼 영역 (TV/영화 구분)
 if (featuredMovie.type === 'tv') {
-    // TV: 에피소드 버튼만 표시 ✅
+    // TV: 에피소드 버튼만 표시 (Trailer 제거) ✅
     const episodes = featuredMovie.episodeList || [];
     const episodeButtons = episodes.map(ep => 
         `<button class="btn-secondary btn-episode" data-url="${ep.url}" style="padding: 6px 10px; font-size: 0.65rem;">${ep.title}</button>`
@@ -359,6 +359,15 @@ if (featuredMovie.type === 'tv') {
             }
         };
     });
+    
+    // 👇 TV일 때도 hero-rating-mobile 이벤트 설정!
+    const ratingIcon = document.getElementById('hero-rating-mobile');
+    if (ratingIcon) {
+        ratingIcon.onclick = () => {
+            openEpisodeModal(featuredMovie);
+        };
+    }
+    
 } else {
     // 영화: 기존 버튼
     document.querySelector('.hero-actions').innerHTML = `
@@ -372,8 +381,9 @@ if (featuredMovie.type === 'tv') {
         </div>
     `;
     
-    setupMobileHeroButtons(featuredMovie);
+    setupMobileHeroButtons(featuredMovie); // ✅ 이미 hero-rating-mobile 이벤트 설정됨
 }
+
 
 
         
@@ -832,7 +842,7 @@ async function changeHeroMovie(index) {
         
                 // 버튼 영역 (TV/영화 구분)
 if (featuredMovie.type === 'tv') {
-    // TV: 에피소드 버튼만 표시 (Trailer 제거) ✅
+    // TV: 에피소드 버튼만 표시 ✅
     const episodes = featuredMovie.episodeList || [];
     const episodeButtons = episodes.map(ep => 
         `<button class="btn-secondary btn-episode" data-url="${ep.url}" style="padding: 6px 10px; font-size: 0.65rem;">${ep.title}</button>`
@@ -859,6 +869,15 @@ if (featuredMovie.type === 'tv') {
             }
         };
     });
+    
+    // 👇 TV일 때도 hero-rating-mobile 이벤트 설정!
+    const ratingIcon = document.getElementById('hero-rating-mobile');
+    if (ratingIcon) {
+        ratingIcon.onclick = () => {
+            openEpisodeModal(featuredMovie);
+        };
+    }
+    
 } else {
     // 영화: 기존 버튼
     document.querySelector('.hero-actions').innerHTML = `
@@ -873,7 +892,8 @@ if (featuredMovie.type === 'tv') {
     `;
     
     setupMobileHeroButtons(featuredMovie);
-    }
+}
+
 
      } else {
         document.getElementById('hero-rating').textContent = featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() ? '🔓' : '🔒';
