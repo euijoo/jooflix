@@ -531,7 +531,6 @@ function setupHeroButtons(movie) {
 // ===========================
 // 버튼 이벤트 (모바일)
 // ===========================
-
 function setupMobileHeroButtons(movie) {
     const trailerBtn = document.getElementById('hero-trailer-btn-mobile');
     if (trailerBtn) {
@@ -572,14 +571,12 @@ function setupMobileHeroButtons(movie) {
         };
     }
     
-        const ratingIcon = document.getElementById('hero-rating-mobile');
+    const ratingIcon = document.getElementById('hero-rating-mobile');
     if (ratingIcon) {
         ratingIcon.onclick = async () => {
             if (movie.type === 'tv') {
-                // TV: 에피소드 관리 모달
                 openEpisodeModal(movie);
             } else {
-                // 영화: 기존 URL 입력
                 const currentUrl = movie.externalVideoUrl || '';
                 const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
                 
@@ -600,8 +597,9 @@ function setupMobileHeroButtons(movie) {
                 }
             }
         };
-      }
     }
+}  
+
 
 
 function playTrailer(trailerUrl) {
@@ -875,10 +873,9 @@ if (featuredMovie.type === 'tv') {
     `;
     
     setupMobileHeroButtons(featuredMovie);
-}
-        }
+    }
 
-    } else {
+     } else {
         document.getElementById('hero-rating').textContent = featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() ? '🔓' : '🔒';
         document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
         document.getElementById('hero-runtime').textContent = featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A';
