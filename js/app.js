@@ -216,7 +216,7 @@ async function addToCollection(itemId, type) {
             }
             
             const streamingUrl = prompt(
-                `"${details.title}" 스트리밍 링크를 입력하세요 (나중에 추가 가능):`,
+                `"${details.title}" 스트리밍 링크를 입력하세요:`,
                 ''
             );
             
@@ -225,10 +225,10 @@ async function addToCollection(itemId, type) {
                 tmdbId: details.id,
                 title: details.title,
                 year: details.release_date ? details.release_date.split('-')[0] : 'N/A',
-                posterPath: details.poster_path,
-                backdropPath: randomBackdrop || details.backdrop_path,
-                overview: details.overview,
-                runtime: details.runtime,
+                posterPath: details.poster_path || '',
+                backdropPath: randomBackdrop || details.backdrop_path || '',
+                overview: details.overview || '',
+                runtime: details.runtime || 0,
                 genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
                 cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
                 trailerUrl: trailer || '',
@@ -236,13 +236,9 @@ async function addToCollection(itemId, type) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
-                } else {
+        } else {
             // TV 시리즈
-            console.log('TV 추가 시작:', itemId);
-            
             const details = await window.getTVDetails(itemId);
-            console.log('TV 상세:', details);
-            
             const trailer = await window.getTVTrailer(itemId);
             const backdrops = await window.getTVBackdrops(itemId);
             
@@ -253,7 +249,7 @@ async function addToCollection(itemId, type) {
             }
             
             const streamingUrl = prompt(
-                `"${details.name}" 스트리밍 링크를 입력하세요 (나중에 추가 가능):`,
+                `"${details.name}" 스트리밍 링크를 입력하세요:`,
                 ''
             );
             
@@ -288,6 +284,7 @@ async function addToCollection(itemId, type) {
         alert('추가하는 중 오류가 발생했습니다.');
     }
 }
+
 
 
 } else {
