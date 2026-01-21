@@ -454,29 +454,12 @@ function setupHeroButtons(movie) {
             `<button class="btn-secondary btn-episode-pc" data-url="${ep.url}" style="padding: 10px 16px; font-size: 0.85rem; margin-right: 8px; margin-bottom: 8px;">${ep.title}</button>`
         ).join('');
         
+        // 👇 버튼들 제거, 에피소드만 표시
         document.querySelector('.hero-actions').innerHTML = `
-            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
-                <button id="hero-trailer-btn" class="btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">Trailer</button>
-                <button id="hero-manage-episodes-btn" class="btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">에피소드 관리</button>
-            </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                ${episodeButtons || '<p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">에피소드가 없습니다.</p>'}
+                ${episodeButtons || '<p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">에피소드가 없습니다. 🔒 아이콘을 클릭하여 추가하세요.</p>'}
             </div>
         `;
-        
-        // Trailer 버튼
-        document.getElementById('hero-trailer-btn').onclick = () => {
-            if (movie.trailerUrl) {
-                playTrailer(movie.trailerUrl);
-            } else {
-                alert('예고편이 없습니다.');
-            }
-        };
-        
-        // 에피소드 관리 버튼
-        document.getElementById('hero-manage-episodes-btn').onclick = () => {
-            openEpisodeModal(movie);
-        };
         
         // 에피소드 재생 버튼들
         document.querySelectorAll('.btn-episode-pc').forEach(btn => {
@@ -498,7 +481,7 @@ function setupHeroButtons(movie) {
         return; // TV는 여기서 종료
     }
     
-    // 영화인 경우 (기존 코드)
+    // 영화인 경우 (기존 코드 유지)
     document.getElementById('hero-trailer-btn').onclick = () => {
         if (movie.trailerUrl) {
             playTrailer(movie.trailerUrl);
@@ -550,6 +533,7 @@ function setupHeroButtons(movie) {
         }
     };
 }
+
 
 
 // ===========================
