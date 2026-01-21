@@ -126,6 +126,27 @@
         </div>
     </div>
 
+<!-- 👇 에피소드 관리 모달 추가 -->
+        <div id="episode-modal" class="modal">
+            <div class="modal-content search-modal-content">
+                <div class="modal-header">
+                    <h2 id="episode-modal-title">에피소드 관리</h2>
+                    <span class="modal-close">&times;</span>
+                </div>
+                <div id="episode-list" style="padding: 20px; max-height: 400px; overflow-y: auto;">
+                    <!-- 에피소드 리스트 동적 생성 -->
+                </div>
+                <div style="padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; gap: 12px;">
+                    <button id="add-episode-btn" class="btn-secondary" style="flex: 1;">+ 에피소드 추가</button>
+                    <button id="save-episodes-btn" class="btn-add">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
     <!-- Scripts -->
     <script src="config/firebase-config.js"></script>
     <script src="js/auth.js"></script>
