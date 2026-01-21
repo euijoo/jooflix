@@ -2,9 +2,10 @@
 // 전역 변수
 // ===========================
 let allMovies = [];
-let currentTab = 'all'; // 👈 추가!
+let currentTab = 'all';
+
 // ===========================
-// 유틸리티 함수
+// 유틸리티
 // ===========================
 
 function truncateOverview(text, maxLines = 3) {
@@ -14,19 +15,16 @@ function truncateOverview(text, maxLines = 3) {
     
     for (let sentence of sentences) {
         const testText = result + sentence;
-        const estimatedLines = Math.ceil(testText.length / 45);
-        
-        if (estimatedLines <= maxLines) {
+        if (Math.ceil(testText.length / 45) <= maxLines) {
             result = testText;
         } else {
             break;
         }
     }
-    
     return result.trim() || sentences[0];
 }
 
-// DOM 요소
+// DOM
 const searchModal = document.getElementById('search-modal');
 const videoModal = document.getElementById('video-modal');
 const searchBtnNav = document.getElementById('search-btn-nav');
@@ -35,36 +33,29 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const moviesGrid = document.getElementById('movies-grid');
 const videoPlayer = document.getElementById('video-player');
-
 let searchTimeout;
 
 // ===========================
 // 초기화
 // ===========================
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('App initialized');
-    
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // 검색 버튼이면 탭 변경 안 함
             if (this.id === 'search-btn-nav') return;
             
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-            
-            // 탭 전환
             currentTab = this.dataset.tab;
             filterAndDisplayMovies();
         });
     });
 });
 
-
 // ===========================
-// 모달 제어
+// 모달
 // ===========================
 
 searchBtnNav.addEventListener('click', () => {
@@ -77,10 +68,9 @@ addMovieBtn.addEventListener('click', () => {
     searchInput.focus();
 });
 
-document.querySelectorAll('.modal-close').forEach(closeBtn => {
-    closeBtn.addEventListener('click', function() {
-        const modal = this.closest('.modal');
-        closeModal(modal);
+document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', function() {
+        closeModal(this.closest('.modal'));
     });
 });
 
@@ -100,11 +90,7 @@ function openModal(modal) {
 function closeModal(modal) {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
-    
-    if (modal === videoModal) {
-        videoPlayer.src = '';
-    }
-    
+    if (modal === videoModal) videoPlayer.src = '';
     if (modal === searchModal) {
         searchInput.value = '';
         searchResults.innerHTML = '';
@@ -118,7 +104,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 // ===========================
-// 검색 기능
+// 검색
 // ===========================
 
 searchInput.addEventListener('input', function(e) {
@@ -134,15 +120,10 @@ searchInput.addEventListener('input', function(e) {
     
     searchTimeout = setTimeout(async () => {
         try {
-            // 선택된 타입 확인
             const searchType = document.querySelector('input[name="search-type"]:checked').value;
-            
-            let results;
-            if (searchType === 'movie') {
-                results = await window.searchMovies(query);
-            } else {
-                results = await window.searchTVShows(query);
-            }
+            const results = searchType === 'movie' 
+                ? await window.searchMovies(query) 
+                : await window.searchTVShows(query);
             
             displaySearchResults(results, searchType);
         } catch (error) {
@@ -162,13 +143,9 @@ function displaySearchResults(items, type) {
         const posterUrl = item.poster_path 
             ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
             : 'https://via.placeholder.com/60x90/2C3440/99AABB?text=No+Image';
-        
-        // 영화: release_date, TV: first_air_date
         const year = type === 'movie' 
             ? (item.release_date ? item.release_date.split('-')[0] : 'N/A')
             : (item.first_air_date ? item.first_air_date.split('-')[0] : 'N/A');
-        
-        // 영화: title, TV: name
         const title = type === 'movie' ? item.title : item.name;
         const overview = item.overview || '줄거리 정보가 없습니다.';
         const typeIcon = type === 'movie' ? '🎬' : '📺';
@@ -194,7 +171,7 @@ function displaySearchResults(items, type) {
 }
 
 // ===========================
-// Firestore에 추가 (영화/TV 통합)
+// Firestore 추가
 // ===========================
 
 async function addToCollection(itemId, type) {
@@ -204,21 +181,16 @@ async function addToCollection(itemId, type) {
         let itemData;
         
         if (type === 'movie') {
-            // 영화
             const details = await window.getMovieDetails(itemId);
             const trailer = await window.getMovieTrailer(itemId);
             const backdrops = await window.getMovieBackdrops(itemId);
             
             let randomBackdrop = '';
             if (backdrops && backdrops.length > 0) {
-                const randomIndex = Math.floor(Math.random() * backdrops.length);
-                randomBackdrop = backdrops[randomIndex].file_path;
+                randomBackdrop = backdrops[Math.floor(Math.random() * backdrops.length)].file_path;
             }
             
-            const streamingUrl = prompt(
-                `"${details.title}" 스트리밍 링크를 입력하세요:`,
-                ''
-            );
+            const streamingUrl = prompt(`"${details.title}" 스트리밍 링크:`, '');
             
             itemData = {
                 type: 'movie',
@@ -235,23 +207,17 @@ async function addToCollection(itemId, type) {
                 externalVideoUrl: streamingUrl || '',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            
         } else {
-            // TV 시리즈
             const details = await window.getTVDetails(itemId);
             const trailer = await window.getTVTrailer(itemId);
             const backdrops = await window.getTVBackdrops(itemId);
             
             let randomBackdrop = '';
             if (backdrops && backdrops.length > 0) {
-                const randomIndex = Math.floor(Math.random() * backdrops.length);
-                randomBackdrop = backdrops[randomIndex].file_path;
+                randomBackdrop = backdrops[Math.floor(Math.random() * backdrops.length)].file_path;
             }
             
-            const streamingUrl = prompt(
-                `"${details.name}" 스트리밍 링크를 입력하세요:`,
-                ''
-            );
+            const streamingUrl = prompt(`"${details.name}" 스트리밍 링크:`, '');
             
             itemData = {
                 type: 'tv',
@@ -273,34 +239,15 @@ async function addToCollection(itemId, type) {
         }
         
         await db.collection('movies').add(itemData);
-        console.log('추가 완료:', itemData.title);
-        
         closeModal(searchModal);
         loadMovies();
-        alert(`"${itemData.title}"이(가) 컬렉션에 추가되었습니다!`);
+        alert(`"${itemData.title}" 추가 완료!`);
         
     } catch (error) {
         console.error('추가 오류:', error);
-        alert('추가하는 중 오류가 발생했습니다.');
+        alert('추가 실패!');
     }
 }
-
-
-
-} else {
-    // TV 시리즈
-    console.log('TV 추가 시작:', itemId); // 👈 추가
-    
-    const details = await window.getTVDetails(itemId);
-    console.log('TV 상세:', details); // 👈 추가
-    
-    const trailer = await window.getTVTrailer(itemId);
-    console.log('TV 예고편:', trailer); // 👈 추가
-    
-    const backdrops = await window.getTVBackdrops(itemId);
-    console.log('TV 백드롭:', backdrops); // 👈 추가
-
-
 // ===========================
 // Firestore 로드
 // ===========================
@@ -316,7 +263,7 @@ async function loadMovies() {
         
         console.log(`${allMovies.length}개 로드 완료`);
         displayHeroSlide();
-        filterAndDisplayMovies(); // 👈 displayMovies() 대신!
+        filterAndDisplayMovies();
         
     } catch (error) {
         console.error('로드 오류:', error);
@@ -324,7 +271,7 @@ async function loadMovies() {
 }
 
 // ===========================
-// 히어로 섹션 표시
+// 히어로
 // ===========================
 
 async function displayHeroSlide() {
@@ -339,16 +286,13 @@ async function displayHeroSlide() {
     const randomIndex = Math.floor(Math.random() * allMovies.length);
     const featuredMovie = allMovies[randomIndex];
     
-    // 랜덤 백드롭
-    // 랜덤 백드롭
-const backdrops = featuredMovie.type === 'tv' 
-    ? await window.getTVBackdrops(featuredMovie.tmdbId)
-    : await window.getMovieBackdrops(featuredMovie.tmdbId);
-    let backdropUrl;
+    const backdrops = featuredMovie.type === 'tv' 
+        ? await window.getTVBackdrops(featuredMovie.tmdbId)
+        : await window.getMovieBackdrops(featuredMovie.tmdbId);
     
+    let backdropUrl;
     if (backdrops && backdrops.length > 0) {
-        const randomIndex = Math.floor(Math.random() * backdrops.length);
-        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[randomIndex].file_path}`;
+        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[Math.floor(Math.random() * backdrops.length)].file_path}`;
     } else {
         backdropUrl = featuredMovie.backdropPath 
             ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
@@ -359,15 +303,12 @@ const backdrops = featuredMovie.type === 'tv'
     document.getElementById('hero-poster').src = window.getPosterUrl(featuredMovie.posterPath);
     document.getElementById('hero-title').textContent = featuredMovie.title;
     
-    // 모바일/PC 분기
     const isMobile = window.innerWidth <= 480;
     
     if (isMobile) {
-    // 아이폰 레이아웃
-    const movieDetails = featuredMovie.type === 'tv'
-        ? await window.getTVDetails(featuredMovie.tmdbId)
-        : await window.getMovieDetails(featuredMovie.tmdbId);
-
+        const movieDetails = featuredMovie.type === 'tv'
+            ? await window.getTVDetails(featuredMovie.tmdbId)
+            : await window.getMovieDetails(featuredMovie.tmdbId);
         const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
         
         document.querySelector('.hero-meta').innerHTML = `
@@ -392,9 +333,7 @@ const backdrops = featuredMovie.type === 'tv'
         `;
         
         setupMobileHeroButtons(featuredMovie);
-        
     } else {
-        // PC/태블릿 레이아웃
         const ratingIcon = document.getElementById('hero-rating');
         ratingIcon.textContent = featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() ? '🔓' : '🔒';
         
@@ -407,10 +346,6 @@ const backdrops = featuredMovie.type === 'tv'
         setupHeroButtons(featuredMovie);
     }
 }
-
-// ===========================
-// 히어로 감독/출연진 표시
-// ===========================
 
 async function displayHeroCredits(movie) {
     try {
@@ -452,16 +387,15 @@ async function displayHeroCredits(movie) {
             castContainer.innerHTML = '<div style="color: var(--text-muted); font-size: 0.85rem;">정보 없음</div>';
         }
     } catch (error) {
-        console.error('크레딧 표시 오류:', error);
+        console.error('크레딧 오류:', error);
     }
 }
 // ===========================
-// 히어로 버튼 이벤트 (PC/태블릿)
+// 버튼 이벤트 (PC)
 // ===========================
 
 function setupHeroButtons(movie) {
-    const trailerBtn = document.getElementById('hero-trailer-btn');
-    trailerBtn.onclick = () => {
+    document.getElementById('hero-trailer-btn').onclick = () => {
         if (movie.trailerUrl) {
             playTrailer(movie.trailerUrl);
         } else {
@@ -469,8 +403,7 @@ function setupHeroButtons(movie) {
         }
     };
     
-    const playBtn = document.getElementById('hero-play-btn');
-    playBtn.onclick = () => {
+    document.getElementById('hero-play-btn').onclick = () => {
         if (movie.externalVideoUrl && movie.externalVideoUrl.trim()) {
             const link = document.createElement('a');
             link.href = movie.externalVideoUrl;
@@ -482,8 +415,7 @@ function setupHeroButtons(movie) {
         }
     };
     
-    const nplayerBtn = document.getElementById('hero-nplayer-btn');
-    nplayerBtn.onclick = () => {
+    document.getElementById('hero-nplayer-btn').onclick = () => {
         if (movie.externalVideoUrl && movie.externalVideoUrl.trim()) {
             const link = document.createElement('a');
             link.href = `nplayer-${movie.externalVideoUrl}`;
@@ -493,37 +425,30 @@ function setupHeroButtons(movie) {
         }
     };
     
-    const ratingIcon = document.getElementById('hero-rating');
-    ratingIcon.onclick = async () => {
+    document.getElementById('hero-rating').onclick = async () => {
         const currentUrl = movie.externalVideoUrl || '';
-        const newUrl = prompt(
-            `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
-            currentUrl
-        );
+        const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
         
         if (newUrl === null) return;
         
         try {
-            await db.collection('movies').doc(movie.id).update({
-                externalVideoUrl: newUrl.trim()
-            });
-            
+            await db.collection('movies').doc(movie.id).update({ externalVideoUrl: newUrl.trim() });
             movie.externalVideoUrl = newUrl.trim();
-            ratingIcon.textContent = newUrl.trim() ? '🔓' : '🔒';
+            document.getElementById('hero-rating').textContent = newUrl.trim() ? '🔓' : '🔒';
             
             const movieInList = allMovies.find(m => m.id === movie.id);
             if (movieInList) movieInList.externalVideoUrl = newUrl.trim();
             
-            alert('URL이 저장되었습니다!');
+            alert('URL 저장 완료!');
         } catch (error) {
             console.error('URL 저장 오류:', error);
-            alert('URL 저장 중 오류가 발생했습니다.');
+            alert('URL 저장 실패!');
         }
     };
 }
 
 // ===========================
-// 히어로 버튼 이벤트 (모바일)
+// 버튼 이벤트 (모바일)
 // ===========================
 
 function setupMobileHeroButtons(movie) {
@@ -570,36 +495,26 @@ function setupMobileHeroButtons(movie) {
     if (ratingIcon) {
         ratingIcon.onclick = async () => {
             const currentUrl = movie.externalVideoUrl || '';
-            const newUrl = prompt(
-                `"${movie.title}" 재생 URL 입력:\n\n현재: ${currentUrl || '(없음)'}`,
-                currentUrl
-            );
+            const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
             
             if (newUrl === null) return;
             
             try {
-                await db.collection('movies').doc(movie.id).update({
-                    externalVideoUrl: newUrl.trim()
-                });
-                
+                await db.collection('movies').doc(movie.id).update({ externalVideoUrl: newUrl.trim() });
                 movie.externalVideoUrl = newUrl.trim();
                 ratingIcon.textContent = newUrl.trim() ? '🔓' : '🔒';
                 
                 const movieInList = allMovies.find(m => m.id === movie.id);
                 if (movieInList) movieInList.externalVideoUrl = newUrl.trim();
                 
-                alert('URL이 저장되었습니다!');
+                alert('URL 저장 완료!');
             } catch (error) {
                 console.error('URL 저장 오류:', error);
-                alert('URL 저장 중 오류가 발생했습니다.');
+                alert('URL 저장 실패!');
             }
         };
     }
 }
-
-// ===========================
-// 예고편 재생
-// ===========================
 
 function playTrailer(trailerUrl) {
     if (!trailerUrl) {
@@ -609,10 +524,8 @@ function playTrailer(trailerUrl) {
     
     let embedUrl = trailerUrl;
     if (trailerUrl.includes('youtube.com/watch')) {
-        const videoId = trailerUrl.split('v=')[1];
-        const ampersandPosition = videoId.indexOf('&');
-        const cleanVideoId = ampersandPosition !== -1 ? videoId.substring(0, ampersandPosition) : videoId;
-        embedUrl = `https://www.youtube.com/embed/${cleanVideoId}?autoplay=1`;
+        const videoId = trailerUrl.split('v=')[1].split('&')[0];
+        embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     } else if (trailerUrl.includes('youtu.be/')) {
         const videoId = trailerUrl.split('youtu.be/')[1];
         embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
@@ -621,11 +534,8 @@ function playTrailer(trailerUrl) {
     videoPlayer.src = embedUrl;
     openModal(videoModal);
 }
-
-
-
 // ===========================
-// 탭별 필터링 및 표시
+// 필터링
 // ===========================
 
 function filterAndDisplayMovies() {
@@ -644,19 +554,17 @@ function filterAndDisplayMovies() {
     displayMovies(filteredMovies);
 }
 
-
-
 // ===========================
-// 영화 그리드 표시
+// 그리드 표시
 // ===========================
 
 function displayMovies(moviesToDisplay = allMovies) {
     if (!moviesToDisplay || moviesToDisplay.length === 0) {
-        moviesGrid.innerHTML = '<p style="color: var(--text-secondary); padding: 40px; text-align: center; grid-column: 1 / -1;">검색 결과가 없습니다.</p>';
+        moviesGrid.innerHTML = '<p style="color: var(--text-secondary); padding: 40px; text-align: center; grid-column: 1 / -1;">아직 추가된 항목이 없습니다.</p>';
         return;
     }
     
-        moviesGrid.innerHTML = moviesToDisplay.map((movie, index) => {
+    moviesGrid.innerHTML = moviesToDisplay.map((movie, index) => {
         const typeIcon = movie.type === 'tv' ? '📺' : '🎬';
         const runtimeText = movie.type === 'tv' 
             ? `S${movie.seasons || '?'} E${movie.episodes || '?'}`
@@ -686,10 +594,8 @@ function displayMovies(moviesToDisplay = allMovies) {
     
     attachMovieCardEvents();
 }
-
-
 // ===========================
-// 영화 카드 이벤트
+// 카드 이벤트
 // ===========================
 
 function attachMovieCardEvents() {
@@ -753,7 +659,6 @@ function attachMovieCardEvents() {
             
             if (isMobile) {
                 clickCount++;
-                
                 if (clickCount === 1) {
                     this.classList.add('active');
                     clearTimeout(clickTimer);
@@ -777,30 +682,26 @@ function attachMovieCardEvents() {
 }
 
 // ===========================
-// 영화 삭제
+// 삭제
 // ===========================
 
 async function deleteMovie(movieId) {
     const movie = allMovies.find(m => m.id === movieId);
-    if (!movie) return;
-    
-    if (!confirm(`"${movie.title}"을(를) 삭제하시겠습니까?`)) return;
+    if (!movie || !confirm(`"${movie.title}" 삭제하시겠습니까?`)) return;
     
     try {
         await db.collection('movies').doc(movieId).delete();
-        console.log('영화 삭제 완료:', movie.title);
-        
         allMovies = allMovies.filter(m => m.id !== movieId);
         displayHeroSlide();
-        filterAndDisplayMovies(); // 👈 변경!
+        filterAndDisplayMovies();
     } catch (error) {
-        console.error('영화 삭제 오류:', error);
-        alert('영화를 삭제하는 중 오류가 발생했습니다.');
+        console.error('삭제 오류:', error);
+        alert('삭제 실패!');
     }
 }
 
 // ===========================
-// 히어로 영화 변경
+// 히어로 변경
 // ===========================
 
 async function changeHeroMovie(index) {
@@ -808,15 +709,13 @@ async function changeHeroMovie(index) {
     
     const featuredMovie = allMovies[index];
     
-    // 영화/TV 타입별 백드롭
-const backdrops = featuredMovie.type === 'tv' 
-    ? await window.getTVBackdrops(featuredMovie.tmdbId)
-    : await window.getMovieBackdrops(featuredMovie.tmdbId);
-    let backdropUrl;
+    const backdrops = featuredMovie.type === 'tv' 
+        ? await window.getTVBackdrops(featuredMovie.tmdbId)
+        : await window.getMovieBackdrops(featuredMovie.tmdbId);
     
+    let backdropUrl;
     if (backdrops && backdrops.length > 0) {
-        const randomIndex = Math.floor(Math.random() * backdrops.length);
-        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[randomIndex].file_path}`;
+        backdropUrl = `https://image.tmdb.org/t/p/original${backdrops[Math.floor(Math.random() * backdrops.length)].file_path}`;
     } else {
         backdropUrl = featuredMovie.backdropPath 
             ? `https://image.tmdb.org/t/p/original${featuredMovie.backdropPath}`
@@ -830,10 +729,9 @@ const backdrops = featuredMovie.type === 'tv'
     const isMobile = window.innerWidth <= 480;
     
     if (isMobile) {
-    const movieDetails = featuredMovie.type === 'tv'
-        ? await window.getTVDetails(featuredMovie.tmdbId)
-        : await window.getMovieDetails(featuredMovie.tmdbId);
-
+        const movieDetails = featuredMovie.type === 'tv'
+            ? await window.getTVDetails(featuredMovie.tmdbId)
+            : await window.getMovieDetails(featuredMovie.tmdbId);
         const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
         
         document.querySelector('.hero-meta').innerHTML = `
@@ -852,17 +750,14 @@ const backdrops = featuredMovie.type === 'tv'
                 <span style="font-size: 0.7rem; color: var(--text-secondary);">${featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A'}</span>
             </div>
             <div style="display: flex; gap: 8px;">
-                <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">Watch Now</button>
+                <button id="hero-play-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">Play</button>
                 <button id="hero-nplayer-btn-mobile" class="btn-secondary" style="flex: 1; padding: 7px; font-size: 0.7rem;">NPlayer</button>
             </div>
         `;
         
         setupMobileHeroButtons(featuredMovie);
-        
     } else {
-        const ratingIcon = document.getElementById('hero-rating');
-        ratingIcon.textContent = featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() ? '🔓' : '🔒';
-        
+        document.getElementById('hero-rating').textContent = featuredMovie.externalVideoUrl && featuredMovie.externalVideoUrl.trim() ? '🔓' : '🔒';
         document.getElementById('hero-year').textContent = featuredMovie.year || 'N/A';
         document.getElementById('hero-runtime').textContent = featuredMovie.runtime ? `${featuredMovie.runtime}분` : 'N/A';
         document.getElementById('hero-genres').textContent = featuredMovie.genres || 'N/A';
