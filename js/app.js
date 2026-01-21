@@ -447,7 +447,6 @@ async function displayHeroCredits(movie) {
 // ===========================
 // 버튼 이벤트 (PC)
 // ===========================
-
 function setupHeroButtons(movie) {
     // TV 시리즈인 경우
     if (movie.type === 'tv') {
@@ -456,7 +455,6 @@ function setupHeroButtons(movie) {
             `<button class="btn-secondary btn-episode-pc" data-url="${ep.url}" style="padding: 10px 16px; font-size: 0.85rem; margin-right: 8px; margin-bottom: 8px;">${ep.title}</button>`
         ).join('');
         
-        // 👇 버튼들 제거, 에피소드만 표시
         document.querySelector('.hero-actions').innerHTML = `
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 ${episodeButtons || '<p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">에피소드가 없습니다. 🔒 아이콘을 클릭하여 추가하세요.</p>'}
@@ -483,7 +481,14 @@ function setupHeroButtons(movie) {
         return; // TV는 여기서 종료
     }
     
-    // 영화인 경우 (기존 코드 유지)
+    // ✅ 영화인 경우 - HTML도 다시 생성!
+    document.querySelector('.hero-actions').innerHTML = `
+        <button id="hero-trailer-btn" class="btn-secondary">Trailer</button>
+        <button id="hero-play-btn" class="btn-secondary">Watch Now</button>
+        <button id="hero-nplayer-btn" class="btn-secondary">NPlayer</button>
+    `;
+    
+    // 이벤트 설정
     document.getElementById('hero-trailer-btn').onclick = () => {
         if (movie.trailerUrl) {
             playTrailer(movie.trailerUrl);
@@ -535,6 +540,7 @@ function setupHeroButtons(movie) {
         }
     };
 }
+
 
 
 
