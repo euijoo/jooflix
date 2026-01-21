@@ -24,16 +24,22 @@ function truncateOverview(text, maxLines = 3) {
     return result.trim() || sentences[0];
 }
 
-// DOM
+// DOM (모두 상단으로!)
 const searchModal = document.getElementById('search-modal');
 const videoModal = document.getElementById('video-modal');
+const episodeModal = document.getElementById('episode-modal'); // 👈 여기로 이동!
 const searchBtnNav = document.getElementById('search-btn-nav');
 const addMovieBtn = document.getElementById('add-movie-btn');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const moviesGrid = document.getElementById('movies-grid');
 const videoPlayer = document.getElementById('video-player');
+const episodeList = document.getElementById('episode-list'); // 👈 추가
+const addEpisodeBtn = document.getElementById('add-episode-btn'); // 👈 추가
+const saveEpisodesBtn = document.getElementById('save-episodes-btn'); // 👈 추가
+
 let searchTimeout;
+
 
 // ===========================
 // 초기화
@@ -889,11 +895,6 @@ if (featuredMovie.type === 'tv') {
 // ===========================
 // 에피소드 관리 모달
 // ===========================
-
-const episodeModal = document.getElementById('episode-modal');
-const episodeList = document.getElementById('episode-list');
-const addEpisodeBtn = document.getElementById('add-episode-btn');
-const saveEpisodesBtn = document.getElementById('save-episodes-btn');
 
 // 👇 여기에 추가!
 episodeModal.addEventListener('click', function(e) {
