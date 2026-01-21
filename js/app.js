@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
             filterAndDisplayMovies();
         });
     });
+
+        loadMovies(); // 👈 이 줄을 추가하세요!
 });
 
 // ===========================
@@ -445,6 +447,58 @@ async function displayHeroCredits(movie) {
 // ===========================
 
 function setupHeroButtons(movie) {
+    // TV 시리즈인 경우
+    if (movie.type === 'tv') {
+        const episodes = movie.episodeList || [];
+        const episodeButtons = episodes.map(ep => 
+            `<button class="btn-secondary btn-episode-pc" data-url="${ep.url}" style="padding: 10px 16px; font-size: 0.85rem; margin-right: 8px; margin-bottom: 8px;">${ep.title}</button>`
+        ).join('');
+        
+        document.querySelector('.hero-actions').innerHTML = `
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                <button id="hero-trailer-btn" class="btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">Trailer</button>
+                <button id="hero-manage-episodes-btn" class="btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">에피소드 관리</button>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                ${episodeButtons || '<p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">에피소드가 없습니다.</p>'}
+            </div>
+        `;
+        
+        // Trailer 버튼
+        document.getElementById('hero-trailer-btn').onclick = () => {
+            if (movie.trailerUrl) {
+                playTrailer(movie.trailerUrl);
+            } else {
+                alert('예고편이 없습니다.');
+            }
+        };
+        
+        // 에피소드 관리 버튼
+        document.getElementById('hero-manage-episodes-btn').onclick = () => {
+            openEpisodeModal(movie);
+        };
+        
+        // 에피소드 재생 버튼들
+        document.querySelectorAll('.btn-episode-pc').forEach(btn => {
+            btn.onclick = () => {
+                const url = btn.dataset.url;
+                if (url && url.trim()) {
+                    window.open(url, '_blank', 'noreferrer,noopener');
+                } else {
+                    alert('URL이 설정되지 않았습니다.');
+                }
+            };
+        });
+        
+        // 등급 아이콘 - 에피소드 관리 열기
+        document.getElementById('hero-rating').onclick = () => {
+            openEpisodeModal(movie);
+        };
+        
+        return; // TV는 여기서 종료
+    }
+    
+    // 영화인 경우 (기존 코드)
     document.getElementById('hero-trailer-btn').onclick = () => {
         if (movie.trailerUrl) {
             playTrailer(movie.trailerUrl);
@@ -475,33 +529,28 @@ function setupHeroButtons(movie) {
         }
     };
     
-        document.getElementById('hero-rating').onclick = async () => {
-        if (movie.type === 'tv') {
-            // TV: 에피소드 관리 모달
-            openEpisodeModal(movie);
-        } else {
-            // 영화: 기존 URL 입력
-            const currentUrl = movie.externalVideoUrl || '';
-            const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
+    document.getElementById('hero-rating').onclick = async () => {
+        const currentUrl = movie.externalVideoUrl || '';
+        const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
+        
+        if (newUrl === null) return;
+        
+        try {
+            await db.collection('movies').doc(movie.id).update({ externalVideoUrl: newUrl.trim() });
+            movie.externalVideoUrl = newUrl.trim();
+            document.getElementById('hero-rating').textContent = newUrl.trim() ? '🔓' : '🔒';
             
-            if (newUrl === null) return;
+            const movieInList = allMovies.find(m => m.id === movie.id);
+            if (movieInList) movieInList.externalVideoUrl = newUrl.trim();
             
-            try {
-                await db.collection('movies').doc(movie.id).update({ externalVideoUrl: newUrl.trim() });
-                movie.externalVideoUrl = newUrl.trim();
-                document.getElementById('hero-rating').textContent = newUrl.trim() ? '🔓' : '🔒';
-                
-                const movieInList = allMovies.find(m => m.id === movie.id);
-                if (movieInList) movieInList.externalVideoUrl = newUrl.trim();
-                
-                alert('URL 저장 완료!');
-            } catch (error) {
-                console.error('URL 저장 오류:', error);
-                alert('URL 저장 실패!');
-            }
+            alert('URL 저장 완료!');
+        } catch (error) {
+            console.error('URL 저장 오류:', error);
+            alert('URL 저장 실패!');
         }
     };
 }
+
 
 // ===========================
 // 버튼 이벤트 (모바일)
