@@ -481,7 +481,7 @@ function setupHeroButtons(movie) {
         return; // TV는 여기서 종료
     }
     
-    // ✅ 영화인 경우 - HTML도 다시 생성!
+    // ✅ 영화인 경우 - HTML도 다시 생성! (이 부분이 핵심!)
     document.querySelector('.hero-actions').innerHTML = `
         <button id="hero-trailer-btn" class="btn-secondary">Trailer</button>
         <button id="hero-play-btn" class="btn-secondary">Watch Now</button>
