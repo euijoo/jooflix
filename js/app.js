@@ -2,7 +2,7 @@
 // 전역 변수
 // ===========================
 let allMovies = [];
-
+let currentTab = 'all'; // 👈 추가!
 // ===========================
 // 유틸리티 함수
 // ===========================
@@ -48,11 +48,20 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // 검색 버튼이면 탭 변경 안 함
+            if (this.id === 'search-btn-nav') return;
+            
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
+            
+            // 탭 전환
+            currentTab = this.dataset.tab;
+            filterAndDisplayMovies();
         });
     });
 });
+
 
 // ===========================
 // 모달 제어
@@ -125,8 +134,17 @@ searchInput.addEventListener('input', function(e) {
     
     searchTimeout = setTimeout(async () => {
         try {
-            const movies = await window.searchMovies(query);
-            displaySearchResults(movies);
+            // 선택된 타입 확인
+            const searchType = document.querySelector('input[name="search-type"]:checked').value;
+            
+            let results;
+            if (searchType === 'movie') {
+                results = await window.searchMovies(query);
+            } else {
+                results = await window.searchTVShows(query);
+            }
+            
+            displaySearchResults(results, searchType);
         } catch (error) {
             console.error('검색 오류:', error);
             searchResults.innerHTML = '<p style="color: #ff5555; padding: 20px; text-align: center;">검색 중 오류가 발생했습니다.</p>';
@@ -134,25 +152,33 @@ searchInput.addEventListener('input', function(e) {
     }, 500);
 });
 
-function displaySearchResults(movies) {
-    if (!movies || movies.length === 0) {
+function displaySearchResults(items, type) {
+    if (!items || items.length === 0) {
         searchResults.innerHTML = '<p style="color: var(--text-secondary); padding: 20px; text-align: center;">검색 결과가 없습니다.</p>';
         return;
     }
     
-    searchResults.innerHTML = movies.map(movie => {
-        const posterUrl = movie.poster_path 
-            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    searchResults.innerHTML = items.map(item => {
+        const posterUrl = item.poster_path 
+            ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
             : 'https://via.placeholder.com/60x90/2C3440/99AABB?text=No+Image';
-        const year = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
-        const overview = movie.overview || '줄거리 정보가 없습니다.';
+        
+        // 영화: release_date, TV: first_air_date
+        const year = type === 'movie' 
+            ? (item.release_date ? item.release_date.split('-')[0] : 'N/A')
+            : (item.first_air_date ? item.first_air_date.split('-')[0] : 'N/A');
+        
+        // 영화: title, TV: name
+        const title = type === 'movie' ? item.title : item.name;
+        const overview = item.overview || '줄거리 정보가 없습니다.';
+        const typeIcon = type === 'movie' ? '🎬' : '📺';
         
         return `
-            <div class="search-result-item" data-movie-id="${movie.id}">
-                <img src="${posterUrl}" alt="${movie.title}" class="search-result-poster"
+            <div class="search-result-item" data-item-id="${item.id}" data-item-type="${type}">
+                <img src="${posterUrl}" alt="${title}" class="search-result-poster"
                      onerror="this.src='https://via.placeholder.com/60x90/2C3440/99AABB?text=No+Image'">
                 <div class="search-result-info">
-                    <div class="search-result-title">${movie.title}</div>
+                    <div class="search-result-title">${typeIcon} ${title}</div>
                     <div class="search-result-meta">${year}</div>
                     <div class="search-result-overview">${overview}</div>
                 </div>
@@ -162,61 +188,103 @@ function displaySearchResults(movies) {
     
     document.querySelectorAll('.search-result-item').forEach(item => {
         item.addEventListener('click', function() {
-            addMovieToCollection(this.dataset.movieId);
+            addToCollection(this.dataset.itemId, this.dataset.itemType);
         });
     });
 }
 
 // ===========================
-// Firestore 영화 추가
+// Firestore에 추가 (영화/TV 통합)
 // ===========================
 
-async function addMovieToCollection(movieId) {
+async function addToCollection(itemId, type) {
     try {
         searchResults.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading"></div></div>';
         
-        const movieDetails = await window.getMovieDetails(movieId);
-        const trailerUrl = await window.getMovieTrailer(movieId);
-        const backdrops = await window.getMovieBackdrops(movieId);
+        let itemData;
         
-        let randomBackdrop = '';
-        if (backdrops && backdrops.length > 0) {
-            const randomIndex = Math.floor(Math.random() * backdrops.length);
-            randomBackdrop = backdrops[randomIndex].file_path;
+        if (type === 'movie') {
+            // 영화
+            const details = await window.getMovieDetails(itemId);
+            const trailer = await window.getMovieTrailer(itemId);
+            const backdrops = await window.getMovieBackdrops(itemId);
+            
+            let randomBackdrop = '';
+            if (backdrops && backdrops.length > 0) {
+                const randomIndex = Math.floor(Math.random() * backdrops.length);
+                randomBackdrop = backdrops[randomIndex].file_path;
+            }
+            
+            const streamingUrl = prompt(
+                `"${details.title}" 스트리밍 링크를 입력하세요 (나중에 추가 가능):`,
+                ''
+            );
+            
+            itemData = {
+                type: 'movie',
+                tmdbId: details.id,
+                title: details.title,
+                year: details.release_date ? details.release_date.split('-')[0] : 'N/A',
+                posterPath: details.poster_path,
+                backdropPath: randomBackdrop || details.backdrop_path,
+                overview: details.overview,
+                runtime: details.runtime,
+                genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
+                cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
+                trailerUrl: trailer || '',
+                externalVideoUrl: streamingUrl || '',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+        } else {
+            // TV 시리즈
+            const details = await window.getTVDetails(itemId);
+            const trailer = await window.getTVTrailer(itemId);
+            const backdrops = await window.getTVBackdrops(itemId);
+            
+            let randomBackdrop = '';
+            if (backdrops && backdrops.length > 0) {
+                const randomIndex = Math.floor(Math.random() * backdrops.length);
+                randomBackdrop = backdrops[randomIndex].file_path;
+            }
+            
+            const streamingUrl = prompt(
+                `"${details.name}" 스트리밍 링크를 입력하세요 (나중에 추가 가능):`,
+                ''
+            );
+            
+            itemData = {
+                type: 'tv',
+                tmdbId: details.id,
+                title: details.name,
+                year: details.first_air_date ? details.first_air_date.split('-')[0] : 'N/A',
+                posterPath: details.poster_path,
+                backdropPath: randomBackdrop || details.backdrop_path,
+                overview: details.overview,
+                runtime: details.episode_run_time ? details.episode_run_time[0] : null,
+                seasons: details.number_of_seasons,
+                episodes: details.number_of_episodes,
+                genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
+                cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
+                trailerUrl: trailer || '',
+                externalVideoUrl: streamingUrl || '',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
         }
         
-        const streamingUrl = prompt(
-            `"${movieDetails.title}" 스트리밍 링크를 입력하세요 (나중에 추가 가능):\n\n예시: https://example.com/movie.mp4`,
-            ''
-        );
-        
-        const movieData = {
-            tmdbId: movieDetails.id,
-            title: movieDetails.title,
-            year: movieDetails.release_date ? movieDetails.release_date.split('-')[0] : 'N/A',
-            posterPath: movieDetails.poster_path,
-            backdropPath: randomBackdrop || movieDetails.backdrop_path,
-            overview: movieDetails.overview,
-            runtime: movieDetails.runtime,
-            genres: movieDetails.genres ? movieDetails.genres.map(g => g.name).join(', ') : '',
-            cast: movieDetails.cast ? movieDetails.cast.slice(0, 5).map(c => c.name).join(', ') : '',
-            trailerUrl: trailerUrl || '',
-            externalVideoUrl: streamingUrl || '',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        await db.collection('movies').add(movieData);
-        console.log('영화 추가 완료:', movieData.title);
+        await db.collection('movies').add(itemData);
+        console.log('추가 완료:', itemData.title);
         
         closeModal(searchModal);
         loadMovies();
-        alert(`"${movieData.title}"이(가) 컬렉션에 추가되었습니다!`);
+        alert(`"${itemData.title}"이(가) 컬렉션에 추가되었습니다!`);
         
     } catch (error) {
-        console.error('영화 추가 오류:', error);
-        alert('영화를 추가하는 중 오류가 발생했습니다.');
+        console.error('추가 오류:', error);
+        alert('추가하는 중 오류가 발생했습니다.');
     }
 }
+
 
 // ===========================
 // Firestore 로드
@@ -231,14 +299,15 @@ async function loadMovies() {
             allMovies.push({ id: doc.id, ...doc.data() });
         });
         
-        console.log(`${allMovies.length}개 영화 로드 완료`);
+        console.log(`${allMovies.length}개 로드 완료`);
         displayHeroSlide();
-        displayMovies();
+        filterAndDisplayMovies(); // 👈 displayMovies() 대신!
         
     } catch (error) {
-        console.error('영화 로드 오류:', error);
+        console.error('로드 오류:', error);
     }
 }
+
 // ===========================
 // 히어로 섹션 표시
 // ===========================
@@ -256,7 +325,10 @@ async function displayHeroSlide() {
     const featuredMovie = allMovies[randomIndex];
     
     // 랜덤 백드롭
-    const backdrops = await window.getMovieBackdrops(featuredMovie.tmdbId);
+    // 랜덤 백드롭
+const backdrops = featuredMovie.type === 'tv' 
+    ? await window.getTVBackdrops(featuredMovie.tmdbId)
+    : await window.getMovieBackdrops(featuredMovie.tmdbId);
     let backdropUrl;
     
     if (backdrops && backdrops.length > 0) {
@@ -276,8 +348,11 @@ async function displayHeroSlide() {
     const isMobile = window.innerWidth <= 480;
     
     if (isMobile) {
-        // 아이폰 레이아웃
-        const movieDetails = await window.getMovieDetails(featuredMovie.tmdbId);
+    // 아이폰 레이아웃
+    const movieDetails = featuredMovie.type === 'tv'
+        ? await window.getTVDetails(featuredMovie.tmdbId)
+        : await window.getMovieDetails(featuredMovie.tmdbId);
+
         const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
         
         document.querySelector('.hero-meta').innerHTML = `
@@ -324,7 +399,9 @@ async function displayHeroSlide() {
 
 async function displayHeroCredits(movie) {
     try {
-        const movieDetails = await window.getMovieDetails(movie.tmdbId);
+        const movieDetails = movie.type === 'tv'
+            ? await window.getTVDetails(movie.tmdbId)
+            : await window.getMovieDetails(movie.tmdbId);
         
         const directorContainer = document.getElementById('hero-director');
         if (movieDetails.director) {
@@ -529,39 +606,72 @@ function playTrailer(trailerUrl) {
     videoPlayer.src = embedUrl;
     openModal(videoModal);
 }
+
+
+
+// ===========================
+// 탭별 필터링 및 표시
+// ===========================
+
+function filterAndDisplayMovies() {
+    let filteredMovies = allMovies;
+    
+    if (currentTab === 'movie') {
+        filteredMovies = allMovies.filter(m => m.type === 'movie');
+        document.getElementById('section-title').textContent = '영화 컬렉션';
+    } else if (currentTab === 'tv') {
+        filteredMovies = allMovies.filter(m => m.type === 'tv');
+        document.getElementById('section-title').textContent = 'TV 시리즈 컬렉션';
+    } else {
+        document.getElementById('section-title').textContent = '전체 컬렉션';
+    }
+    
+    displayMovies(filteredMovies);
+}
+
+
+
 // ===========================
 // 영화 그리드 표시
 // ===========================
 
-function displayMovies() {
-    if (!allMovies || allMovies.length === 0) {
-        moviesGrid.innerHTML = '<p style="color: var(--text-secondary); padding: 40px; text-align: center; grid-column: 1 / -1;">아직 추가된 영화가 없습니다.<br>상단의 "+ 영화 추가" 버튼을 눌러 영화를 추가해보세요!</p>';
+function displayMovies(moviesToDisplay = allMovies) {
+    if (!moviesToDisplay || moviesToDisplay.length === 0) {
+        moviesGrid.innerHTML = '<p style="color: var(--text-secondary); padding: 40px; text-align: center; grid-column: 1 / -1;">검색 결과가 없습니다.</p>';
         return;
     }
     
-    moviesGrid.innerHTML = allMovies.map((movie, index) => `
-        <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${index}">
-            <img src="${window.getPosterUrl(movie.posterPath)}" alt="${movie.title}"
-                 onerror="this.src='https://via.placeholder.com/300x450/2C3440/99AABB?text=No+Image'">
-            <div class="movie-card-overlay">
-                <div class="movie-card-title">${movie.title}</div>
-                <div class="movie-card-year">${movie.year || 'N/A'}</div>
-                <div class="movie-card-actions">
-                    <button class="btn-small btn-trailer" data-trailer="${movie.trailerUrl || ''}">예고편</button>
-                    <button class="btn-small btn-play" data-url="${movie.externalVideoUrl || ''}">Play</button>
-                    <button class="btn-small btn-nplayer" data-url="${movie.externalVideoUrl || ''}">NPlayer</button>
-                    <button class="btn-small btn-delete" data-movie-id="${movie.id}">삭제</button>
+        moviesGrid.innerHTML = moviesToDisplay.map((movie, index) => {
+        const typeIcon = movie.type === 'tv' ? '📺' : '🎬';
+        const runtimeText = movie.type === 'tv' 
+            ? `S${movie.seasons || '?'} E${movie.episodes || '?'}`
+            : (movie.year || 'N/A');
+        
+        return `
+            <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${index}">
+                <img src="${window.getPosterUrl(movie.posterPath)}" alt="${movie.title}"
+                     onerror="this.src='https://via.placeholder.com/300x450/2C3440/99AABB?text=No+Image'">
+                <div class="movie-card-overlay">
+                    <div class="movie-card-title">${typeIcon} ${movie.title}</div>
+                    <div class="movie-card-year">${runtimeText}</div>
+                    <div class="movie-card-actions">
+                        <button class="btn-small btn-trailer" data-trailer="${movie.trailerUrl || ''}">예고편</button>
+                        <button class="btn-small btn-play" data-url="${movie.externalVideoUrl || ''}">Play</button>
+                        <button class="btn-small btn-nplayer" data-url="${movie.externalVideoUrl || ''}">NPlayer</button>
+                        <button class="btn-small btn-delete" data-movie-id="${movie.id}">삭제</button>
+                    </div>
+                </div>
+                <div class="movie-card-info">
+                    <div class="movie-card-info-title">${typeIcon} ${movie.title}</div>
+                    <div class="movie-card-info-year">${runtimeText}</div>
                 </div>
             </div>
-            <div class="movie-card-info">
-                <div class="movie-card-info-title">${movie.title}</div>
-                <div class="movie-card-info-year">${movie.year || 'N/A'}</div>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     attachMovieCardEvents();
 }
+
 
 // ===========================
 // 영화 카드 이벤트
@@ -667,7 +777,7 @@ async function deleteMovie(movieId) {
         
         allMovies = allMovies.filter(m => m.id !== movieId);
         displayHeroSlide();
-        displayMovies();
+        filterAndDisplayMovies(); // 👈 변경!
     } catch (error) {
         console.error('영화 삭제 오류:', error);
         alert('영화를 삭제하는 중 오류가 발생했습니다.');
@@ -683,7 +793,10 @@ async function changeHeroMovie(index) {
     
     const featuredMovie = allMovies[index];
     
-    const backdrops = await window.getMovieBackdrops(featuredMovie.tmdbId);
+    // 영화/TV 타입별 백드롭
+const backdrops = featuredMovie.type === 'tv' 
+    ? await window.getTVBackdrops(featuredMovie.tmdbId)
+    : await window.getMovieBackdrops(featuredMovie.tmdbId);
     let backdropUrl;
     
     if (backdrops && backdrops.length > 0) {
@@ -702,7 +815,10 @@ async function changeHeroMovie(index) {
     const isMobile = window.innerWidth <= 480;
     
     if (isMobile) {
-        const movieDetails = await window.getMovieDetails(featuredMovie.tmdbId);
+    const movieDetails = featuredMovie.type === 'tv'
+        ? await window.getTVDetails(featuredMovie.tmdbId)
+        : await window.getMovieDetails(featuredMovie.tmdbId);
+
         const directorName = movieDetails.director ? movieDetails.director.name : '정보 없음';
         
         document.querySelector('.hero-meta').innerHTML = `
