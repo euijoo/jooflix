@@ -254,16 +254,16 @@ async function addToCollection(itemId, type) {
             );
             
             itemData = {
-                type: 'tv',
-                tmdbId: details.id,
-                title: details.name,
-                year: details.first_air_date ? details.first_air_date.split('-')[0] : 'N/A',
-                posterPath: details.poster_path,
-                backdropPath: randomBackdrop || details.backdrop_path,
-                overview: details.overview,
-                runtime: details.episode_run_time ? details.episode_run_time[0] : null,
-                seasons: details.number_of_seasons,
-                episodes: details.number_of_episodes,
+    type: 'tv',
+    tmdbId: details.id,
+    title: details.name,
+    year: details.first_air_date ? details.first_air_date.split('-')[0] : 'N/A',
+    posterPath: details.poster_path,
+    backdropPath: randomBackdrop || details.backdrop_path,
+    overview: details.overview,
+    runtime: (details.episode_run_time && details.episode_run_time.length > 0) ? details.episode_run_time[0] : null,  // 👈 수정!
+    seasons: details.number_of_seasons || 0,  // 👈 기본값 추가
+    episodes: details.number_of_episodes || 0,  // 👈 기본값 추가
                 genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
                 cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
                 trailerUrl: trailer || '',
