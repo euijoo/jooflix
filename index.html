@@ -33,10 +33,11 @@
                     <span>jooflix</span>
                 </div>
                 <ul class="nav-menu">
-                    <li><a href="#" class="nav-link active" data-tab="home">홈</a></li>
-                    <li><a href="#" class="nav-link" data-tab="collection">내 컬렉션</a></li>
-                    <li><a href="#" class="nav-link" id="search-btn-nav">검색</a></li>
-                </ul>
+    <li><a href="#" class="nav-link active" data-tab="all">홈</a></li>
+    <li><a href="#" class="nav-link" data-tab="movie">영화</a></li>
+    <li><a href="#" class="nav-link" data-tab="tv">TV 시리즈</a></li>
+    <li><a href="#" class="nav-link" id="search-btn-nav">검색</a></li>
+</ul>
                 <div class="nav-user">
                     <img id="user-avatar" src="" alt="User" class="avatar">
                     <button id="logout-btn" class="btn-logout">로그아웃</button>
@@ -82,25 +83,37 @@
         <!-- 영화 그리드 리스트 (6열) -->
         <section class="content-section">
             <div class="section-header">
-                <h2>내 영화 컬렉션</h2>
-                <button id="add-movie-btn" class="btn-add"> + </button>
-            </div>
+    <h2 id="section-title">전체 컬렉션</h2>
+    <button id="add-movie-btn" class="btn-add"> + </button>
+</div>
             <div id="movies-grid" class="movies-grid">
                 <!-- 영화 카드가 여기에 동적으로 추가됨 -->
             </div>
         </section>
 
         <!-- 검색 모달 -->
-        <div id="search-modal" class="modal">
-            <div class="modal-content search-modal-content">
-                <div class="modal-header">
-                    <h2>영화 검색</h2>
-                    <span class="modal-close">&times;</span>
-                </div>
-                <input type="text" id="search-input" placeholder="영화 제목을 입력하세요..." class="search-input">
-                <div id="search-results" class="search-results"></div>
-            </div>
+<div id="search-modal" class="modal">
+    <div class="modal-content search-modal-content">
+        <div class="modal-header">
+            <h2>영화/TV 검색</h2>
+            <span class="modal-close">&times;</span>
         </div>
+        <!-- 타입 선택 -->
+        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; gap: 20px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="search-type" value="movie" checked style="cursor: pointer;">
+                <span>🎬 영화</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="search-type" value="tv" style="cursor: pointer;">
+                <span>📺 TV 시리즈</span>
+            </label>
+        </div>
+        <input type="text" id="search-input" placeholder="제목을 입력하세요..." class="search-input">
+        <div id="search-results" class="search-results"></div>
+    </div>
+</div>
+
 
         <!-- 비디오 모달 -->
         <div id="video-modal" class="modal video-modal">
