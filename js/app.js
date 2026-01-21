@@ -284,6 +284,18 @@ async function addToCollection(itemId, type) {
         alert('추가하는 중 오류가 발생했습니다.');
     }
 }
+} else {
+    // TV 시리즈
+    console.log('TV 추가 시작:', itemId); // 👈 추가
+    
+    const details = await window.getTVDetails(itemId);
+    console.log('TV 상세:', details); // 👈 추가
+    
+    const trailer = await window.getTVTrailer(itemId);
+    console.log('TV 예고편:', trailer); // 👈 추가
+    
+    const backdrops = await window.getTVBackdrops(itemId);
+    console.log('TV 백드롭:', backdrops); // 👈 추가
 
 
 // ===========================
