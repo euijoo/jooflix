@@ -236,9 +236,13 @@ async function addToCollection(itemId, type) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
             
-        } else {
+                } else {
             // TV 시리즈
+            console.log('TV 추가 시작:', itemId);
+            
             const details = await window.getTVDetails(itemId);
+            console.log('TV 상세:', details);
+            
             const trailer = await window.getTVTrailer(itemId);
             const backdrops = await window.getTVBackdrops(itemId);
             
@@ -254,16 +258,16 @@ async function addToCollection(itemId, type) {
             );
             
             itemData = {
-    type: 'tv',
-    tmdbId: details.id,
-    title: details.name,
-    year: details.first_air_date ? details.first_air_date.split('-')[0] : 'N/A',
-    posterPath: details.poster_path,
-    backdropPath: randomBackdrop || details.backdrop_path,
-    overview: details.overview,
-    runtime: (details.episode_run_time && details.episode_run_time.length > 0) ? details.episode_run_time[0] : null,  // 👈 수정!
-    seasons: details.number_of_seasons || 0,  // 👈 기본값 추가
-    episodes: details.number_of_episodes || 0,  // 👈 기본값 추가
+                type: 'tv',
+                tmdbId: details.id,
+                title: details.name,
+                year: details.first_air_date ? details.first_air_date.split('-')[0] : 'N/A',
+                posterPath: details.poster_path || '',
+                backdropPath: randomBackdrop || details.backdrop_path || '',
+                overview: details.overview || '',
+                runtime: (details.episode_run_time && details.episode_run_time.length > 0) ? details.episode_run_time[0] : 0,
+                seasons: details.number_of_seasons || 0,
+                episodes: details.number_of_episodes || 0,
                 genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
                 cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
                 trailerUrl: trailer || '',
@@ -284,6 +288,8 @@ async function addToCollection(itemId, type) {
         alert('추가하는 중 오류가 발생했습니다.');
     }
 }
+
+
 } else {
     // TV 시리즈
     console.log('TV 추가 시작:', itemId); // 👈 추가
