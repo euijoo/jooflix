@@ -79,6 +79,87 @@ async function getMovieTrailer(movieId) {
     }
 }
 
+// ===========================
+// TV 시리즈 검색
+// ===========================
+async function searchTVShows(query) {
+    try {
+        const response = await fetch(
+            `${TMDB_BASE_URL}/search/tv?api_key=${TMDB_API_KEY}&language=ko-KR&query=${encodeURIComponent(query)}&page=1`
+        );
+        const data = await response.json();
+        return data.results;
+    } catch (error) {
+        console.error('TV 검색 실패:', error);
+        return [];
+    }
+}
+
+// ===========================
+// TV 상세 정보
+// ===========================
+async function getTVDetails(tvId) {
+    try {
+        const [tvResponse, creditsResponse] = await Promise.all([
+            fetch(`${TMDB_BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}&language=ko-KR`),
+            fetch(`${TMDB_BASE_URL}/tv/${tvId}/credits?api_key=${TMDB_API_KEY}&language=ko-KR`)
+        ]);
+        
+        const tv = await tvResponse.json();
+        const credits = await creditsResponse.json();
+        
+        const creator = tv.created_by && tv.created_by[0] ? tv.created_by[0] : null;
+        const director = credits.crew.find(p => p.job === 'Director') || creator;
+        
+        return {
+            ...tv,
+            cast: credits.cast.slice(0, 10),
+            director: director
+        };
+    } catch (error) {
+        console.error('TV 상세 정보 실패:', error);
+        return null;
+    }
+}
+
+// ===========================
+// TV 예고편
+// ===========================
+async function getTVTrailer(tvId) {
+    try {
+        const response = await fetch(`${TMDB_BASE_URL}/tv/${tvId}/videos?api_key=${TMDB_API_KEY}&language=ko-KR`);
+        const data = await response.json();
+        
+        let trailer = data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+        
+        if (!trailer) {
+            const enResponse = await fetch(`${TMDB_BASE_URL}/tv/${tvId}/videos?api_key=${TMDB_API_KEY}&language=en-US`);
+            const enData = await enResponse.json();
+            trailer = enData.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+        }
+        
+        return trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
+    } catch (error) {
+        console.error('TV 예고편 오류:', error);
+        return null;
+    }
+}
+
+// ===========================
+// TV 백드롭
+// ===========================
+async function getTVBackdrops(tvId) {
+    try {
+        const response = await fetch(`${TMDB_BASE_URL}/tv/${tvId}/images?api_key=${TMDB_API_KEY}`);
+        const data = await response.json();
+        return data.backdrops || [];
+    } catch (error) {
+        console.error('TV 백드롭 오류:', error);
+        return [];
+    }
+}
+
+
 
 // ===========================
 // 영화 스틸컷(백드롭) 가져오기
@@ -109,6 +190,10 @@ window.searchMovies = searchMovies;
 window.getMovieDetails = getMovieDetails;
 window.getPosterUrl = getPosterUrl;
 window.getMovieTrailer = getMovieTrailer;
-window.getMovieBackdrops = getMovieBackdrops; // 👈 이 줄만 추가!
+window.getMovieBackdrops = getMovieBackdrops;
+window.searchTVShows = searchTVShows; // 👈 추가
+window.getTVDetails = getTVDetails; // 👈 추가
+window.getTVTrailer = getTVTrailer; // 👈 추가
+window.getTVBackdrops = getTVBackdrops; // 👈 추가
 
 console.log('TMDB 함수 전역 노출 완료');
