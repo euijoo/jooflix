@@ -77,10 +77,9 @@ img {
 }
 
 .auth-logo {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 24px;
-    border-radius: 50%;
+    width: 200px;
+    height: auto;
+    border-radius: 8px;
 }
 
 .auth-title {
@@ -144,9 +143,9 @@ img {
 }
 
 .nav-logo img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    height: 28px;
+    width: auto;
+    border-radius: 4px; /* 살짝 둥글게 */
 }
 
 .nav-menu {
