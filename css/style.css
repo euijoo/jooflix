@@ -836,9 +836,10 @@ img {
     }
     
     .content-section {
-        padding: 0 16px 32px 16px;
-        margin: 32px auto;
+        padding: 20px 16px 32px 16px; /* ✅ 상단 패딩 줄임 */
+        margin: 0 auto 32px auto; /* ✅ 상단 마진 0 */
     }
+}
     
     .section-header {
         flex-direction: column;
@@ -876,16 +877,18 @@ img {
     }
     
        /* 히어로 섹션 - 아이폰 전용 디자인 */
-    .hero-section {
+     .hero-section {
         margin-bottom: 0;
-        padding: 24px 20px 40px 20px;
+        padding: 24px 20px 60px 20px; /* ✅ 하단 패딩 증가 */
     }
     
     /* 배경 표시 (블러 유지) */
      .hero-backdrop::after {
+        height: 200px; /* ✅ 모바일용 */
         background: linear-gradient(
             to bottom,
-            transparent 60%,
+            transparent 40%,
+            rgba(0, 0, 0, 0.7) 70%,
             #000000 100%
         );
     }
@@ -944,7 +947,11 @@ img {
         width: 100%;
     }
 
-    
+    .content-section {
+        margin: 0 auto 32px auto;
+        padding: 20px 16px 32px 16px;
+    }
+}
     /* 모달 */
     .search-modal-content {
         width: 95%;
