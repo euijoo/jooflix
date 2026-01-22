@@ -602,34 +602,17 @@ function setupMobileHeroButtons(movie) {
     
     const ratingIcon = document.getElementById('hero-rating-mobile');
     if (ratingIcon) {
-        ratingIcon.onclick = async () => {
+        ratingIcon.onclick = () => {
             if (movie.type === 'tv') {
+                // TV는 에피소드 모달 그대로 사용
                 openEpisodeModal(movie);
             } else {
-                const currentUrl = movie.externalVideoUrl || '';
-                const newUrl = prompt(`"${movie.title}" 재생 URL:\n\n현재: ${currentUrl || '(없음)'}`, currentUrl);
-                
-                if (newUrl === null) return;
-                
-                try {
-                    await db.collection('movies').doc(movie.id).update({ externalVideoUrl: newUrl.trim() });
-                    movie.externalVideoUrl = newUrl.trim();
-                    ratingIcon.textContent = newUrl.trim() ? '🔓' : '🔒';
-                    
-                    const movieInList = allMovies.find(m => m.id === movie.id);
-                    if (movieInList) movieInList.externalVideoUrl = newUrl.trim();
-                    
-                    alert('URL 저장 완료!');
-                } catch (error) {
-                    console.error('URL 저장 오류:', error);
-                    alert('URL 저장 실패!');
-                }
+                // 영화: URL 편집 + 작은 삭제 버튼 있는 미니 모달
+                openMobileUrlAndDeleteMiniModal(movie, ratingIcon);
             }
         };
     }
-}  
-
-
+}
 
 function playTrailer(trailerUrl) {
     if (!trailerUrl) {
@@ -649,6 +632,120 @@ function playTrailer(trailerUrl) {
     videoPlayer.src = embedUrl;
     openModal(videoModal);
 }
+
+// ===========================
+// 모바일: URL + 삭제 미니 모달
+// ===========================
+function openMobileUrlAndDeleteMiniModal(movie, ratingIcon) {
+    const currentUrl = movie.externalVideoUrl || '';
+
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '50%';
+    wrapper.style.top = '50%';
+    wrapper.style.transform = 'translate(-50%, -50%)';
+    wrapper.style.zIndex = '9999';
+    wrapper.style.background = 'rgba(15,15,20,0.95)';
+    wrapper.style.border = '1px solid rgba(255,255,255,0.12)';
+    wrapper.style.borderRadius = '10px';
+    wrapper.style.padding = '12px 14px';
+    wrapper.style.width = 'min(90%, 320px)';
+    wrapper.style.boxShadow = '0 12px 30px rgba(0,0,0,0.6)';
+    wrapper.style.fontSize = '0.8rem';
+
+    wrapper.innerHTML = `
+        <div style="margin-bottom: 6px; color: var(--text-secondary);">
+            "${movie.title}" 재생 URL
+        </div>
+        <input id="mobile-url-input" type="text"
+            value="${currentUrl}"
+            placeholder="https://..."
+            style="width: 100%; padding: 6px 8px; border-radius: 4px;
+                   border: 1px solid var(--border-color);
+                   background: var(--bg-dark);
+                   color: var(--text-primary);
+                   font-size: 0.8rem; margin-bottom: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <button id="mobile-url-save"
+                style="flex:1; padding: 6px 0; border-radius:4px;
+                       background:#3b82f6; border:none; color:#fff;
+                       font-size:0.8rem; font-weight:500;">
+                저장
+            </button>
+            <button id="mobile-movie-delete"
+                style="padding: 4px 6px; border-radius:999px;
+                       background:rgba(239,68,68,0.1);
+                       border:1px solid rgba(239,68,68,0.7);
+                       color:#f87171; font-size:0.7rem;">
+                삭제
+            </button>
+            <button id="mobile-url-cancel"
+                style="padding: 6px 8px; border-radius:4px;
+                       background:transparent; border:none;
+                       color:var(--text-secondary); font-size:0.8rem;">
+                취소
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(wrapper);
+
+    const closeMiniModal = () => {
+        if (wrapper.parentNode) {
+            document.body.removeChild(wrapper);
+        }
+    };
+
+    // 저장 버튼
+    wrapper.querySelector('#mobile-url-save').onclick = async () => {
+        const newUrl = wrapper.querySelector('#mobile-url-input').value.trim();
+
+        try {
+            await db.collection('movies').doc(movie.id).update({
+                externalVideoUrl: newUrl
+            });
+            movie.externalVideoUrl = newUrl;
+            if (ratingIcon) {
+                ratingIcon.textContent = newUrl ? '🔓' : '🔒';
+            }
+
+            const movieInList = allMovies.find(m => m.id === movie.id);
+            if (movieInList) movieInList.externalVideoUrl = newUrl;
+
+            alert('URL 저장 완료!');
+            closeMiniModal();
+        } catch (error) {
+            console.error('URL 저장 오류:', error);
+            alert('URL 저장 실패!');
+        }
+    };
+
+    // 취소 버튼
+    wrapper.querySelector('#mobile-url-cancel').onclick = () => {
+        closeMiniModal();
+    };
+
+    // 🔴 작은 삭제 버튼
+    wrapper.querySelector('#mobile-movie-delete').onclick = async () => {
+        if (!confirm(`"${movie.title}" 를 삭제하시겠습니까?`)) return;
+
+        try {
+            await db.collection('movies').doc(movie.id).delete();
+            allMovies = allMovies.filter(m => m.id !== movie.id);
+            closeMiniModal();
+
+            await displayHeroSlide();
+            filterAndDisplayMovies();
+
+            alert('삭제 완료!');
+        } catch (error) {
+            console.error('삭제 오류:', error);
+            alert('삭제 실패!');
+        }
+    };
+}
+
+
 // ===========================
 // 필터링
 // ===========================
