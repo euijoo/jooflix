@@ -219,11 +219,38 @@ img {
     z-index: 0;
 }
 
+/* 히어로 배경에 하단 그라디언트 (더 길게) */
 .hero-backdrop::after {
     content: '';
     position: absolute;
+    bottom: 0; /* ✅ 하단부터 시작 */
+    left: 0;
+    right: 0;
+    height: 250px; /* ✅ 더 길게 확장 */
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.5) 40%,
+        rgba(0, 0, 0, 0.8) 70%,
+        #000000 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 좌우 그라디언트는 before 사용 */
+.hero-backdrop::before {
+    content: '';
+    position: absolute;
     inset: 0;
-    background: linear-gradient(to right, var(--bg-dark) 20%, transparent 70%);
+    background: linear-gradient(to right, rgba(20, 24, 28, 0.8) 20%, transparent 70%);
+    z-index: 0;
+}
+
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* after보다 위에 */
 }
 
 .hero-content {
@@ -850,15 +877,17 @@ img {
     
        /* 히어로 섹션 - 아이폰 전용 디자인 */
     .hero-section {
-        min-height: 250px;
-        height: auto;
-        padding: 24px 20px;
+        margin-bottom: 0;
+        padding: 24px 20px 40px 20px;
     }
     
     /* 배경 표시 (블러 유지) */
-    .hero-backdrop {
-        display: block;
-        filter: blur(0px) brightness(0.3);
+     .hero-backdrop::after {
+        background: linear-gradient(
+            to bottom,
+            transparent 60%,
+            #000000 100%
+        );
     }
     
     /* 콘텐츠 세로 레이아웃 */
