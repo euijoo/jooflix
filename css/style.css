@@ -77,9 +77,10 @@ img {
 }
 
 .auth-logo {
-    width: 200px;
-    height: auto;
-    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    object-fit: contain;
 }
 
 .auth-title {
@@ -143,9 +144,9 @@ img {
 }
 
 .nav-logo img {
-    height: 28px;
+    height: 24px;
     width: auto;
-    border-radius: 4px; /* 살짝 둥글게 */
+    object-fit: contain;
 }
 
 .nav-menu {
