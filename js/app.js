@@ -29,7 +29,6 @@ const searchModal = document.getElementById('search-modal');
 const videoModal = document.getElementById('video-modal');
 const episodeModal = document.getElementById('episode-modal'); // 👈 여기로 이동!
 const searchBtnNav = document.getElementById('search-btn-nav');
-const addMovieBtn = document.getElementById('add-movie-btn');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const moviesGrid = document.getElementById('movies-grid');
@@ -66,12 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // 모달
 // ===========================
 
-searchBtnNav.addEventListener('click', () => {
-    openModal(searchModal);
-    searchInput.focus();
-});
 
-addMovieBtn.addEventListener('click', () => {
+searchBtnNav.addEventListener('click', () => {
     openModal(searchModal);
     searchInput.focus();
 });
@@ -104,6 +99,10 @@ function closeModal(modal) {
         searchInput.value = '';
         searchResults.innerHTML = '';
     }
+
+     if (modal === episodeModal) {
+        currentEditingMovie = null; 
+    }    
 }
 
 document.addEventListener('keydown', function(e) {
