@@ -776,14 +776,17 @@ function displayMovies(moviesToDisplay = allMovies) {
         return;
     }
     
-    moviesGrid.innerHTML = moviesToDisplay.map((movie, index) => {
+    moviesGrid.innerHTML = moviesToDisplay.map((movie) => {
         const typeIcon = movie.type === 'tv' ? '📺' : '🎬';
         const runtimeText = movie.type === 'tv' 
             ? `S${movie.seasons || '?'} E${movie.episodes || '?'}`
             : (movie.year || 'N/A');
         
+        // ✅ 전체 배열에서 실제 인덱스 찾기!
+        const realIndex = allMovies.findIndex(m => m.id === movie.id);
+        
         return `
-            <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${index}">
+            <div class="movie-card" data-movie-id="${movie.id}" data-movie-index="${realIndex}">
                 <img src="${window.getPosterUrl(movie.posterPath)}" alt="${movie.title}"
                      onerror="this.src='https://via.placeholder.com/300x450/2C3440/99AABB?text=No+Image'">
                 <div class="movie-card-overlay">
@@ -806,6 +809,7 @@ function displayMovies(moviesToDisplay = allMovies) {
     
     attachMovieCardEvents();
 }
+
 // ===========================
 // 카드 이벤트
 // ===========================
