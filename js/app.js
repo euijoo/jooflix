@@ -186,10 +186,24 @@ function displaySearchResults(items, type) {
 
 async function addToCollection(itemId, type) {
     try {
+        // 1) 이미 같은 tmdbId + type 이 있는지 검사
+        const dupSnap = await db.collection('movies')
+            .where('tmdbId', '==', Number(itemId))  // TMDB id
+            .where('type', '==', type)             // movie / tv
+            .limit(1)
+            .get();
+
+        if (!dupSnap.empty) {
+            alert('이미 컬렉션에 추가된 작품입니다.');
+            searchResults.innerHTML = '';  // 혹시 로딩 표시 제거
+            return; // 👉 여기서 바로 종료, 밑으로 안 내려감
+        }
+
+        // 2) 여기부터는 "없을 때만" 기존 로직 실행
         searchResults.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading"></div></div>';
-        
+
         let itemData;
-        
+
         if (type === 'movie') {
             const details = await window.getMovieDetails(itemId);
             const trailer = await window.getMovieTrailer(itemId);
@@ -227,7 +241,6 @@ async function addToCollection(itemId, type) {
                 randomBackdrop = backdrops[Math.floor(Math.random() * backdrops.length)].file_path;
             }
             
-            
             itemData = {
                 type: 'tv',
                 tmdbId: details.id,
@@ -242,7 +255,7 @@ async function addToCollection(itemId, type) {
                 genres: details.genres ? details.genres.map(g => g.name).join(', ') : '',
                 cast: details.cast ? details.cast.slice(0, 5).map(c => c.name).join(', ') : '',
                 trailerUrl: trailer || '',
-                episodeList: [],  // 👈 에피소드 배열 추가!
+                episodeList: [],
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
         }
